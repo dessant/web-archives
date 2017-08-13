@@ -1,0 +1,292 @@
+{
+  "extensionName": {
+    "message": "View Page Archive & Cache",
+    "description": "Name of the extension."
+  },
+
+  "extensionDescription": {
+    "message": "View archived and cached versions of web pages on 10+ search engines.",
+    "description": "Description of the extension."
+  },
+
+  "engineName_google_short": {
+    "message": "Google",
+    "description": "Short name of the search engine."
+  },
+
+  "engineName_google_full": {
+    "message": "Google Cache",
+    "description": "Full name of the search engine."
+  },
+
+  "engineName_googleText_short": {
+    "message": "Google (Text only)",
+    "description": "Short name of the search engine."
+  },
+
+  "engineName_googleText_full": {
+    "message": "Google Cache (Text only)",
+    "description": "Full name of the search engine."
+  },
+
+  "engineName_bing_short": {
+    "message": "Bing",
+    "description": "Short name of the search engine."
+  },
+
+  "engineName_bing_full": {
+    "message": "Bing Cache",
+    "description": "Full name of the search engine."
+  },
+
+  "engineName_yandex_short": {
+    "message": "Yandex",
+    "description": "Short name of the search engine."
+  },
+
+  "engineName_yandex_full": {
+    "message": "Yandex Cache",
+    "description": "Full name of the search engine."
+  },
+
+  "engineName_archiveOrg_short": {
+    "message": "Archive.org",
+    "description": "Short name of the search engine."
+  },
+
+  "engineName_archiveOrg_full": {
+    "message": "Wayback Machine",
+    "description": "Full name of the search engine."
+  },
+
+  "engineName_memento_short": {
+    "message": "Memento",
+    "description": "Short name of the search engine."
+  },
+
+  "engineName_memento_full": {
+    "message": "Memento Time Travel",
+    "description": "Full name of the search engine."
+  },
+
+  "engineName_archiveIs_short": {
+    "message": "Archive.is",
+    "description": "Short name of the search engine."
+  },
+
+  "engineName_archiveIs_full": {
+    "message": "Archive.is",
+    "description": "Full name of the search engine."
+  },
+
+  "engineName_webcite_short": {
+    "message": "WebCite",
+    "description": "Short name of the search engine."
+  },
+
+  "engineName_webcite_full": {
+    "message": "WebCite",
+    "description": "Full name of the search engine."
+  },
+
+  "engineName_exalead_short": {
+    "message": "Exalead",
+    "description": "Short name of the search engine."
+  },
+
+  "engineName_exalead_full": {
+    "message": "Exalead Cache",
+    "description": "Full name of the search engine."
+  },
+
+  "engineName_gigablast_short": {
+    "message": "Gigablast",
+    "description": "Short name of the search engine."
+  },
+
+  "engineName_gigablast_full": {
+    "message": "Gigablast Cache",
+    "description": "Full name of the search engine."
+  },
+
+  "engineName_sogou_short": {
+    "message": "Sogou",
+    "description": "Short name of the search engine."
+  },
+
+  "engineName_sogou_full": {
+    "message": "Sogou Snapshot",
+    "description": "Full name of the search engine."
+  },
+
+  "engineName_qihoo_short": {
+    "message": "360 Search",
+    "description": "Short name of the search engine."
+  },
+
+  "engineName_qihoo_full": {
+    "message": "Qihoo 360 Search Snapshot",
+    "description": "Full name of the search engine."
+  },
+
+  "engineName_baidu_short": {
+    "message": "Baidu",
+    "description": "Short name of the search engine."
+  },
+
+  "engineName_baidu_full": {
+    "message": "Baidu Snapshot",
+    "description": "Full name of the search engine."
+  },
+
+  "engineName_naver_short": {
+    "message": "Naver",
+    "description": "Short name of the search engine."
+  },
+
+  "engineName_naver_full": {
+    "message": "Naver Cache",
+    "description": "Full name of the search engine."
+  },
+
+  "engineName_yahooJp_short": {
+    "message": "Yahoo Japan",
+    "description": "Short name of the search engine."
+  },
+
+  "engineName_yahooJp_full": {
+    "message": "Yahoo Japan Cache",
+    "description": "Full name of the search engine."
+  },
+
+  "engineName_megalodon_short": {
+    "message": "Megalodon",
+    "description": "Short name of the search engine."
+  },
+
+  "engineName_megalodon_full": {
+    "message": "Megalodon",
+    "description": "Full name of the search engine."
+  },
+
+  "engineName_allEngines_short": {
+    "message": "All engines",
+    "description": "Short name of the search engine."
+  },
+
+  "engineName_allEngines_full": {
+    "message": "All search engines",
+    "description": "Full name of the search engine."
+  },
+
+  "actionTitle_allEngines_main": {
+    "message": "View page archive on all engines",
+    "description": "Title of the context menu item."
+  },
+
+  "actionTitle_engine_main": {
+    "message": "View page archive on $ENGINE$",
+    "description": "Title of the context menu item.",
+    "placeholders": {
+      "engine": {
+        "content": "$1",
+        "example": "Google"
+      }
+    }
+  },
+
+  "contextMenuGroupTitle_viewArchive_main": {
+    "message": "View page archive on...",
+    "description": "Title of the context menu group."
+  },
+
+  "optionSectionTitle_engines": {
+    "message": "Search engines",
+    "description": "Title of the search engine options section."
+  },
+
+  "optionSectionDescription_engines": {
+    "message": "Toggle search engines and customize their order (drag and drop)",
+    "description": "Description of the search engine options section."
+  },
+
+  "optionSectionTitle_misc": {
+    "message": "Miscellaneous",
+    "description": "Title of the miscellaneous options section."
+  },
+
+  "optionValue_showInContextMenu_all": {
+    "message": "Show in context menu",
+    "description": "Value of the option."
+  },
+
+  "optionValue_showInContextMenu_link": {
+    "message": "Show in context menu for links",
+    "description": "Value of the option."
+  },
+
+  "optionValue_showInContextMenu_false": {
+    "message": "Do not show in context menu",
+    "description": "Value of the option."
+  },
+
+  "optionValue_searchAllEnginesContextMenu_main": {
+    "message": "Search all engines from context menu",
+    "description": "Value of the option."
+  },
+
+  "optionValue_searchAllEnginesContextMenu_sub": {
+    "message": "Search all engines from submenu of context menu",
+    "description": "Value of the option."
+  },
+
+  "optionValue_searchAllEnginesContextMenu_false": {
+    "message": "Do not search all engines from context menu",
+    "description": "Value of the option."
+  },
+
+  "optionValue_searchAllEnginesAction_main": {
+    "message": "Search all engines from browser and page action",
+    "description": "Value of the option."
+  },
+
+  "optionValue_searchAllEnginesAction_sub": {
+    "message": "Search all engines from browser and page action popup",
+    "description": "Value of the option."
+  },
+
+  "optionValue_searchAllEnginesAction_false": {
+    "message": "Do not search all engines from browser and page action",
+    "description": "Value of the option."
+  },
+
+  "optionTitle_showPageAction": {
+    "message": "Show page action in address bar on server error",
+    "description": "Title of the option."
+  },
+
+  "optionTitle_openNewTab": {
+    "message": "View page archive in a new tab",
+    "description": "Title of the option."
+  },
+
+  "optionTitle_tabInBackgound": {
+    "message": "Open new tabs in the background",
+    "description": "Title of the option."
+  },
+
+  "error_invalidUrl": {
+    "message": "The URL is not valid. It must point to a HTTP(S) or FTP page.",
+    "description": "Error message."
+  },
+
+  "error_allEnginesDisabled": {
+    "message": "All search engines have been disabled. Visit the options page and enable at least one search engine.",
+    "description": "Error message."
+  },
+
+  "error_internalError": {
+    "message": "Something went wrong. Try viewing the page archive or cache again.",
+    "description": "Error message."
+  }
+}
