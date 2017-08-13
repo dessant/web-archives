@@ -118,6 +118,7 @@ body {
   padding-left: 16px;
   padding-right: 48px;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .mdc-list-item__start-detail {
