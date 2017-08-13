@@ -1,6 +1,6 @@
 function viewCache() {
   const nodes = document.evaluate(
-    '//div[@id="WS2m"]/div[@class="w"]/div[@class="bd"]/div[@class="a"]//a[text()="キャッシュ"]',
+    '//div[@class="bd"]//a[text()="キャッシュ"]',
     document,
     null,
     XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
