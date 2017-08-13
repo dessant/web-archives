@@ -69,7 +69,7 @@ gulp.task('fonts', function() {
     .pipe(postcss())
     .pipe(gulp.dest('dist'));
   gulp
-    .src('node_modules/typeface-roboto/files/roboto-latin-@(300|400|500).woff2')
+    .src('node_modules/typeface-roboto/files/roboto-latin-@(400|500).woff2')
     .pipe(gulp.dest('dist/src/fonts/files'));
 });
 
