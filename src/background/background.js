@@ -171,10 +171,34 @@ async function evalExecEngine(tabId, engineId, url) {
 
 async function execEngineContent(tabId, engineId, url) {
   const urlExecEngines = ['bing', 'sogou', 'qihoo', 'naver', 'yahooJp'];
-  if (urlExecEngines.indexOf(engineId) !== -1) {
-    await executeCode(`var url = '${url}';`, tabId);
+
+  // workaround for Bugzilla@Mozilla#1290016
+  const tabUpdateCallback = async function(eventTabId, changes, tab) {
+    if (eventTabId === tabId && tab.status === 'complete') {
+      removeCallbacks();
+      if (urlExecEngines.indexOf(engineId) !== -1) {
+        await executeCode(`var url = '${url}';`, tabId, 0, 'document_idle');
+      }
+      executeFile(
+        `/src/content/engines/${engineId}.js`,
+        tabId,
+        0,
+        'document_idle'
+      );
+    }
+  };
+  const removeCallbacks = function(details) {
+    window.clearTimeout(timeoutId);
+    browser.tabs.onUpdated.removeListener(tabUpdateCallback);
+  };
+  const timeoutId = window.setTimeout(removeCallbacks, 120000); // 2 minutes
+
+  browser.tabs.onUpdated.addListener(tabUpdateCallback);
+
+  const tab = await browser.tabs.get(tabId);
+  if (tab.status === 'complete') {
+    tabUpdateCallback();
   }
-  executeFile(`/src/content/engines/${engineId}.js`, tabId, 0, 'document_idle');
 }
 
 async function onContextMenuItemClick(info, tab) {
