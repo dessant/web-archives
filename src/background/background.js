@@ -234,7 +234,7 @@ async function onActionClick(tab) {
 
 async function onActionPopupClick(engine) {
   const [tab, ...rest] = await browser.tabs.query({
-    currentWindow: true,
+    lastFocusedWindow: true,
     active: true
   });
   await searchUrl(tab.url, engine, tab.index, tab.id);
