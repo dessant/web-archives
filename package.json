@@ -22,7 +22,8 @@
     "inspect":
       "webpack --profile --json > report.json; webpack-bundle-analyzer report.json --mode static && sleep 6 && rm report.{json,html}",
     "update": "ncu --upgrade --upgradeAll && yarn upgrade --latest",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "release": "standard-version && git push --follow-tags origin master"
   },
   "browserslist": ["Firefox >= 52"],
   "dependencies": {
@@ -67,6 +68,7 @@
     "npm-check-updates": "^2.12.1",
     "sass-loader": "^6.0.6",
     "shortid": "^2.2.8",
+    "standard-version": "^4.2.0",
     "typeface-roboto": "^0.0.35",
     "vue-loader": "^13.0.4",
     "vue-template-compiler": "^2.4.2",
