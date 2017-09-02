@@ -8,7 +8,8 @@ function viewCache() {
   );
 
   const cacheUrls = [];
-  const noschUrl = url.replace(/^(?:https?|ftp):\/\/(.*)$/i, '$1');
+  const rxUrl = /^(?:https?|ftp):\/\/(.*)$/i;
+  const noschUrl = url.replace(rxUrl, '$1');
   const nodeCount = nodes.snapshotLength;
   for (let i = 0; i < nodeCount; i++) {
     let node = nodes.snapshotItem(i);
@@ -16,10 +17,7 @@ function viewCache() {
     const cacheParam = new URL(cacheUrl).searchParams.get('u');
 
     if (cacheParam) {
-      const noschCacheParam = cacheParam.replace(
-        /^(?:https?|ftp):\/\/(.*)$/i,
-        '$1'
-      );
+      const noschCacheParam = cacheParam.replace(rxUrl, '$1');
       if (noschCacheParam === noschUrl) {
         window.location.href = cacheUrl;
         break;
