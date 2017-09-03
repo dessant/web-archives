@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "author": "Armin Sebastian",
   "homepage_url": "https://github.com/dessant/view-page-archive",
   "default_locale": "en",
@@ -13,6 +13,8 @@
       "strict_min_version": "52.0"
     }
   },
+  "minimum_chrome_version": "55.0",
+  "minimum_opera_version": "42.0",
 
   "permissions": [
     "contextMenus",
@@ -23,7 +25,8 @@
     "<all_urls>"
   ],
 
-  "content_security_policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; object-src 'none'; child-src 'none'; form-action 'none';",
+  "content_security_policy":
+    "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; object-src 'none'; child-src 'none'; form-action 'none';",
 
   "icons": {
     "16": "src/icons/app/app-icon-16.png",
@@ -69,7 +72,8 @@
 
   "options_ui": {
     "page": "src/options/index.html",
-    "browser_style": false
+    "browser_style": false,
+    "chrome_style": false
   },
 
   "background": {

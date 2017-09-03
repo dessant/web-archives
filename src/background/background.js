@@ -1,3 +1,5 @@
+import browser from 'webextension-polyfill';
+
 import storage from 'storage/storage';
 import {
   getText,
@@ -8,6 +10,7 @@ import {
 } from 'utils/common';
 import {getEnabledEngines, showNotification} from 'utils/app';
 import {optionKeys, engines} from 'utils/data';
+import {targetEnv} from 'utils/config';
 
 function createMenuItem(id, title, contexts, parentId, type = 'normal') {
   browser.contextMenus.create(
@@ -25,7 +28,19 @@ function createMenuItem(id, title, contexts, parentId, type = 'normal') {
 
 async function createMenu(options) {
   const enEngines = await getEnabledEngines(options);
-  const contexts = options.showInContextMenu === 'all' ? ['all'] : ['link'];
+  const contexts =
+    options.showInContextMenu === 'all'
+      ? [
+          'audio',
+          'editable',
+          'frame',
+          'image',
+          'link',
+          'page',
+          'selection',
+          'video'
+        ]
+      : ['link'];
 
   if (enEngines.length === 1) {
     const engine = enEngines[0];
@@ -317,6 +332,10 @@ async function requestErrorCallback(details) {
 }
 
 async function setRequestListeners() {
+  if (targetEnv !== 'firefox') {
+    return;
+  }
+
   const {showPageAction} = await storage.get('showPageAction', 'sync');
   const hasListener = browser.webRequest.onCompleted.hasListener(
     requestCompletedCallback

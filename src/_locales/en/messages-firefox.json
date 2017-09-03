@@ -43,5 +43,20 @@
   "optionSectionTitle_engines": {
     "message": "Search Engines",
     "description": "Title of the search engine options section."
+  },
+
+  "optionValue_searchAllEnginesAction_main": {
+    "message": "Search all engines from browser and page action",
+    "description": "Value of the option."
+  },
+
+  "optionValue_searchAllEnginesAction_sub": {
+    "message": "Search all engines from browser and page action popup",
+    "description": "Value of the option."
+  },
+
+  "optionValue_searchAllEnginesAction_false": {
+    "message": "Do not search all engines from browser and page action",
+    "description": "Value of the option."
   }
 }

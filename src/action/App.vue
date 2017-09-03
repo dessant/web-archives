@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import browser from 'webextension-polyfill';
+
 import storage from 'storage/storage';
 import {getEnabledEngines} from 'utils/app';
 import {getText} from 'utils/common';
@@ -53,8 +55,8 @@ export default {
       return `/src/icons/engines/${name}.png`;
     },
 
-    selectEngine: async function(engine) {
-      await browser.runtime.sendMessage({
+    selectEngine: function(engine) {
+      browser.runtime.sendMessage({
         id: 'actionPopupSubmit',
         engine: engine
       });

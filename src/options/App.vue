@@ -39,7 +39,7 @@
             :options="selectOptions.searchAllEnginesAction">
         </v-select>
       </div>
-      <div class="option">
+      <div class="option" v-show="targetEnv === 'firefox'">
         <v-form-field input-id="spa"
             :label="getText('optionTitle_showPageAction')">
           <v-switch id="spa" v-model="options.showPageAction"></v-switch>
@@ -64,12 +64,14 @@
 </template>
 
 <script>
+import browser from 'webextension-polyfill';
 import _ from 'lodash';
 import draggable from 'vuedraggable';
 
 import storage from 'storage/storage';
 import {getText} from 'utils/common';
 import {optionKeys} from 'utils/data';
+import {targetEnv} from 'utils/config';
 
 import Checkbox from './components/Checkbox';
 import Switch from './components/Switch';
@@ -88,6 +90,7 @@ export default {
   data: function() {
     const data = {
       dataLoaded: false,
+      targetEnv,
 
       options: {
         engines: [],
@@ -166,10 +169,13 @@ export default {
   margin-right: 12px;
 }
 
+body {
+  min-width: 600px;
+}
+
 #app {
   display: grid;
   grid-row-gap: 32px;
-  min-width: 600px;
   padding: 12px;
 }
 

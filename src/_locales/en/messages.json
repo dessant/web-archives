@@ -5,7 +5,8 @@
   },
 
   "extensionDescription": {
-    "message": "View archived and cached versions of web pages on 10+ search engines.",
+    "message":
+      "View archived and cached versions of web pages on 10+ search engines.",
     "description": "Description of the extension."
   },
 
@@ -206,7 +207,8 @@
   },
 
   "optionSectionDescription_engines": {
-    "message": "Toggle search engines and customize their order (drag and drop)",
+    "message":
+      "Toggle search engines and customize their order (drag and drop)",
     "description": "Description of the search engine options section."
   },
 
@@ -246,17 +248,17 @@
   },
 
   "optionValue_searchAllEnginesAction_main": {
-    "message": "Search all engines from browser and page action",
+    "message": "Search all engines from browser action",
     "description": "Value of the option."
   },
 
   "optionValue_searchAllEnginesAction_sub": {
-    "message": "Search all engines from browser and page action popup",
+    "message": "Search all engines from browser action popup",
     "description": "Value of the option."
   },
 
   "optionValue_searchAllEnginesAction_false": {
-    "message": "Do not search all engines from browser and page action",
+    "message": "Do not search all engines from browser action",
     "description": "Value of the option."
   },
 
@@ -281,12 +283,14 @@
   },
 
   "error_allEnginesDisabled": {
-    "message": "All search engines have been disabled. Visit the options page and enable at least one search engine.",
+    "message":
+      "All search engines have been disabled. Visit the options page and enable at least one search engine.",
     "description": "Error message."
   },
 
   "error_internalError": {
-    "message": "Something went wrong. Try viewing the page archive or cache again.",
+    "message":
+      "Something went wrong. Try viewing the page archive or cache again.",
     "description": "Error message."
   }
 }

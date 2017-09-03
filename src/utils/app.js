@@ -1,3 +1,4 @@
+import browser from 'webextension-polyfill';
 import _ from 'lodash';
 
 import storage from 'storage/storage';

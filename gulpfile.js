@@ -14,7 +14,7 @@ const jsBeautify = require('gulp-jsbeautifier');
 const svg2png = require('gulp-rsvg');
 const imagemin = require('gulp-imagemin');
 
-const targetEnv = process.env.TARGET_ENV;
+const targetEnv = process.env.TARGET_ENV || 'firefox';
 const isProduction = process.env.NODE_ENV === 'production';
 
 const jsBeautifyOptions = {
@@ -99,15 +99,57 @@ gulp.task('locale', function() {
   }
 });
 
-gulp.task('copy', function() {
-  gulp
-    .src(['src/manifest.json', 'LICENSE', 'src*/icons/**/*.png'])
+gulp.task('manifest', function() {
+  return gulp
+    .src('src/manifest.json')
+    .pipe(
+      jsonMerge({
+        fileName: 'manifest.json',
+        jsonSpace: '  ',
+        edit: (parsedJson, file) => {
+          if (['chrome', 'opera'].indexOf(targetEnv) !== -1) {
+            delete parsedJson.applications;
+            delete parsedJson.page_action;
+            delete parsedJson.browser_action.browser_style;
+            delete parsedJson.options_ui.browser_style;
+          }
+
+          if (['firefox', 'chrome'].indexOf(targetEnv) !== -1) {
+            delete parsedJson.minimum_opera_version;
+          }
+
+          if (['firefox', 'opera'].indexOf(targetEnv) !== -1) {
+            delete parsedJson.minimum_chrome_version;
+          }
+
+          if (targetEnv === 'firefox') {
+            delete parsedJson.options_ui.chrome_style;
+          }
+
+          parsedJson.version = require('./package.json').version;
+          return parsedJson;
+        }
+      })
+    )
+    .pipe(gulpif(isProduction, jsBeautify(jsBeautifyOptions)))
     .pipe(gulp.dest('dist'));
+});
+
+gulp.task('copy', function() {
+  gulp.src(['LICENSE', 'src*/icons/**/*.png']).pipe(gulp.dest('dist'));
 });
 
 gulp.task(
   'build',
-  gulpSeq('clean', ['js', 'html', 'icons', 'fonts', 'locale', 'copy'])
+  gulpSeq('clean', [
+    'js',
+    'html',
+    'icons',
+    'fonts',
+    'locale',
+    'manifest',
+    'copy'
+  ])
 );
 
 gulp.task('default', ['build']);

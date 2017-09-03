@@ -1,3 +1,5 @@
+import browser from 'webextension-polyfill';
+
 const getText = browser.i18n.getMessage;
 
 function createTab(url, index, active = true) {
