@@ -28,6 +28,7 @@ let plugins = [
     chunks: ['background', 'options', 'action'],
     minChunks: 2
   }),
+  isProduction ? new webpack.optimize.ModuleConcatenationPlugin() : null,
   isProduction ? new MinifyPlugin() : null
 ];
 plugins = plugins.filter(Boolean);
