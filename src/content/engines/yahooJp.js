@@ -20,7 +20,7 @@ function viewCache() {
       const noschCacheParam = cacheParam.replace(rxUrl, '$1');
       if (noschCacheParam === noschUrl) {
         window.location.href = cacheUrl;
-        break;
+        return;
       }
       if (noschCacheParam.startsWith(noschUrl)) {
         cacheUrls.push(cacheUrl);

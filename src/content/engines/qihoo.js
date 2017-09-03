@@ -8,7 +8,7 @@ function viewCache() {
       if (cacheParam === url) {
         node.setAttribute('target', '_top');
         node.click();
-        break;
+        return;
       }
       if (cacheParam.startsWith(url)) {
         cacheNodes.push(node);

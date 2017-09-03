@@ -8,7 +8,7 @@ function viewCache() {
     if (cacheParam) {
       if (cacheParam === url) {
         window.location.href = cacheUrl;
-        break;
+        return;
       }
       if (cacheParam.startsWith(url)) {
         cacheUrls.push(cacheUrl);
