@@ -12,11 +12,11 @@
     "build:prod:opera": "NODE_ENV=production TARGET_ENV=opera gulp build",
     "build:prod:chrome": "NODE_ENV=production TARGET_ENV=chrome gulp build",
     "build:ext:prod":
-      "NODE_ENV=production gulp build && web-ext build -s dist/ -a artifacts/",
+      "NODE_ENV=production SYS_DEPS=false gulp build && web-ext build -s dist/ -a artifacts/",
     "build:ext:prod:opera":
-      "NODE_ENV=production TARGET_ENV=opera gulp build && web-ext build -s dist/ -a artifacts/",
+      "NODE_ENV=production TARGET_ENV=opera SYS_DEPS=false gulp build && web-ext build -s dist/ -a artifacts/",
     "build:ext:prod:chrome":
-      "NODE_ENV=production TARGET_ENV=chrome gulp build && web-ext build -s dist/ -a artifacts/",
+      "NODE_ENV=production TARGET_ENV=chrome SYS_DEPS=false gulp build && web-ext build -s dist/ -a artifacts/",
     "start":
       "web-ext run --bc --url 'about:debugging' --url 'about:addons' -s dist/",
     "exec": "yarn run build && yarn run start",
@@ -69,9 +69,11 @@
     "lodash-webpack-plugin": "^0.11.4",
     "node-sass": "^4.5.3",
     "npm-check-updates": "^2.12.1",
+    "recursive-readdir": "^2.2.1",
     "sass-loader": "^6.0.6",
     "shortid": "^2.2.8",
     "standard-version": "^4.2.0",
+    "svg2png": "^4.1.1",
     "typeface-roboto": "^0.0.35",
     "vue-loader": "^13.0.4",
     "vue-template-compiler": "^2.4.2",
