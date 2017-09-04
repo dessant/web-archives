@@ -1,10 +1,10 @@
 <template>
-<div id="app" class="mdc-typography" v-if="dataLoaded">
+<div id="app" v-if="dataLoaded">
   <div class="section">
-    <div class="section-title mdc-typography--title" v-once>
+    <div class="section-title" v-once>
       {{ getText('optionSectionTitle_engines') }}
     </div>
-    <div class="section-desc mdc-typography--body1" v-once>
+    <div class="section-desc" v-once>
       {{ getText('optionSectionDescription_engines') }}
     </div>
     <v-draggable class="option-wrap" :list="options.engines">
@@ -20,7 +20,7 @@
   </div>
 
   <div class="section">
-    <div class="section-title mdc-typography--title" v-once>
+    <div class="section-title" v-once>
       {{ getText('optionSectionTitle_misc') }}
     </div>
     <div class="option-wrap">
@@ -163,6 +163,9 @@ export default {
 </script>
 
 <style lang="scss">
+$mdc-theme-primary: #1abc9c;
+
+@import '@material/theme/mdc-theme';
 @import '@material/typography/mdc-typography';
 
 .mdc-checkbox {
@@ -185,10 +188,15 @@ body {
 
 .section-title,
 .section-desc {
-  color: rgba(0, 0, 0, 0.87);
+  @include mdc-theme-prop('color', 'text-primary-on-light');
+}
+
+.section-title {
+  @include mdc-typography('title');
 }
 
 .section-desc {
+  @include mdc-typography('body1');
   padding-top: 8px;
 }
 

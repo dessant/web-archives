@@ -1,6 +1,6 @@
 <template>
-<div id="app" class="mdc-typography" v-show="dataLoaded">
-  <div class="title mdc-typography--title">
+<div id="app" v-show="dataLoaded">
+  <div class="title">
     {{ getText('extensionName') }}
   </div>
   <ul class="mdc-list">
@@ -99,7 +99,8 @@ body {
   padding-right: 48px;
   white-space: nowrap;
   font-size: 1.13rem !important;
-  color: rgba(0, 0, 0, 0.87);
+  @include mdc-typography('title');
+  @include mdc-theme-prop('color', 'text-primary-on-light');
 }
 
 .engines-wrap {
