@@ -2,15 +2,18 @@ function viewCache() {
   const nodes = document.querySelectorAll('li.res-list p.res-linkinfo > a.m');
 
   const cacheNodes = [];
+  const rxUrl = /^(?:https?|ftp):\/\/(.*)$/i;
+  const noschUrl = url.replace(rxUrl, '$1');
   for (let node of nodes) {
     const cacheParam = new URL(node.href).searchParams.get('u');
     if (cacheParam) {
-      if (cacheParam === url) {
+      const noschCacheParam = cacheParam.replace(rxUrl, '$1');
+      if (noschCacheParam === noschUrl) {
         node.setAttribute('target', '_top');
         node.click();
         return;
       }
-      if (cacheParam.startsWith(url)) {
+      if (noschCacheParam.startsWith(noschUrl)) {
         cacheNodes.push(node);
       }
     }
