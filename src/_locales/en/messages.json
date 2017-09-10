@@ -248,22 +248,22 @@
   },
 
   "optionValue_searchAllEnginesAction_main": {
-    "message": "Search all engines from browser action",
+    "message": "Search all engines from toolbar",
     "description": "Value of the option."
   },
 
   "optionValue_searchAllEnginesAction_sub": {
-    "message": "Search all engines from browser action popup",
+    "message": "Search all engines from toolbar popup",
     "description": "Value of the option."
   },
 
   "optionValue_searchAllEnginesAction_false": {
-    "message": "Do not search all engines from browser action",
+    "message": "Do not search all engines from toolbar",
     "description": "Value of the option."
   },
 
   "optionTitle_showPageAction": {
-    "message": "Show page action in address bar on server error",
+    "message": "Show in address bar on server error",
     "description": "Title of the option."
   },
 
@@ -273,7 +273,7 @@
   },
 
   "optionTitle_tabInBackgound": {
-    "message": "Open new tabs in the background",
+    "message": "Open new tabs in background",
     "description": "Title of the option."
   },
 
