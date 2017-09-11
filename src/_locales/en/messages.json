@@ -248,17 +248,17 @@
   },
 
   "optionValue_searchAllEnginesAction_main": {
-    "message": "Search all engines from toolbar",
+    "message": "Search all engines from browser toolbar",
     "description": "Value of the option."
   },
 
   "optionValue_searchAllEnginesAction_sub": {
-    "message": "Search all engines from toolbar popup",
+    "message": "Search all engines from browser toolbar popup",
     "description": "Value of the option."
   },
 
   "optionValue_searchAllEnginesAction_false": {
-    "message": "Do not search all engines from toolbar",
+    "message": "Do not search all engines from browser toolbar",
     "description": "Value of the option."
   },
 
