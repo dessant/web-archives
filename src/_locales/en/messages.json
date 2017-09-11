@@ -21,12 +21,12 @@
   },
 
   "engineName_googleText_short": {
-    "message": "Google (Text only)",
+    "message": "Google (text-only)",
     "description": "Short name of the search engine."
   },
 
   "engineName_googleText_full": {
-    "message": "Google Cache (Text only)",
+    "message": "Google Cache (text-only)",
     "description": "Full name of the search engine."
   },
 

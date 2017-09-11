@@ -1,11 +1,11 @@
 {
   "engineName_googleText_short": {
-    "message": "Google (Text Only)",
+    "message": "Google (Text-Only)",
     "description": "Short name of the search engine."
   },
 
   "engineName_googleText_full": {
-    "message": "Google Cache (Text Only)",
+    "message": "Google Cache (Text-Only)",
     "description": "Full name of the search engine."
   },
 
