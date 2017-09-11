@@ -268,12 +268,12 @@
   },
 
   "optionTitle_openNewTab": {
-    "message": "View page archive in a new tab",
+    "message": "View page archive in new tab",
     "description": "Title of the option."
   },
 
   "optionTitle_tabInBackgound": {
-    "message": "Open new tabs in background",
+    "message": "Open new tab in background",
     "description": "Title of the option."
   },
 
