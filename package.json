@@ -1,6 +1,6 @@
 {
   "name": "view-page-archive",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Armin Sebastian",
   "repository": "https://github.com/dessant/view-page-archive",
   "license": "MIT",
@@ -11,23 +11,22 @@
     "build:prod": "NODE_ENV=production gulp build",
     "build:prod:opera": "NODE_ENV=production TARGET_ENV=opera gulp build",
     "build:prod:chrome": "NODE_ENV=production TARGET_ENV=chrome gulp build",
-    "build:ext:prod":
-      "NODE_ENV=production SYS_DEPS=false gulp build && web-ext build -s dist/ -a artifacts/",
-    "build:ext:prod:opera":
-      "NODE_ENV=production TARGET_ENV=opera SYS_DEPS=false gulp build && web-ext build -s dist/ -a artifacts/",
-    "build:ext:prod:chrome":
-      "NODE_ENV=production TARGET_ENV=chrome SYS_DEPS=false gulp build && web-ext build -s dist/ -a artifacts/",
-    "start":
-      "web-ext run --bc --url 'about:debugging' --url 'about:addons' -s dist/",
+    "build:ext:prod": "NODE_ENV=production SYS_DEPS=false gulp build && web-ext build -s dist/ -a artifacts/",
+    "build:ext:prod:opera": "NODE_ENV=production TARGET_ENV=opera SYS_DEPS=false gulp build && web-ext build -s dist/ -a artifacts/",
+    "build:ext:prod:chrome": "NODE_ENV=production TARGET_ENV=chrome SYS_DEPS=false gulp build && web-ext build -s dist/ -a artifacts/",
+    "start": "web-ext run --bc --url 'about:debugging' --url 'about:addons' -s dist/",
     "exec": "yarn run build && yarn run start",
     "exec:prod": "yarn run build:prod && yarn run start",
-    "inspect":
-      "webpack --profile --json > report.json; webpack-bundle-analyzer report.json --mode static && sleep 6 && rm report.{json,html}",
+    "inspect": "webpack --profile --json > report.json; webpack-bundle-analyzer report.json --mode static && sleep 6 && rm report.{json,html}",
     "update": "ncu --upgrade --upgradeAll && yarn upgrade --latest",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "release": "standard-version && git push --follow-tags origin master"
   },
-  "browserslist": ["Chrome >= 55", "Firefox >= 52", "Opera >= 42"],
+  "browserslist": [
+    "Chrome >= 55",
+    "Firefox >= 52",
+    "Opera >= 42"
+  ],
   "dependencies": {
     "@material/button": "^0.5.0",
     "@material/checkbox": "^0.4.5",
