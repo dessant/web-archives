@@ -100,7 +100,7 @@ gulp.task('fonts', function() {
 });
 
 gulp.task('locale', function() {
-  const customTargets = ['firefox'];
+  const customTargets = ['chrome', 'firefox'];
   if (customTargets.indexOf(targetEnv) !== -1) {
     const localesRootDir = path.join(__dirname, 'src/_locales');
     const localeDirs = readdirSync(localesRootDir).filter(function(file) {
