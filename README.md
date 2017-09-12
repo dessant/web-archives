@@ -3,7 +3,7 @@
 
 <p align="center">
   </br></br>
-  <a href="">
+  <a href="https://goo.gl/j9nHXH">
     <img src="https://i.imgur.com/q6E8SOD.png" alt="Chrome Web Store"></a>
   <a href="https://goo.gl/3xXyXc">
     <img src="https://i.imgur.com/IuvTttN.png" alt="Firefox add-ons"></a>
