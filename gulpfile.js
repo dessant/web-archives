@@ -14,7 +14,6 @@ const del = require('del');
 const jsonMerge = require('gulp-merge-json');
 const jsBeautify = require('gulp-jsbeautifier');
 const svg2png = require('svg2png');
-const rsvg = require('gulp-rsvg');
 const imagemin = require('gulp-imagemin');
 
 const targetEnv = process.env.TARGET_ENV || 'firefox';
@@ -59,7 +58,7 @@ gulp.task('html', function() {
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('icons:phantomJs', async function() {
+gulp.task('icons', async function() {
   ensureDirSync('dist/src/icons/app');
   ensureDirSync('dist/src/icons/engines');
   const svgPaths = await recursiveReadDir('src/icons', ['*.!(svg)']);
@@ -78,16 +77,6 @@ gulp.task('icons:phantomJs', async function() {
       .pipe(gulp.dest(''));
   }
 });
-
-gulp.task('icons:rsvg', function() {
-  return gulp
-    .src('src/**/*.svg', {base: '.'})
-    .pipe(rsvg())
-    .pipe(gulpif(isProduction, imagemin()))
-    .pipe(gulp.dest('dist'));
-});
-
-gulp.task('icons', [sysDeps === 'true' ? 'icons:rsvg' : 'icons:phantomJs']);
 
 gulp.task('fonts', function() {
   gulp
