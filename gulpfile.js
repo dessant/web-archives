@@ -18,7 +18,6 @@ const imagemin = require('gulp-imagemin');
 
 const targetEnv = process.env.TARGET_ENV || 'firefox';
 const isProduction = process.env.NODE_ENV === 'production';
-const sysDeps = process.env.SYS_DEPS || 'true';
 
 const jsBeautifyOptions = {
   indent_size: 2,
