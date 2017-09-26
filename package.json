@@ -21,7 +21,7 @@
       "web-ext run --bc --url 'about:debugging' --url 'about:addons' -s dist/",
     "inspect":
       "webpack --profile --json > report.json; webpack-bundle-analyzer report.json --mode static && sleep 6 && rm report.{json,html}",
-    "update": "ncu --upgrade --upgradeAll && yarn upgrade --latest",
+    "update": "ncu --upgrade --upgradeAll && yarn",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "release": "standard-version && git push --follow-tags origin master"
   },
