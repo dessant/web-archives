@@ -1,20 +1,21 @@
 const path = require('path');
+const exec = require('child_process').exec;
 const {lstatSync, readdirSync, readFileSync, writeFileSync} = require('fs');
+
+const del = require('del');
 const {ensureDirSync} = require('fs-extra');
 const recursiveReadDir = require('recursive-readdir');
-const exec = require('child_process').exec;
 const gulp = require('gulp');
 const gulpSeq = require('gulp-sequence');
-const webpack = require('webpack');
-const htmlmin = require('gulp-htmlmin');
 const babel = require('gulp-babel');
+const htmlmin = require('gulp-htmlmin');
 const postcss = require('gulp-postcss');
 const gulpif = require('gulp-if');
-const del = require('del');
 const jsonMerge = require('gulp-merge-json');
 const jsBeautify = require('gulp-jsbeautifier');
-const svg2png = require('svg2png');
 const imagemin = require('gulp-imagemin');
+const webpack = require('webpack');
+const svg2png = require('svg2png');
 
 const targetEnv = process.env.TARGET_ENV || 'firefox';
 const isProduction = process.env.NODE_ENV === 'production';
