@@ -4,7 +4,7 @@
     {{ getText('extensionName') }}
   </div>
   <ul class="mdc-list">
-    <li class="mdc-list-item mdc-ripple-surface"
+    <li class="mdc-list-item ripple-surface"
         v-if="searchAllEngines"
         @click="selectEngine('allEngines')">
       <img class="mdc-list-item__start-detail" :src="getIcon('allEngines')">
@@ -15,7 +15,7 @@
     </li>
     <div class="engines-wrap">
       <div class="engines">
-        <li class="mdc-list-item mdc-ripple-surface"
+        <li class="mdc-list-item ripple-surface"
             v-for="engine in engines"
             :key="engine.id"
             @click="selectEngine(engine)">
@@ -83,8 +83,9 @@ export default {
 $mdc-theme-primary: #1abc9c;
 
 @import '@material/list/mdc-list';
-@import '@material/ripple/mdc-ripple';
-@import '@material/typography/mdc-typography';
+@import '@material/theme/mixins';
+@import '@material/typography/mixins';
+@import "@material/ripple/mixins";
 
 body {
   margin: 0;
@@ -126,5 +127,13 @@ body {
 
 .mdc-list-item__start-detail {
   margin-right: 16px !important;
+}
+
+.ripple-surface {
+  @include mdc-ripple-base;
+  @include mdc-ripple-bg((pseudo: "::before"));
+  @include mdc-ripple-fg((pseudo: "::after"));
+
+  overflow: hidden;
 }
 </style>
