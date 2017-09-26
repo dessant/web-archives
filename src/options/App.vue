@@ -153,9 +153,10 @@ export default {
       });
     }
 
-    document.title = `${getText('pageTitle_options')} - ${getText(
-      'extensionName'
-    )}`;
+    document.title = getText('pageTitle', [
+      getText('pageTitle_options'),
+      getText('extensionName')
+    ]);
 
     this.dataLoaded = true;
   }

@@ -277,6 +277,21 @@
     "description": "Title of the option."
   },
 
+  "pageTitle": {
+    "message": "$PAGETITLE$ - $EXTENSIONNAME$",
+    "description": "Title of the page.",
+    "placeholders": {
+      "pageTitle": {
+        "content": "$1",
+        "example": "Options"
+      },
+      "extensionName": {
+        "content": "$2",
+        "example": "Extension Name"
+      }
+    }
+  },
+
   "pageTitle_options": {
     "message": "Options",
     "description": "Title of the page."
