@@ -34,6 +34,7 @@
     "@material/ripple": "^0.8.7",
     "@material/select": "^0.3.17",
     "@material/switch": "^0.1.14",
+    "@material/textfield": "^0.4.1",
     "@material/theme": "^0.3.1",
     "@material/typography": "^0.3.0",
     "lodash": "^4.17.4",

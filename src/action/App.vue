@@ -1,8 +1,22 @@
 <template>
 <div id="app" v-show="dataLoaded">
-  <div class="title">
-    {{ getText('extensionName') }}
+  <div class="header">
+    <div class="title">
+      {{ getText('extensionName') }}
+    </div>
+    <img class="settings-icon" src="/src/icons/settings.png"
+        @click="showSettings = !showSettings"/>
   </div>
+
+  <transition name="settings">
+    <div class="settings" v-show="showSettings">
+      <v-textfield v-model="customUrl"
+          :placeholder="getText('inputPlaceholder_customURL')"
+          :fullwidth="true">
+      </v-textfield>
+    </div>
+  </transition>
+
   <ul class="mdc-list">
     <li class="mdc-list-item ripple-surface"
         v-if="searchAllEngines"
@@ -11,7 +25,7 @@
       {{ getText('engineName_allEngines_full') }}
     </li>
     <li role="separator" class="mdc-list-divider"
-        v-if="searchAllEngines || engines.length > 10">
+        v-if="searchAllEngines || engines.length > 8">
     </li>
     <div class="engines-wrap">
       <div class="engines">
@@ -32,16 +46,25 @@
 import browser from 'webextension-polyfill';
 
 import storage from 'storage/storage';
-import {getEnabledEngines} from 'utils/app';
+import {getEnabledEngines, showNotification, validateUrl} from 'utils/app';
 import {getText} from 'utils/common';
 
+import Textfield from './components/Textfield';
+
 export default {
+  components: {
+    [Textfield.name]: Textfield
+  },
+
   data: function() {
     return {
       dataLoaded: false,
 
+      showSettings: false,
+
       engines: [],
-      searchAllEngines: false
+      searchAllEngines: false,
+      customUrl: ''
     };
   },
 
@@ -56,9 +79,18 @@ export default {
     },
 
     selectEngine: function(engine) {
+      let customUrl = this.customUrl;
+      if (customUrl) {
+        customUrl = customUrl.trim();
+        if (!validateUrl(customUrl)) {
+          showNotification('error_invalidUrl');
+          return;
+        }
+      }
       browser.runtime.sendMessage({
         id: 'actionPopupSubmit',
-        engine: engine
+        customUrl,
+        engine
       });
       window.close();
     }
@@ -89,14 +121,20 @@ $mdc-theme-primary: #1abc9c;
 
 body {
   margin: 0;
-  min-width: 300px;
+  min-width: 336px;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .title {
-  display: flex;
-  align-items: center;
-  padding-top: 16px;
-  padding-left: 16px;
   padding-right: 48px;
   white-space: nowrap;
   font-size: 1.13rem !important;
@@ -104,8 +142,35 @@ body {
   @include mdc-theme-prop('color', 'text-primary-on-light');
 }
 
+.settings-icon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.settings {
+  padding: 16px;
+}
+
+.settings-enter-active, .settings-leave-active {
+  max-height: 100px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  transition: max-height .3s ease,
+              padding-top .3s ease,
+              padding-bottom .3s ease,
+              opacity .2s ease;
+}
+
+.settings-enter, .settings-leave-to {
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  opacity: 0;
+}
+
 .engines-wrap {
-  max-height: 488px;
+  max-height: 392px;
   overflow-y: auto;
 }
 

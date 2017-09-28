@@ -277,6 +277,11 @@
     "description": "Title of the option."
   },
 
+  "inputPlaceholder_customURL": {
+    "message": "Custom URL",
+    "description": "Placeholder of the input."
+  },
+
   "pageTitle": {
     "message": "$PAGETITLE$ - $EXTENSIONNAME$",
     "description": "Title of the page.",

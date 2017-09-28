@@ -102,6 +102,17 @@
     "@material/elevation" "^0.1.12"
     "@material/theme" "^0.3.1"
 
+"@material/textfield@^0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@material/textfield/-/textfield-0.4.1.tgz#54161d51e75ecf2773042392f7b0bbe7c7241e7b"
+  dependencies:
+    "@material/animation" "^0.4.0"
+    "@material/base" "^0.2.5"
+    "@material/ripple" "^0.8.7"
+    "@material/rtl" "^0.1.8"
+    "@material/theme" "^0.3.1"
+    "@material/typography" "^0.3.0"
+
 "@material/theme@^0.3.1":
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/@material/theme/-/theme-0.3.1.tgz#6ff261ff72b3493a5cc6e746da3b472d072aa5a9"

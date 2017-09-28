@@ -20,7 +20,27 @@ function showNotification(messageId) {
   });
 }
 
+function validateUrl(url) {
+  if (url.length > 2048) {
+    return;
+  }
+
+  let parsedUrl;
+  try {
+    parsedUrl = new URL(url);
+  } catch (e) {
+    return;
+  }
+
+  if (!/^(?:https?|ftp?):$/i.test(parsedUrl.protocol)) {
+    return;
+  }
+
+  return true;
+}
+
 module.exports = {
   getEnabledEngines,
-  showNotification
+  showNotification,
+  validateUrl
 };

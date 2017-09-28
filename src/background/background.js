@@ -8,7 +8,7 @@ import {
   executeFile,
   onComplete
 } from 'utils/common';
-import {getEnabledEngines, showNotification} from 'utils/app';
+import {getEnabledEngines, showNotification, validateUrl} from 'utils/app';
 import {optionKeys, engines} from 'utils/data';
 import {targetEnv} from 'utils/config';
 
@@ -101,8 +101,7 @@ async function getTabUrl(url, engineId, options) {
 }
 
 async function searchUrl(url, menuId, tabIndex, tabId) {
-  const rx = /^(?:https?|ftps?):\/\/.*/i;
-  if (!rx.test(url)) {
+  if (!validateUrl(url)) {
     await showNotification('error_invalidUrl');
     return;
   }
@@ -247,17 +246,17 @@ async function onActionClick(tab) {
   await searchUrl(tab.url, engine, tab.index, tab.id);
 }
 
-async function onActionPopupClick(engine) {
+async function onActionPopupClick(engine, url) {
   const [tab, ...rest] = await browser.tabs.query({
     lastFocusedWindow: true,
     active: true
   });
-  await searchUrl(tab.url, engine, tab.index, tab.id);
+  await searchUrl(url || tab.url, engine, tab.index, tab.id);
 }
 
 function onMessage(request, sender, sendResponse) {
   if (request.id === 'actionPopupSubmit') {
-    onActionPopupClick(request.engine);
+    onActionPopupClick(request.engine, request.customUrl);
   }
 }
 
