@@ -31,7 +31,7 @@
 </div>
 </template>
 
-<script lang="babel">
+<script>
 import {MDCTextfield} from '@material/textfield';
 
 export default {
@@ -108,4 +108,8 @@ export default {
 $mdc-theme-primary: #1abc9c;
 
 @import '@material/textfield/mdc-textfield';
+
+.mdc-textfield__input {
+  font-size: 1rem;
+}
 </style>
