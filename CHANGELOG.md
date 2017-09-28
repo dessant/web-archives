@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.2.0"></a>
+# [1.2.0](https://github.com/dessant/view-page-archive/compare/v1.1.2...v1.2.0) (2017-09-28)
+
+
+### Bug Fixes
+
+* call yarn install instead of upgrade after package.json change ([712baac](https://github.com/dessant/view-page-archive/commit/712baac))
+* ensure correct input font size ([06a8c6c](https://github.com/dessant/view-page-archive/commit/06a8c6c))
+* import theme and typography mixins instead of CSS ([c45f3db](https://github.com/dessant/view-page-archive/commit/c45f3db))
+* inline CSS not needed anymore, upstream fix ([d03a58c](https://github.com/dessant/view-page-archive/commit/d03a58c))
+* move page title template into locale message ([4062db9](https://github.com/dessant/view-page-archive/commit/4062db9))
+
+
+### Features
+
+* search for a custom URL ([d2de944](https://github.com/dessant/view-page-archive/commit/d2de944))
+
+
+
 <a name="1.1.2"></a>
 ## [1.1.2](https://github.com/dessant/view-page-archive/compare/v1.1.1...v1.1.2) (2017-09-12)
 
