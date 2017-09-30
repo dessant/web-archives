@@ -16,7 +16,8 @@
 
 View Page Archive & Cache is an MIT-licensed open source project. Its ongoing
 development is made possible thanks to the support of awesome backers.
-If you'd like to join them, check out [PayPal.Me](https://goo.gl/BfygYx).
+If you'd like to join them, check out [Patreon](https://goo.gl/UtCEg4)
+or [PayPal.Me](https://goo.gl/BfygYx).
 
 ## Description
 
