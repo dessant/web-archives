@@ -35,7 +35,7 @@ plugins = plugins.filter(Boolean);
 
 module.exports = {
   entry: {
-    background: './src/background/background.js',
+    background: './src/background/main.js',
     options: './src/options/main.js',
     action: './src/action/main.js',
     vue: ['vue']
