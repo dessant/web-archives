@@ -32,7 +32,7 @@ function validateUrl(url) {
     return;
   }
 
-  if (!/^(?:https?|ftp?):$/i.test(parsedUrl.protocol)) {
+  if (!/^(?:https?|ftp):$/i.test(parsedUrl.protocol)) {
     return;
   }
 
