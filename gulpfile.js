@@ -13,7 +13,6 @@ const svgmin = require('gulp-svgmin');
 const postcss = require('gulp-postcss');
 const gulpif = require('gulp-if');
 const jsonMerge = require('gulp-merge-json');
-const jsBeautify = require('gulp-jsbeautifier');
 const jsonmin = require('gulp-jsonmin');
 const imagemin = require('gulp-imagemin');
 const webpack = require('webpack');
@@ -169,7 +168,7 @@ gulp.task('manifest', function() {
         }
       })
     )
-    .pipe(gulpif(isProduction, jsBeautify(jsBeautifyOptions)))
+    .pipe(gulpif(isProduction, jsonmin()))
     .pipe(gulp.dest('dist'));
 });
 
