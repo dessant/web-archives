@@ -47,8 +47,8 @@ import browser from 'webextension-polyfill';
 
 import storage from 'storage/storage';
 import {getEnabledEngines, showNotification, validateUrl} from 'utils/app';
-import {getText} from 'utils/common';
-
+import {getText, isAndroid} from 'utils/common';
+import {targetEnv} from 'utils/config';
 import Textfield from './components/Textfield';
 
 export default {
@@ -78,12 +78,12 @@ export default {
       return `/src/icons/engines/${name}.png`;
     },
 
-    selectEngine: function(engine) {
+    selectEngine: async function(engine) {
       let customUrl = this.customUrl;
       if (customUrl) {
         customUrl = customUrl.trim();
         if (!validateUrl(customUrl)) {
-          showNotification('error_invalidUrl');
+          showNotification({messageId: 'error_invalidUrl'});
           return;
         }
       }
@@ -92,7 +92,12 @@ export default {
         customUrl,
         engine
       });
-      window.close();
+
+      if (targetEnv === 'firefox' && (await isAndroid())) {
+        browser.tabs.remove((await browser.tabs.getCurrent()).id);
+      } else {
+        window.close();
+      }
     }
   },
 
@@ -102,6 +107,16 @@ export default {
       'sync'
     );
     const enEngines = await getEnabledEngines(options);
+
+    if (
+      targetEnv === 'firefox' &&
+      (await isAndroid()) &&
+      (enEngines.length <= 1 || options.searchAllEnginesAction === 'main')
+    ) {
+      // Removing the action popup has no effect on Android
+      showNotification({messageId: 'error_optionsNotApplied'});
+      return;
+    }
 
     this.searchAllEngines = options.searchAllEnginesAction === 'sub';
     this.engines = enEngines;
@@ -121,7 +136,6 @@ $mdc-theme-primary: #1abc9c;
 
 body {
   margin: 0;
-  min-width: 336px;
   overflow: hidden;
 }
 
@@ -136,15 +150,16 @@ body {
 
 .title {
   padding-right: 48px;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 1.13rem !important;
   @include mdc-typography('title');
   @include mdc-theme-prop('color', 'text-primary-on-light');
 }
 
 .settings-icon {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   cursor: pointer;
 }
 
@@ -200,5 +215,15 @@ body {
   @include mdc-ripple-fg((pseudo: "::after"));
 
   overflow: hidden;
+}
+
+@media (min-width: 360px) {
+  body {
+    min-width: 360px;
+  }
+
+  .title {
+    overflow: initial;
+  }
 }
 </style>

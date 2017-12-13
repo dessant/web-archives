@@ -6,7 +6,8 @@ import {
   createTab,
   executeCode,
   executeFile,
-  onComplete
+  onComplete,
+  isAndroid
 } from 'utils/common';
 import {getEnabledEngines, showNotification, validateUrl} from 'utils/app';
 import {optionKeys, engines} from 'utils/data';
@@ -102,7 +103,7 @@ async function getTabUrl(url, engineId, options) {
 
 async function searchUrl(url, menuId, tabIndex, tabId) {
   if (!validateUrl(url)) {
-    await showNotification('error_invalidUrl');
+    await showNotification({messageId: 'error_invalidUrl'});
     return;
   }
 
@@ -232,7 +233,7 @@ async function onActionClick(tab) {
   const enEngines = await getEnabledEngines(options);
 
   if (enEngines.length === 0) {
-    await showNotification('error_allEnginesDisabled');
+    await showNotification({messageId: 'error_allEnginesDisabled'});
     return;
   }
 
@@ -267,6 +268,9 @@ async function onStorageChange(changes, area) {
 }
 
 async function setContextMenu(removeFirst = false) {
+  if (targetEnv === 'firefox' && (await isAndroid())) {
+    return;
+  }
   if (removeFirst) {
     await browser.contextMenus.removeAll();
   }

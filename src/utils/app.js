@@ -11,11 +11,17 @@ async function getEnabledEngines(options) {
   return _.difference(options.engines, options.disabledEngines);
 }
 
-function showNotification(messageId) {
-  return browser.notifications.create('vpa-notification', {
+function showNotification({message, messageId, title, type = 'info'}) {
+  if (!title) {
+    title = getText('extensionName');
+  }
+  if (messageId) {
+    message = getText(messageId);
+  }
+  return browser.notifications.create(`vpa-notification-${type}`, {
     type: 'basic',
-    title: getText('extensionName'),
-    message: getText(messageId),
+    title: title,
+    message: message,
     iconUrl: '/src/icons/app/app-icon-48.png'
   });
 }

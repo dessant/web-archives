@@ -58,5 +58,10 @@
   "optionValue_searchAllEnginesAction_false": {
     "message": "Do not search all engines from browser toolbar and address bar",
     "description": "Value of the option."
+  },
+
+  "error_optionsNotApplied": {
+    "message": "Restart the browser for changes to take effect.",
+    "description": "Error message."
   }
 }

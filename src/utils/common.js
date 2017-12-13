@@ -32,10 +32,16 @@ function onComplete(n) {
   }
 }
 
+async function isAndroid() {
+  const {os} = await browser.runtime.getPlatformInfo();
+  return os === 'android';
+}
+
 module.exports = {
   getText,
   createTab,
   executeCode,
   executeFile,
-  onComplete
+  onComplete,
+  isAndroid
 };

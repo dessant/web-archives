@@ -24,12 +24,12 @@
       {{ getText('optionSectionTitle_misc') }}
     </div>
     <div class="option-wrap">
-      <div class="option">
+      <div class="option" v-if="contextMenuEnabled">
         <v-select v-model="options.showInContextMenu"
             :options="selectOptions.showInContextMenu">
         </v-select>
       </div>
-      <div class="option">
+      <div class="option" v-if="contextMenuEnabled">
         <v-select v-model="options.searchAllEnginesContextMenu"
             :options="selectOptions.searchAllEnginesContextMenu">
         </v-select>
@@ -69,7 +69,7 @@ import _ from 'lodash';
 import draggable from 'vuedraggable';
 
 import storage from 'storage/storage';
-import {getText} from 'utils/common';
+import {getText, isAndroid} from 'utils/common';
 import {optionKeys} from 'utils/data';
 import {targetEnv} from 'utils/config';
 
@@ -91,6 +91,7 @@ export default {
     const data = {
       dataLoaded: false,
       targetEnv,
+      contextMenuEnabled: true,
 
       options: {
         engines: [],
@@ -153,6 +154,10 @@ export default {
       });
     }
 
+    if (targetEnv === 'firefox' && (await isAndroid())) {
+      this.contextMenuEnabled = false;
+    }
+
     document.title = getText('pageTitle', [
       getText('pageTitle_options'),
       getText('extensionName')
@@ -169,16 +174,17 @@ $mdc-theme-primary: #1abc9c;
 @import '@material/theme/mixins';
 @import '@material/typography/mixins';
 
+.mdc-select__menu {
+  top: inherit !important;
+  left: inherit !important;
+}
+
 .mdc-checkbox {
   margin-left: 8px;
 }
 
 .mdc-switch {
   margin-right: 12px;
-}
-
-body {
-  min-width: 600px;
 }
 
 #app {
