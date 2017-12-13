@@ -69,6 +69,7 @@ import _ from 'lodash';
 import draggable from 'vuedraggable';
 
 import storage from 'storage/storage';
+import {getOptionLabels} from 'utils/app';
 import {getText, isAndroid} from 'utils/common';
 import {optionKeys} from 'utils/data';
 import {targetEnv} from 'utils/config';
@@ -88,8 +89,14 @@ export default {
   },
 
   data: function() {
-    const data = {
+    return {
       dataLoaded: false,
+
+      selectOptions: getOptionLabels({
+        showInContextMenu: ['all', 'link', 'false'],
+        searchAllEnginesContextMenu: ['main', 'sub', 'false'],
+        searchAllEnginesAction: ['main', 'sub', 'false']
+      }),
       targetEnv,
       contextMenuEnabled: true,
 
@@ -104,25 +111,6 @@ export default {
         tabInBackgound: false
       }
     };
-
-    const selectOptionsData = {
-      showInContextMenu: ['all', 'link', 'false'],
-      searchAllEnginesContextMenu: ['main', 'sub', 'false'],
-      searchAllEnginesAction: ['main', 'sub', 'false']
-    };
-    const selectOptions = {};
-    for (const [option, values] of Object.entries(selectOptionsData)) {
-      selectOptions[option] = [];
-      values.forEach(function(value) {
-        selectOptions[option].push({
-          id: value,
-          label: getText(`optionValue_${option}_${value}`)
-        });
-      });
-    }
-    data.selectOptions = selectOptions;
-
-    return data;
   },
 
   methods: {

@@ -26,6 +26,20 @@ function showNotification({message, messageId, title, type = 'info'}) {
   });
 }
 
+function getOptionLabels(data, scope = 'optionValue') {
+  const labels = {};
+  for (const [group, items] of Object.entries(data)) {
+    labels[group] = [];
+    items.forEach(function(value) {
+      labels[group].push({
+        id: value,
+        label: getText(`${scope}_${group}_${value}`)
+      });
+    });
+  }
+  return labels;
+}
+
 function validateUrl(url) {
   if (url.length > 2048) {
     return;
@@ -48,5 +62,6 @@ function validateUrl(url) {
 module.exports = {
   getEnabledEngines,
   showNotification,
+  getOptionLabels,
   validateUrl
 };
