@@ -9,6 +9,7 @@ const gulp = require('gulp');
 const gulpSeq = require('gulp-sequence');
 const babel = require('gulp-babel');
 const htmlmin = require('gulp-htmlmin');
+const svgmin = require('gulp-svgmin');
 const postcss = require('gulp-postcss');
 const gulpif = require('gulp-if');
 const jsonMerge = require('gulp-merge-json');
@@ -86,6 +87,11 @@ gulp.task('icons', async function() {
       .pipe(imagemin())
       .pipe(gulp.dest(''));
   }
+
+  gulp
+    .src('src/icons/misc/*.svg', {base: '.'})
+    .pipe(gulpif(isProduction, svgmin()))
+    .pipe(gulp.dest('dist'));
 });
 
 gulp.task('fonts', function() {

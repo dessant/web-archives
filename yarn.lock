@@ -3963,7 +3963,14 @@ gulp-sourcemaps@1.6.0:
     through2 "^2.0.0"
     vinyl "^1.0.0"
 
-gulp-util@>=3.0.0, gulp-util@^3.0.0, gulp-util@^3.0.1, gulp-util@^3.0.7, gulp-util@^3.0.8:
+gulp-svgmin@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/gulp-svgmin/-/gulp-svgmin-1.2.4.tgz#a4aa9e2615cf1105ef555aea86e86296cc20e273"
+  dependencies:
+    gulp-util "^3.0.4"
+    svgo "^0.7.0"
+
+gulp-util@>=3.0.0, gulp-util@^3.0.0, gulp-util@^3.0.1, gulp-util@^3.0.4, gulp-util@^3.0.7, gulp-util@^3.0.8:
   version "3.0.8"
   resolved "https://registry.yarnpkg.com/gulp-util/-/gulp-util-3.0.8.tgz#0054e1e744502e27c04c187c3ecc505dd54bbb4f"
   dependencies:

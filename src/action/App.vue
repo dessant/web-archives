@@ -4,7 +4,7 @@
     <div class="title">
       {{ getText('extensionName') }}
     </div>
-    <img class="settings-icon" src="/src/icons/settings.png"
+    <img class="settings-icon" src="/src/icons/misc/settings.svg"
         @click="showSettings = !showSettings"/>
   </div>
 
@@ -158,8 +158,6 @@ body {
 }
 
 .settings-icon {
-  width: 24px;
-  height: 24px;
   cursor: pointer;
 }
 
