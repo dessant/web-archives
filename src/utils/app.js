@@ -22,7 +22,7 @@ function showNotification({message, messageId, title, type = 'info'}) {
     type: 'basic',
     title: title,
     message: message,
-    iconUrl: '/src/icons/app/app-icon-48.png'
+    iconUrl: '/src/icons/app/icon-48.png'
   });
 }
 
