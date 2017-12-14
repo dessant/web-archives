@@ -7850,6 +7850,16 @@ stdout-stream@^1.4.0:
   dependencies:
     readable-stream "^2.0.1"
 
+storage-versions@dessant/storage-versions#^0.1.1:
+  version "0.1.1"
+  resolved "https://codeload.github.com/dessant/storage-versions/tar.gz/14a19e7d632d93569b7ed223d4dfc048c533ac33"
+  dependencies:
+    commander "^2.11.0"
+    fs-extra "^4.0.2"
+    lodash "^4.17.4"
+    shortid "^2.2.8"
+    webextension-polyfill "^0.2.1"
+
 stream-browserify@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/stream-browserify/-/stream-browserify-2.0.1.tgz#66266ee5f9bdb9940a4e4514cafb43bb71e5c9db"
@@ -8781,6 +8791,10 @@ web-ext@^2.0.0:
 webextension-polyfill@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/webextension-polyfill/-/webextension-polyfill-0.1.2.tgz#a625e3d4da33076ca147293566e42ef153dc3002"
+
+webextension-polyfill@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/webextension-polyfill/-/webextension-polyfill-0.2.1.tgz#cdfc9126033039f1713553157d35beff1d4d6f4a"
 
 webidl-conversions@^3.0.0:
   version "3.0.1"
