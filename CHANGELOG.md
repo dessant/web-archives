@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.3.0"></a>
+# [1.3.0](https://github.com/dessant/view-page-archive/compare/v1.2.0...v1.3.0) (2017-12-14)
+
+
+### Bug Fixes
+
+* set favicon for options and action pages ([2d836f4](https://github.com/dessant/view-page-archive/commit/2d836f4))
+* use svg icon for settings button ([f1b7593](https://github.com/dessant/view-page-archive/commit/f1b7593))
+* validation for FTP URLs ([e6e6af4](https://github.com/dessant/view-page-archive/commit/e6e6af4))
+
+
+### Features
+
+* support Firefox for Android ([d7a30db](https://github.com/dessant/view-page-archive/commit/d7a30db))
+
+
+
 <a name="1.2.0"></a>
 # [1.2.0](https://github.com/dessant/view-page-archive/compare/v1.1.2...v1.2.0) (2017-09-28)
 
