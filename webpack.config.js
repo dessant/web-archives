@@ -1,4 +1,5 @@
 const path = require('path');
+
 const webpack = require('webpack');
 const MinifyPlugin = require('babel-minify-webpack-plugin');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
@@ -21,6 +22,15 @@ let plugins = [
     names: ['vue', 'manifest'],
     filename: '[name].bundle.js',
     minChunks: Infinity
+  }),
+  new webpack.optimize.CommonsChunkPlugin({
+    name: 'commons-ui',
+    filename: '[name]/commons.bundle.js',
+    chunks: ['options', 'action'],
+    minChunks: function(module, count) {
+      const rxResource = /\/(@material|(css|vue)-loader|ext-components|src\/(options|action))\//;
+      return module.resource && rxResource.test(module.resource) && count >= 2;
+    }
   }),
   new webpack.optimize.CommonsChunkPlugin({
     name: 'commons',
