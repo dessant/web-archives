@@ -37,11 +37,20 @@ async function isAndroid() {
   return os === 'android';
 }
 
+async function getActiveTab() {
+  const [tab] = await browser.tabs.query({
+    lastFocusedWindow: true,
+    active: true
+  });
+  return tab;
+}
+
 module.exports = {
   getText,
   createTab,
   executeCode,
   executeFile,
   onComplete,
-  isAndroid
+  isAndroid,
+  getActiveTab
 };

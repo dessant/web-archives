@@ -8,6 +8,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const targetEnv = process.env.TARGET_ENV || 'firefox';
 const isProduction = process.env.NODE_ENV === 'production';
 
+const uiModules = ['options', 'action', 'contribute'];
 let plugins = [
   new webpack.DefinePlugin({
     'process.env': {
@@ -26,16 +27,16 @@ let plugins = [
   new webpack.optimize.CommonsChunkPlugin({
     name: 'commons-ui',
     filename: '[name]/commons.bundle.js',
-    chunks: ['options', 'action'],
+    chunks: uiModules,
     minChunks: function(module, count) {
-      const rxResource = /\/(@material|(css|vue)-loader|ext-components|src\/(options|action))\//;
+      const rxResource = /\/(@material|(css|vue)-loader|ext-components|ext-contribute|src\/(options|action|contribute))\//;
       return module.resource && rxResource.test(module.resource) && count >= 2;
     }
   }),
   new webpack.optimize.CommonsChunkPlugin({
     name: 'commons',
     filename: '[name].bundle.js',
-    chunks: ['background', 'options', 'action'],
+    chunks: ['background', ...uiModules],
     minChunks: 2
   }),
   isProduction ? new webpack.optimize.ModuleConcatenationPlugin() : null,
@@ -48,6 +49,7 @@ module.exports = {
     background: './src/background/main.js',
     options: './src/options/main.js',
     action: './src/action/main.js',
+    contribute: './src/contribute/main.js',
     vue: ['vue']
   },
   output: {
@@ -84,7 +86,8 @@ module.exports = {
                     }
                   ]
                 })
-              }
+              },
+              transformToRequire: {img: ''}
             }
           }
         ]

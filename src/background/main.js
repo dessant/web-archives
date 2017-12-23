@@ -7,9 +7,15 @@ import {
   executeCode,
   executeFile,
   onComplete,
-  isAndroid
+  isAndroid,
+  getActiveTab
 } from 'utils/common';
-import {getEnabledEngines, showNotification, validateUrl} from 'utils/app';
+import {
+  getEnabledEngines,
+  showNotification,
+  validateUrl,
+  showContributePage
+} from 'utils/app';
 import {optionKeys, engines} from 'utils/data';
 import {targetEnv} from 'utils/config';
 
@@ -106,11 +112,19 @@ async function searchUrl(url, menuId, tabIndex, tabId) {
     await showNotification({messageId: 'error_invalidUrl'});
     return;
   }
-
   const options = await storage.get(optionKeys, 'sync');
 
   let tabActive = !options.tabInBackgound;
   tabIndex = tabIndex + 1;
+
+  let {searchCount} = await storage.get('searchCount', 'sync');
+  searchCount += 1;
+  await storage.set({searchCount}, 'sync');
+  if ([10, 30].includes(searchCount)) {
+    await showContributePage('search');
+    tabIndex += 1;
+    tabActive = false;
+  }
 
   if (menuId === 'allEngines') {
     options.openNewTab = true;
@@ -248,10 +262,7 @@ async function onActionClick(tab) {
 }
 
 async function onActionPopupClick(engine, url) {
-  const [tab, ...rest] = await browser.tabs.query({
-    lastFocusedWindow: true,
-    active: true
-  });
+  const tab = await getActiveTab();
   await searchUrl(url || tab.url, engine, tab.index, tab.id);
 }
 

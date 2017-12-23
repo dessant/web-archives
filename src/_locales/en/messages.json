@@ -302,6 +302,11 @@
     "description": "Title of the page."
   },
 
+  "pageTitle_contribute": {
+    "message": "Contribute",
+    "description": "Title of the page."
+  },
+
   "error_invalidUrl": {
     "message": "The URL is not valid. It must point to a HTTP(S) or FTP page.",
     "description": "Error message."

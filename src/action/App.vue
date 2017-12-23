@@ -4,8 +4,13 @@
     <div class="title">
       {{ getText('extensionName') }}
     </div>
-    <img class="settings-icon" src="/src/icons/misc/settings.svg"
-        @click="showSettings = !showSettings"/>
+    <div>
+      <img class="contribute-icon"
+          src="/src/contribute/assets/heart.svg"
+          @click="showContribute">
+      <img class="settings-icon" src="/src/icons/misc/settings.svg"
+          @click="showSettings = !showSettings"/>
+    </div>
   </div>
 
   <transition name="settings">
@@ -47,7 +52,12 @@ import browser from 'webextension-polyfill';
 import {TextField} from 'ext-components';
 
 import storage from 'storage/storage';
-import {getEnabledEngines, showNotification, validateUrl} from 'utils/app';
+import {
+  getEnabledEngines,
+  showNotification,
+  validateUrl,
+  showContributePage
+} from 'utils/app';
 import {getText, isAndroid} from 'utils/common';
 import {targetEnv} from 'utils/config';
 
@@ -93,6 +103,15 @@ export default {
         engine
       });
 
+      this.closeAction();
+    },
+
+    showContribute: async function() {
+      await showContributePage();
+      this.closeAction();
+    },
+
+    closeAction: async function() {
       if (targetEnv === 'firefox' && (await isAndroid())) {
         browser.tabs.remove((await browser.tabs.getCurrent()).id);
       } else {
@@ -134,7 +153,7 @@ $mdc-theme-primary: #1abc9c;
 @import '@material/typography/mixins';
 @import "@material/ripple/mixins";
 
-@media (max-width: 359px) {
+@media (max-width: 412px) {
   body {
     min-width: initial;
   }
@@ -142,7 +161,7 @@ $mdc-theme-primary: #1abc9c;
 
 body {
   margin: 0;
-  min-width: 360px;
+  min-width: 413px;
   overflow: hidden;
 }
 
@@ -157,11 +176,16 @@ body {
 }
 
 .title {
-  padding-right: 48px;
+  padding-right: 56px;
   overflow: hidden;
   text-overflow: ellipsis;
   @include mdc-typography('title');
   @include mdc-theme-prop('color', 'text-primary-on-light');
+}
+
+.contribute-icon {
+  margin-right: 16px;
+  cursor: pointer;
 }
 
 .settings-icon {
