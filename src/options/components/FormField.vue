@@ -60,4 +60,8 @@ export default {
 $mdc-theme-primary: #1abc9c;
 
 @import '@material/form-field/mdc-form-field';
+
+.mdc-form-field label {
+  white-space: nowrap;
+}
 </style>
