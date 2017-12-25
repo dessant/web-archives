@@ -141,6 +141,13 @@ export default {
     this.engines = enEngines;
 
     this.dataLoaded = true;
+
+    const mq = window.matchMedia('(min-width: 413px)');
+    const widthChange = function(mq) {
+      document.body.style.minWidth = mq.matches ? '413px' : 'initial';
+    };
+    mq.addListener(widthChange);
+    widthChange(mq);
   }
 };
 </script>
@@ -152,12 +159,6 @@ $mdc-theme-primary: #1abc9c;
 @import '@material/theme/mixins';
 @import '@material/typography/mixins';
 @import "@material/ripple/mixins";
-
-@media (max-width: 412px) {
-  body {
-    min-width: initial;
-  }
-}
 
 body {
   margin: 0;
