@@ -186,7 +186,10 @@ body {
 .header-buttons {
   display: flex;
   align-items: center;
-  margin-left: 56px;
+  margin-left: 32px;
+  @media (min-width: 413px) {
+    margin-left: 56px;
+  }
 }
 
 .contribute-icon {
