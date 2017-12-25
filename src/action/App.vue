@@ -4,7 +4,7 @@
     <div class="title">
       {{ getText('extensionName') }}
     </div>
-    <div>
+    <div class="header-buttons">
       <img class="contribute-icon"
           src="/src/contribute/assets/heart.svg"
           @click="showContribute">
@@ -177,11 +177,16 @@ body {
 }
 
 .title {
-  padding-right: 56px;
   overflow: hidden;
   text-overflow: ellipsis;
   @include mdc-typography('title');
   @include mdc-theme-prop('color', 'text-primary-on-light');
+}
+
+.header-buttons {
+  display: flex;
+  align-items: center;
+  margin-left: 56px;
 }
 
 .contribute-icon {
