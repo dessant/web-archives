@@ -14,9 +14,8 @@
   </div>
 
   <transition name="settings"
-      @before-enter="beforeSettingsEnter"
-      @after-enter="afterSettingsEnter"
-      @after-leave="afterSettingsLeave">
+      @after-enter="handleSizeChange"
+      @after-leave="handleSizeChange">
     <div class="settings" v-show="showSettings">
       <v-textfield v-model="customUrl"
           :placeholder="getText('inputPlaceholder_customURL')"
@@ -82,8 +81,7 @@ export default {
 
       showSettings: false,
       hasScrollBar: false,
-      hideScrollBar: false,
-      isAndroid: false,
+      isPopup: false,
 
       engines: [],
       searchAllEngines: false,
@@ -94,8 +92,7 @@ export default {
   computed: {
     listClasses: function() {
       return {
-        'list-items-scroll-bar-hidden': this.hideScrollBar,
-        'list-items-max-height': !this.isAndroid
+        'list-items-max-height': this.isPopup
       };
     }
   },
@@ -134,7 +131,7 @@ export default {
     },
 
     closeAction: async function() {
-      if (targetEnv === 'firefox' && (await isAndroid())) {
+      if (!this.isPopup) {
         browser.tabs.remove((await browser.tabs.getCurrent()).id);
       } else {
         window.close();
@@ -144,49 +141,38 @@ export default {
     handleSizeChange: function() {
       const items = this.$refs.items;
       this.hasScrollBar = items.scrollHeight > items.clientHeight;
-    },
-
-    beforeSettingsEnter: function() {
-      this.hideScrollBar = !this.hasScrollBar;
-    },
-
-    afterSettingsEnter: function() {
-      this.handleSizeChange();
-      this.hideScrollBar = false;
-    },
-
-    afterSettingsLeave: function() {
-      this.handleSizeChange();
     }
   },
 
   created: async function() {
+    const currentTab = await browser.tabs.getCurrent();
+    this.isPopup = !currentTab || currentTab instanceof Array;
+    if (!this.isPopup) {
+      document.documentElement.style.height = '100%';
+      document.body.style.minWidth = 'initial';
+    }
+
     const options = await storage.get(
       ['engines', 'disabledEngines', 'searchAllEnginesAction'],
       'sync'
     );
+
     const enEngines = await getEnabledEngines(options);
 
-    if (targetEnv === 'firefox' && (await isAndroid())) {
-      this.isAndroid = true;
-      if (enEngines.length <= 1 || options.searchAllEnginesAction === 'main') {
-        // Removing the action popup has no effect on Android
-        showNotification({messageId: 'error_optionsNotApplied'});
-        return;
-      }
+    if (
+      targetEnv === 'firefox' &&
+      (await isAndroid()) &&
+      (enEngines.length <= 1 || options.searchAllEnginesAction === 'main')
+    ) {
+      // Removing the action popup has no effect on Android
+      showNotification({messageId: 'error_optionsNotApplied'});
+      return;
     }
 
     this.searchAllEngines = options.searchAllEnginesAction === 'sub';
     this.engines = enEngines;
 
     this.dataLoaded = true;
-
-    const mq = window.matchMedia('(min-width: 413px)');
-    const mqChange = function(mq) {
-      document.body.style.minWidth = mq.matches ? '413px' : 'initial';
-    };
-    mq.addListener(mqChange);
-    mqChange(mq);
   }
 };
 </script>
@@ -201,7 +187,6 @@ $mdc-theme-primary: #1abc9c;
 
 @import 'vue-resize/dist/vue-resize';
 
-html,
 body,
 #app {
   height: 100%;
@@ -297,10 +282,6 @@ body {
 
 .list-items-max-height {
   max-height: 392px;
-}
-
-.list-items-scroll-bar-hidden {
-  overflow-y: hidden;
 }
 
 .list-items {
