@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.4.0"></a>
+# [1.4.0](https://github.com/dessant/view-page-archive/compare/v1.3.0...v1.4.0) (2017-12-30)
+
+
+### Bug Fixes
+
+* add contribPageLastOpen ([56955c5](https://github.com/dessant/view-page-archive/commit/56955c5))
+* decrease space between popup header items on small displays ([1f85125](https://github.com/dessant/view-page-archive/commit/1f85125))
+* do not set min-width for small screens ([ae84bda](https://github.com/dessant/view-page-archive/commit/ae84bda))
+* do not show page action on server error by default ([34215bf](https://github.com/dessant/view-page-archive/commit/34215bf))
+* handle list overflowing on small screens ([fcf18cc](https://github.com/dessant/view-page-archive/commit/fcf18cc))
+* minimize draggable surface for search engine options ([0efe71b](https://github.com/dessant/view-page-archive/commit/0efe71b))
+* vertically center popup buttons ([bb6f88e](https://github.com/dessant/view-page-archive/commit/bb6f88e))
+
+
+### Features
+
+* add contribution page ([1496a3f](https://github.com/dessant/view-page-archive/commit/1496a3f))
+
+
+
 <a name="1.3.0"></a>
 # [1.3.0](https://github.com/dessant/view-page-archive/compare/v1.2.0...v1.3.0) (2017-12-14)
 
