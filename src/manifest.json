@@ -26,7 +26,7 @@
   ],
 
   "content_security_policy":
-    "default-src 'self'; img-src 'self' data:; connect-src *; object-src 'none'; child-src 'none'; form-action 'none';",
+    "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; connect-src *; object-src 'none'; child-src 'none'; form-action 'none';",
 
   "icons": {
     "16": "src/icons/app/icon-16.png",

@@ -13,7 +13,10 @@
     </div>
   </div>
 
-  <transition name="settings">
+  <transition name="settings"
+      @before-enter="beforeSettingsEnter"
+      @after-enter="afterSettingsEnter"
+      @after-leave="afterSettingsLeave">
     <div class="settings" v-show="showSettings">
       <v-textfield v-model="customUrl"
           :placeholder="getText('inputPlaceholder_customURL')"
@@ -22,33 +25,39 @@
     </div>
   </transition>
 
-  <ul class="mdc-list list">
-    <li class="mdc-list-item item ripple-surface"
-        v-if="searchAllEngines"
+  <div class="list-padding-top"></div>
+  <ul class="mdc-list list list-bulk-button" v-if="searchAllEngines">
+    <li class="mdc-list-item list-item ripple-surface"
         @click="selectEngine('allEngines')">
-      <img class="mdc-list-item__start-detail item-icon"
+      <img class="mdc-list-item__start-detail list-item-icon"
           :src="getIcon('allEngines')">
       {{ getText('engineName_allEngines_full') }}
     </li>
-    <li role="separator" class="mdc-list-divider"
-        v-if="searchAllEngines || engines.length > 8">
-    </li>
-    <div class="items">
-      <li class="mdc-list-item item ripple-surface"
+  </ul>
+  <ul class="mdc-list list list-separator"
+      v-if="searchAllEngines || hasScrollBar">
+    <li role="separator" class="mdc-list-divider"></li>
+  </ul>
+  <div class="list-items-wrap" ref="items" :class="listClasses">
+    <resize-observer @notify="handleSizeChange"></resize-observer>
+    <ul class="mdc-list list list-items">
+      <li class="mdc-list-item list-item ripple-surface"
           v-for="engine in engines"
           :key="engine.id"
           @click="selectEngine(engine)">
-        <img class="mdc-list-item__start-detail item-icon"
+        <img class="mdc-list-item__start-detail list-item-icon"
             :src="getIcon(engine)">
         {{ getText(`engineName_${engine}_short`) }}
       </li>
-    </div>
-  </ul>
+    </ul>
+  </div>
+
 </div>
 </template>
 
 <script>
 import browser from 'webextension-polyfill';
+import {ResizeObserver} from 'vue-resize';
 import {TextField} from 'ext-components';
 
 import storage from 'storage/storage';
@@ -63,7 +72,8 @@ import {targetEnv} from 'utils/config';
 
 export default {
   components: {
-    [TextField.name]: TextField
+    [TextField.name]: TextField,
+    [ResizeObserver.name]: ResizeObserver
   },
 
   data: function() {
@@ -71,11 +81,23 @@ export default {
       dataLoaded: false,
 
       showSettings: false,
+      hasScrollBar: false,
+      hideScrollBar: false,
+      isAndroid: false,
 
       engines: [],
       searchAllEngines: false,
       customUrl: ''
     };
+  },
+
+  computed: {
+    listClasses: function() {
+      return {
+        'list-items-scroll-bar-hidden': this.hideScrollBar,
+        'list-items-max-height': !this.isAndroid
+      };
+    }
   },
 
   methods: {
@@ -117,6 +139,24 @@ export default {
       } else {
         window.close();
       }
+    },
+
+    handleSizeChange: function() {
+      const items = this.$refs.items;
+      this.hasScrollBar = items.scrollHeight > items.clientHeight;
+    },
+
+    beforeSettingsEnter: function() {
+      this.hideScrollBar = !this.hasScrollBar;
+    },
+
+    afterSettingsEnter: function() {
+      this.handleSizeChange();
+      this.hideScrollBar = false;
+    },
+
+    afterSettingsLeave: function() {
+      this.handleSizeChange();
     }
   },
 
@@ -127,14 +167,13 @@ export default {
     );
     const enEngines = await getEnabledEngines(options);
 
-    if (
-      targetEnv === 'firefox' &&
-      (await isAndroid()) &&
-      (enEngines.length <= 1 || options.searchAllEnginesAction === 'main')
-    ) {
-      // Removing the action popup has no effect on Android
-      showNotification({messageId: 'error_optionsNotApplied'});
-      return;
+    if (targetEnv === 'firefox' && (await isAndroid())) {
+      this.isAndroid = true;
+      if (enEngines.length <= 1 || options.searchAllEnginesAction === 'main') {
+        // Removing the action popup has no effect on Android
+        showNotification({messageId: 'error_optionsNotApplied'});
+        return;
+      }
     }
 
     this.searchAllEngines = options.searchAllEnginesAction === 'sub';
@@ -143,11 +182,11 @@ export default {
     this.dataLoaded = true;
 
     const mq = window.matchMedia('(min-width: 413px)');
-    const widthChange = function(mq) {
+    const mqChange = function(mq) {
       document.body.style.minWidth = mq.matches ? '413px' : 'initial';
     };
-    mq.addListener(widthChange);
-    widthChange(mq);
+    mq.addListener(mqChange);
+    mqChange(mq);
   }
 };
 </script>
@@ -159,6 +198,19 @@ $mdc-theme-primary: #1abc9c;
 @import '@material/theme/mixins';
 @import '@material/typography/mixins';
 @import "@material/ripple/mixins";
+
+@import 'vue-resize/dist/vue-resize';
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+}
 
 body {
   margin: 0;
@@ -222,23 +274,46 @@ body {
   opacity: 0;
 }
 
-.items {
-  max-height: 392px;
-  overflow-y: auto;
-}
-
 .list {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+  padding: 0 !important;
 }
 
-.item {
+.list-padding-top {
+  margin-bottom: 8px;
+}
+
+.list-bulk-button {
+  height: 48px;
+}
+
+.list-separator {
+  height: 1px;
+}
+
+.list-items-wrap {
+  overflow-y: auto;
+  position: relative;
+}
+
+.list-items-max-height {
+  max-height: 392px;
+}
+
+.list-items-scroll-bar-hidden {
+  overflow-y: hidden;
+}
+
+.list-items {
+  padding-bottom: 8px !important;
+}
+
+.list-item {
   padding-left: 16px;
   padding-right: 48px;
   cursor: pointer;
 }
 
-.item-icon {
+.list-item-icon {
   margin-right: 16px !important;
 }
 
