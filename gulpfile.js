@@ -21,12 +21,6 @@ const svg2png = require('svg2png');
 const targetEnv = process.env.TARGET_ENV || 'firefox';
 const isProduction = process.env.NODE_ENV === 'production';
 
-const jsBeautifyOptions = {
-  indent_size: 2,
-  preserve_newlines: false,
-  end_with_newline: true
-};
-
 gulp.task('clean', function() {
   return del(['dist']);
 });
