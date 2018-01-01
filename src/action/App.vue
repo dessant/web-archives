@@ -277,7 +277,6 @@ body {
 
 .list-items-wrap {
   overflow-y: auto;
-  position: relative;
 }
 
 .list-items-max-height {
@@ -303,7 +302,7 @@ body {
   @include mdc-ripple-radius;
   @include mdc-ripple-color;
 
-  position: relative;
+  position: sticky;
   outline: none;
   overflow: hidden;
 }
