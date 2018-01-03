@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.4.2"></a>
+## [1.4.2](https://github.com/dessant/view-page-archive/compare/v1.4.1...v1.4.2) (2018-01-03)
+
+
+### Bug Fixes
+
+* adjust spacing between popup header items ([d7057bc](https://github.com/dessant/view-page-archive/commit/d7057bc))
+* reduce size of imported background code ([3b80722](https://github.com/dessant/view-page-archive/commit/3b80722))
+* update mdc ripple class ([7a66046](https://github.com/dessant/view-page-archive/commit/7a66046))
+
+
+
 <a name="1.4.1"></a>
 ## [1.4.1](https://github.com/dessant/view-page-archive/compare/v1.4.0...v1.4.1) (2018-01-01)
 
