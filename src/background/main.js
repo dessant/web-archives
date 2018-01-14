@@ -162,7 +162,6 @@ async function evalExecEngine(tabId, engineId, url) {
   const execEngines = [
     'bing',
     'yandex',
-    'archiveIs',
     'gigablast',
     'sogou',
     'qihoo',

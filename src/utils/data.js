@@ -26,7 +26,7 @@ const engines = {
     url: 'https://www.yandex.com/search/?text={url}&url={url}'
   },
   archiveIs: {
-    url: 'https://archive.is/{url}'
+    url: 'https://archive.is/newest/{url}'
   },
   memento: {
     url: 'http://timetravel.mementoweb.org/reconstruct/{url}'
