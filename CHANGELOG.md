@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.4.3"></a>
+## [1.4.3](https://github.com/dessant/view-page-archive/compare/v1.4.2...v1.4.3) (2018-03-07)
+
+
+### Bug Fixes
+
+* link to latest Archive.is copy directly ([15b62e5](https://github.com/dessant/view-page-archive/commit/15b62e5))
+* update dependencies ([178a076](https://github.com/dessant/view-page-archive/commit/178a076))
+* update gigablast cache link selector ([68bc5d6](https://github.com/dessant/view-page-archive/commit/68bc5d6))
+
+
+
 <a name="1.4.2"></a>
 ## [1.4.2](https://github.com/dessant/view-page-archive/compare/v1.4.1...v1.4.2) (2018-01-03)
 
