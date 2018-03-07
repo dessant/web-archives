@@ -24,17 +24,17 @@
       {{ getText('optionSectionTitle_misc') }}
     </div>
     <div class="option-wrap">
-      <div class="option" v-if="contextMenuEnabled">
+      <div class="option select" v-if="contextMenuEnabled">
         <v-select v-model="options.showInContextMenu"
             :options="selectOptions.showInContextMenu">
         </v-select>
       </div>
-      <div class="option" v-if="contextMenuEnabled">
+      <div class="option select" v-if="contextMenuEnabled">
         <v-select v-model="options.searchAllEnginesContextMenu"
             :options="selectOptions.searchAllEnginesContextMenu">
         </v-select>
       </div>
-      <div class="option">
+      <div class="option select">
         <v-select v-model="options.searchAllEnginesAction"
             :options="selectOptions.searchAllEnginesAction">
         </v-select>
@@ -158,6 +158,11 @@ $mdc-theme-primary: #1abc9c;
 @import '@material/theme/mixins';
 @import '@material/typography/mixins';
 
+body {
+  @include mdc-typography-base;
+  font-size: 100%;
+}
+
 .mdc-select__menu {
   top: inherit !important;
   left: inherit !important;
@@ -202,5 +207,9 @@ $mdc-theme-primary: #1abc9c;
   display: flex;
   align-items: center;
   height: 36px;
+}
+
+.option.select {
+  align-items: end;
 }
 </style>

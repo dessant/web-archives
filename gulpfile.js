@@ -15,7 +15,6 @@ const gulpif = require('gulp-if');
 const jsonMerge = require('gulp-merge-json');
 const jsonmin = require('gulp-jsonmin');
 const imagemin = require('gulp-imagemin');
-const webpack = require('webpack');
 const svg2png = require('svg2png');
 
 const targetEnv = process.env.TARGET_ENV || 'firefox';

@@ -28,7 +28,7 @@
   <ul class="mdc-list list list-bulk-button" v-if="searchAllEngines">
     <li class="mdc-list-item list-item ripple-surface"
         @click="selectEngine('allEngines')">
-      <img class="mdc-list-item__start-detail list-item-icon"
+      <img class="mdc-list-item__graphic list-item-icon"
           :src="getIcon('allEngines')">
       {{ getText('engineName_allEngines_full') }}
     </li>
@@ -44,7 +44,7 @@
           v-for="engine in engines"
           :key="engine.id"
           @click="selectEngine(engine)">
-        <img class="mdc-list-item__start-detail list-item-icon"
+        <img class="mdc-list-item__graphic list-item-icon"
             :src="getIcon(engine)">
         {{ getText(`engineName_${engine}_short`) }}
       </li>
@@ -183,7 +183,7 @@ $mdc-theme-primary: #1abc9c;
 @import '@material/list/mdc-list';
 @import '@material/theme/mixins';
 @import '@material/typography/mixins';
-@import "@material/ripple/mixins";
+@import '@material/ripple/mixins';
 
 @import 'vue-resize/dist/vue-resize';
 
@@ -201,6 +201,8 @@ body {
   margin: 0;
   min-width: 413px;
   overflow: hidden;
+  @include mdc-typography-base;
+  font-size: 100%;
 }
 
 .header {
@@ -299,8 +301,8 @@ body {
 
 .ripple-surface {
   @include mdc-ripple-surface;
+  @include mdc-ripple-radius-bounded;
   @include mdc-states;
-  @include mdc-ripple-radius;
 
   position: sticky;
   outline: none;
