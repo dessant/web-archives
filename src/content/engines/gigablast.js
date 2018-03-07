@@ -1,6 +1,6 @@
 function viewCache() {
   const node = document.evaluate(
-    '//table[@class="result"][1]/tbody/tr/td/a[text()="cached"]',
+    '//table[@class="result"][1]/tbody/tr/td//a[text()="cached"]',
     document,
     null,
     XPathResult.FIRST_ORDERED_NODE_TYPE,
