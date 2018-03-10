@@ -244,17 +244,17 @@ body {
   padding: 16px;
 }
 
-.settings-enter-active, .settings-leave-active {
+.settings-enter-active,
+.settings-leave-active {
   max-height: 100px;
   padding-top: 16px;
   padding-bottom: 16px;
-  transition: max-height .3s ease,
-              padding-top .3s ease,
-              padding-bottom .3s ease,
-              opacity .2s ease;
+  transition: max-height 0.3s ease, padding-top 0.3s ease,
+    padding-bottom 0.3s ease, opacity 0.2s ease;
 }
 
-.settings-enter, .settings-leave-to {
+.settings-enter,
+.settings-leave-to {
   max-height: 0;
   padding-top: 0;
   padding-bottom: 0;
