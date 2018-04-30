@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.5.0"></a>
+# [1.5.0](https://github.com/dessant/view-page-archive/compare/v1.4.3...v1.5.0) (2018-04-30)
+
+
+### Bug Fixes
+
+* add labels for select components and change options layout ([a82c480](https://github.com/dessant/view-page-archive/commit/a82c480))
+* update Archive.is logo ([3982a1f](https://github.com/dessant/view-page-archive/commit/3982a1f))
+
+
+### Features
+
+* show search engine icons in context menu ([d5b3f16](https://github.com/dessant/view-page-archive/commit/d5b3f16))
+
+
+
 <a name="1.4.3"></a>
 ## [1.4.3](https://github.com/dessant/view-page-archive/compare/v1.4.2...v1.4.3) (2018-03-07)
 
