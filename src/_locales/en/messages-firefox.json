@@ -45,18 +45,23 @@
     "description": "Title of the search engine options section."
   },
 
+  "optionSectionTitle_contextmenu": {
+    "message": "Context Menu",
+    "description": "Title of the options section."
+  },
+
+  "optionSectionTitle_toolbar": {
+    "message": "Browser Toolbar",
+    "description": "Title of the options section."
+  },
+
   "optionValue_searchAllEnginesAction_main": {
-    "message": "Search all engines from browser toolbar and address bar",
+    "message": "From browser toolbar and address bar",
     "description": "Value of the option."
   },
 
   "optionValue_searchAllEnginesAction_sub": {
-    "message": "Search all engines from browser toolbar and address bar popup",
-    "description": "Value of the option."
-  },
-
-  "optionValue_searchAllEnginesAction_false": {
-    "message": "Do not search all engines from browser toolbar and address bar",
+    "message": "From browser toolbar and address bar popup",
     "description": "Value of the option."
   },
 

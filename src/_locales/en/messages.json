@@ -212,54 +212,74 @@
     "description": "Description of the search engine options section."
   },
 
-  "optionSectionTitle_misc": {
-    "message": "Miscellaneous",
-    "description": "Title of the miscellaneous options section."
+  "optionTitle_searchAllEngines": {
+    "message": "Search all engines",
+    "description": "Title of the option."
+  },
+
+  "optionSectionTitle_contextmenu": {
+    "message": "Context menu",
+    "description": "Title of the options section."
+  },
+
+  "optionTitle_showInContextMenu": {
+    "message": "Visibility",
+    "description": "Title of the option."
   },
 
   "optionValue_showInContextMenu_all": {
-    "message": "Show in context menu",
+    "message": "Show",
     "description": "Value of the option."
   },
 
   "optionValue_showInContextMenu_link": {
-    "message": "Show in context menu for links",
+    "message": "Show for links",
     "description": "Value of the option."
   },
 
   "optionValue_showInContextMenu_false": {
-    "message": "Do not show in context menu",
+    "message": "Hide",
     "description": "Value of the option."
   },
 
   "optionValue_searchAllEnginesContextMenu_main": {
-    "message": "Search all engines from context menu",
+    "message": "From context menu",
     "description": "Value of the option."
   },
 
   "optionValue_searchAllEnginesContextMenu_sub": {
-    "message": "Search all engines from submenu of context menu",
+    "message": "From submenu of context menu",
     "description": "Value of the option."
   },
 
   "optionValue_searchAllEnginesContextMenu_false": {
-    "message": "Do not search all engines from context menu",
+    "message": "Disable",
     "description": "Value of the option."
   },
 
+  "optionSectionTitle_toolbar": {
+    "message": "Browser toolbar",
+    "description": "Title of the options section."
+  },
+
   "optionValue_searchAllEnginesAction_main": {
-    "message": "Search all engines from browser toolbar",
+    "message": "From browser toolbar",
     "description": "Value of the option."
   },
 
   "optionValue_searchAllEnginesAction_sub": {
-    "message": "Search all engines from browser toolbar popup",
+    "message": "From browser toolbar popup",
     "description": "Value of the option."
   },
 
   "optionValue_searchAllEnginesAction_false": {
-    "message": "Do not search all engines from browser toolbar",
+    "message": "Disable",
     "description": "Value of the option."
+  },
+
+  "optionSectionTitle_misc": {
+    "message": "Miscellaneous",
+    "description": "Title of the miscellaneous options section."
   },
 
   "optionTitle_showPageAction": {

@@ -19,23 +19,34 @@
     </v-draggable>
   </div>
 
-  <div class="section">
+  <div class="section" v-if="contextMenuEnabled">
     <div class="section-title" v-once>
-      {{ getText('optionSectionTitle_misc') }}
+      {{ getText('optionSectionTitle_contextmenu') }}
     </div>
     <div class="option-wrap">
-      <div class="option select" v-if="contextMenuEnabled">
-        <v-select v-model="options.showInContextMenu"
+      <div class="option select">
+        <v-select :label="getText('optionTitle_showInContextMenu')"
+            v-model="options.showInContextMenu"
             :options="selectOptions.showInContextMenu">
         </v-select>
       </div>
-      <div class="option select" v-if="contextMenuEnabled">
-        <v-select v-model="options.searchAllEnginesContextMenu"
+      <div class="option select">
+        <v-select :label="getText('optionTitle_searchAllEngines')"
+            v-model="options.searchAllEnginesContextMenu"
             :options="selectOptions.searchAllEnginesContextMenu">
         </v-select>
       </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title" v-once>
+      {{ getText('optionSectionTitle_toolbar') }}
+    </div>
+    <div class="option-wrap">
       <div class="option select">
-        <v-select v-model="options.searchAllEnginesAction"
+        <v-select :label="getText('optionTitle_searchAllEngines')"
+            v-model="options.searchAllEnginesAction"
             :options="selectOptions.searchAllEnginesAction">
         </v-select>
       </div>
@@ -45,6 +56,14 @@
           <v-switch id="spa" v-model="options.showPageAction"></v-switch>
         </v-form-field>
       </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title" v-once>
+      {{ getText('optionSectionTitle_misc') }}
+    </div>
+    <div class="option-wrap">
       <div class="option">
         <v-form-field input-id="ont"
             :label="getText('optionTitle_openNewTab')">
@@ -110,7 +129,7 @@ export default {
   },
 
   methods: {
-    getText: getText,
+    getText,
 
     engineEnabled: function(engine) {
       return !_.includes(this.options.disabledEngines, engine);
@@ -161,6 +180,7 @@ $mdc-theme-primary: #1abc9c;
 body {
   @include mdc-typography-base;
   font-size: 100%;
+  overflow: visible !important;
 }
 
 .mdc-select__menu {
@@ -210,6 +230,6 @@ body {
 }
 
 .option.select {
-  align-items: end;
+  height: 56px;
 }
 </style>
