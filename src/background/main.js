@@ -19,18 +19,43 @@ import {
 import {optionKeys, engines} from 'utils/data';
 import {targetEnv} from 'utils/config';
 
-function createMenuItem(id, title, contexts, parentId, type = 'normal') {
-  browser.contextMenus.create(
-    {
-      id: id,
-      title: title,
-      contexts: contexts,
-      documentUrlPatterns: ['http://*/*', 'https://*/*', 'ftp://*/*'],
-      parentId: parentId,
-      type: type
-    },
-    onComplete
-  );
+function getEngineMenuIcons(engine) {
+  if (engine === 'googleText') {
+    engine = 'google';
+  }
+  if (['gigablast', 'megalodon'].includes(engine)) {
+    return {
+      '16': `src/icons/engines/${engine}-16.png`,
+      '32': `src/icons/engines/${engine}-32.png`
+    };
+  } else {
+    return {
+      '16': `src/icons/engines/${engine}.svg`
+    };
+  }
+}
+
+function createMenuItem({
+  id,
+  title = '',
+  contexts,
+  parent,
+  type = 'normal',
+  urlPatterns = ['http://*/*', 'https://*/*', 'ftp://*/*'],
+  icons = null
+}) {
+  const params = {
+    id,
+    title,
+    contexts,
+    documentUrlPatterns: urlPatterns,
+    parentId: parent,
+    type
+  };
+  if (icons) {
+    params.icons = icons;
+  }
+  browser.contextMenus.create(params, onComplete);
 }
 
 async function createMenu(options) {
@@ -48,14 +73,25 @@ async function createMenu(options) {
           'video'
         ]
       : ['link'];
+  const urlPatterns = ['http://*/*', 'https://*/*', 'ftp://*/*'];
+  let setIcons = false;
+  if (targetEnv === 'firefox') {
+    const {version} = await browser.runtime.getBrowserInfo();
+    if (parseInt(version.slice(0, 2), 10) >= 56) {
+      setIcons = true;
+    }
+  }
 
   if (enEngines.length === 1) {
     const engine = enEngines[0];
-    createMenuItem(
-      engine,
-      getText('actionTitle_engine_main', getText(`engineName_${engine}_short`)),
+    createMenuItem({
+      id: engine,
+      title: getText(
+        'actionTitle_engine_main',
+        getText(`engineName_${engine}_short`)
+      ),
       contexts
-    );
+    });
     return;
   }
 
@@ -63,37 +99,44 @@ async function createMenu(options) {
     const searchAllEngines = options.searchAllEnginesContextMenu;
 
     if (searchAllEngines === 'main') {
-      createMenuItem(
-        'allEngines',
-        getText('actionTitle_allEngines_main'),
+      createMenuItem({
+        id: 'allEngines',
+        title: getText('actionTitle_allEngines_main'),
         contexts
-      );
+      });
       return;
     }
 
-    createMenuItem(
-      'par-1',
-      getText('contextMenuGroupTitle_viewArchive_main'),
+    createMenuItem({
+      id: 'par-1',
+      title: getText('contextMenuGroupTitle_viewArchive_main'),
       contexts
-    );
+    });
 
     if (searchAllEngines === 'sub') {
-      createMenuItem(
-        'allEngines',
-        getText('engineName_allEngines_full'),
+      createMenuItem({
+        id: 'allEngines',
+        title: getText('engineName_allEngines_full'),
         contexts,
-        'par-1'
-      );
-      createMenuItem('sep-1', '', contexts, 'par-1', 'separator');
+        parent: 'par-1',
+        icons: setIcons && getEngineMenuIcons('allEngines')
+      });
+      createMenuItem({
+        id: 'sep-1',
+        contexts,
+        parent: 'par-1',
+        type: 'separator'
+      });
     }
 
-    enEngines.forEach(function(engineId) {
-      createMenuItem(
-        engineId,
-        getText(`engineName_${engineId}_short`),
+    enEngines.forEach(function(engine) {
+      createMenuItem({
+        id: engine,
+        title: getText(`engineName_${engine}_short`),
         contexts,
-        'par-1'
-      );
+        parent: 'par-1',
+        icons: setIcons && getEngineMenuIcons(engine)
+      });
     });
   }
 }

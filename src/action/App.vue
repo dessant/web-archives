@@ -29,7 +29,7 @@
     <li class="mdc-list-item list-item ripple-surface"
         @click="selectEngine('allEngines')">
       <img class="mdc-list-item__graphic list-item-icon"
-          :src="getIcon('allEngines')">
+          :src="getEngineIcon('allEngines')">
       {{ getText('engineName_allEngines_full') }}
     </li>
   </ul>
@@ -45,7 +45,7 @@
           :key="engine.id"
           @click="selectEngine(engine)">
         <img class="mdc-list-item__graphic list-item-icon"
-            :src="getIcon(engine)">
+            :src="getEngineIcon(engine)">
         {{ getText(`engineName_${engine}_short`) }}
       </li>
     </ul>
@@ -100,11 +100,15 @@ export default {
   methods: {
     getText,
 
-    getIcon: function(name) {
-      if (name === 'googleText') {
-        name = 'google';
+    getEngineIcon: function(engine) {
+      if (engine === 'googleText') {
+        engine = 'google';
       }
-      return `/src/icons/engines/${name}.png`;
+      let ext = 'svg';
+      if (['gigablast', 'megalodon'].includes(engine)) {
+        ext = 'png';
+      }
+      return `/src/icons/engines/${engine}.${ext}`;
     },
 
     selectEngine: async function(engine) {

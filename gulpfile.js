@@ -1,5 +1,5 @@
 const path = require('path');
-const exec = require('child_process').exec;
+const {exec} = require('child_process');
 const {lstatSync, readdirSync, readFileSync, writeFileSync} = require('fs');
 
 const del = require('del');
@@ -16,6 +16,7 @@ const jsonMerge = require('gulp-merge-json');
 const jsonmin = require('gulp-jsonmin');
 const imagemin = require('gulp-imagemin');
 const svg2png = require('svg2png');
+const sharp = require('sharp');
 
 const targetEnv = process.env.TARGET_ENV || 'firefox';
 const isProduction = process.env.NODE_ENV === 'production';
@@ -62,16 +63,14 @@ gulp.task('icons', async function() {
   }
 
   ensureDirSync('dist/src/icons/engines');
-  const svgPaths = await recursiveReadDir('src/icons', [
-    'src/icons/@(app|misc)/*',
-    '*.!(svg)'
-  ]);
-  for (svgPath of svgPaths) {
-    const pngBuffer = await svg2png(readFileSync(svgPath));
-    writeFileSync(
-      path.join('dist', svgPath.replace(/^(.*)\.svg$/i, '$1.png')),
-      pngBuffer
-    );
+  const pngPaths = await recursiveReadDir('src/icons/engines', ['*.!(png)']);
+  const menuIconSizes = [16, 32];
+  for (const pngPath of pngPaths) {
+    for (const size of menuIconSizes) {
+      await sharp(pngPath)
+        .resize(size)
+        .toFile(path.join('dist', `${pngPath.slice(0, -4)}-${size}.png`));
+    }
   }
 
   if (isProduction) {
@@ -82,7 +81,7 @@ gulp.task('icons', async function() {
   }
 
   gulp
-    .src('src/icons/misc/*.svg', {base: '.'})
+    .src('src/icons/@(engines|misc)/*.svg', {base: '.'})
     .pipe(gulpif(isProduction, svgmin()))
     .pipe(gulp.dest('dist'));
   gulp
@@ -178,15 +177,11 @@ gulp.task('copy', function() {
 
 gulp.task(
   'build',
-  gulpSeq('clean', [
-    'js',
-    'html',
-    'icons',
-    'fonts',
-    'locale',
-    'manifest',
+  gulpSeq(
+    'clean',
+    ['js', 'html', 'icons', 'fonts', 'locale', 'manifest'],
     'copy'
-  ])
+  )
 );
 
 gulp.task('default', ['build']);
