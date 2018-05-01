@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.5.1"></a>
+## [1.5.1](https://github.com/dessant/view-page-archive/compare/v1.5.0...v1.5.1) (2018-05-01)
+
+
+### Bug Fixes
+
+* set default background color ([4195ff0](https://github.com/dessant/view-page-archive/commit/4195ff0)), closes [#2](https://github.com/dessant/view-page-archive/issues/2)
+
+
+
 <a name="1.5.0"></a>
 # [1.5.0](https://github.com/dessant/view-page-archive/compare/v1.4.3...v1.5.0) (2018-04-30)
 
