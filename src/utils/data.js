@@ -14,10 +14,10 @@ const engines = {
     url: 'https://web.archive.org/web/{url}'
   },
   google: {
-    url: 'http://webcache.googleusercontent.com/search?q=cache:{url}'
+    url: 'https://webcache.googleusercontent.com/search?q=cache:{url}'
   },
   googleText: {
-    url: 'http://webcache.googleusercontent.com/search?strip=1&q=cache:{url}'
+    url: 'https://webcache.googleusercontent.com/search?strip=1&q=cache:{url}'
   },
   bing: {
     url: 'https://www.bing.com/search?q=url:{url}&go=Search&qs=bs&form=QBRE'
@@ -29,16 +29,16 @@ const engines = {
     url: 'https://archive.is/newest/{url}'
   },
   memento: {
-    url: 'http://timetravel.mementoweb.org/reconstruct/{url}'
+    url: 'https://timetravel.mementoweb.org/reconstruct/{url}'
   },
   webcite: {
-    url: 'http://www.webcitation.org/query?url={url}&date={date}'
+    url: 'https://www.webcitation.org/query?url={url}&date={date}'
   },
   exalead: {
-    url: 'http://www.exalead.com/search/web/cached/?url={url}&q={url}'
+    url: 'https://www.exalead.com/search/web/cached/?url={url}&q={url}'
   },
   gigablast: {
-    url: 'http://www.gigablast.com/search?q=url:{url}'
+    url: 'https://www.gigablast.com/search?q=url:{url}'
   },
   sogou: {
     url: 'https://www.sogou.com/web?query={url}'
@@ -57,7 +57,7 @@ const engines = {
     url: 'https://search.yahoo.co.jp/search?ei=UTF-8&p={url}'
   },
   megalodon: {
-    url: 'http://megalodon.jp/?url={url}'
+    url: 'https://megalodon.jp/?url={url}'
   }
 };
 
