@@ -12,13 +12,12 @@
   </br></br>
 </p>
 
-## Supporting View Page Archive & Cache
+## Supporting the Project
 
-View Page Archive & Cache is an MIT-licensed open source project. Its ongoing
-development is made possible thanks to the support of awesome backers.
-If you'd like to join them, please consider contributing with
-[Patreon](https://goo.gl/qRhKSW), [PayPal](https://goo.gl/5FnBaw)
-or [Bitcoin](https://goo.gl/uJUAaU).
+The continued development of View Page Archive & Cache is made possible
+thanks to the support of awesome backers. If you'd like to join them,
+please consider contributing with [Patreon](https://goo.gl/qRhKSW),
+[PayPal](https://goo.gl/5FnBaw) or [Bitcoin](https://goo.gl/uJUAaU).
 
 ## Description
 
