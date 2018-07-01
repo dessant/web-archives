@@ -61,7 +61,37 @@ const engines = {
   }
 };
 
+const errorCodes = [
+  400,
+  403,
+  404,
+  408,
+  410,
+  429,
+  451,
+  500,
+  502,
+  503,
+  504,
+  // Nonstandard
+  444,
+  450,
+  509,
+  530,
+  598,
+  // Cloudflare
+  520,
+  521,
+  522,
+  523,
+  524,
+  525,
+  526,
+  527
+];
+
 module.exports = {
   optionKeys,
-  engines
+  engines,
+  errorCodes
 };

@@ -16,7 +16,7 @@ import {
   validateUrl,
   showContributePage
 } from 'utils/app';
-import {optionKeys, engines} from 'utils/data';
+import {optionKeys, engines, errorCodes} from 'utils/data';
 import {targetEnv} from 'utils/config';
 
 function getEngineMenuIcons(engine) {
@@ -349,36 +349,7 @@ async function showPageAction(tabId) {
 }
 
 async function requestCompletedCallback(details) {
-  const statusCodes = [
-    400,
-    403,
-    404,
-    408,
-    410,
-    429,
-    451,
-    500,
-    502,
-    503,
-    504,
-    // Nonstandard
-    444,
-    450,
-    509,
-    530,
-    598,
-    // Cloudflare
-    520,
-    521,
-    522,
-    523,
-    524,
-    525,
-    526,
-    527
-  ];
-
-  if (statusCodes.indexOf(details.statusCode) !== -1) {
+  if (errorCodes.indexOf(details.statusCode) !== -1) {
     await showPageAction(details.tabId);
   }
 }
