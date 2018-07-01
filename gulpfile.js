@@ -140,18 +140,18 @@ gulp.task('manifest', function() {
         fileName: 'manifest.json',
         jsonSpace: '  ',
         edit: (parsedJson, file) => {
-          if (['chrome', 'opera'].indexOf(targetEnv) !== -1) {
+          if (['chrome', 'opera'].includes(targetEnv)) {
             delete parsedJson.applications;
             delete parsedJson.page_action;
             delete parsedJson.browser_action.browser_style;
             delete parsedJson.options_ui.browser_style;
           }
 
-          if (['firefox', 'chrome'].indexOf(targetEnv) !== -1) {
+          if (['firefox', 'chrome'].includes(targetEnv)) {
             delete parsedJson.minimum_opera_version;
           }
 
-          if (['firefox', 'opera'].indexOf(targetEnv) !== -1) {
+          if (['firefox', 'opera'].includes(targetEnv)) {
             delete parsedJson.minimum_chrome_version;
           }
 

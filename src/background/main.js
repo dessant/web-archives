@@ -213,7 +213,7 @@ async function evalExecEngine(tabId, engineId, url) {
     'yahooJp',
     'megalodon'
   ];
-  if (execEngines.indexOf(engineId) !== -1) {
+  if (execEngines.includes(engineId)) {
     const requestCompletedCallback = async function(response) {
       if (response.statusCode === 200) {
         removeCallbacks();
@@ -247,7 +247,7 @@ async function execEngineContent(tabId, engineId, url) {
   const tabUpdateCallback = async function(eventTabId, changes, tab) {
     if (eventTabId === tabId && tab.status === 'complete') {
       removeCallbacks();
-      if (urlExecEngines.indexOf(engineId) !== -1) {
+      if (urlExecEngines.includes(engineId)) {
         await executeCode(`var url = '${url}';`, tabId, 0, 'document_idle');
       }
       executeFile(
@@ -349,7 +349,7 @@ async function showPageAction(tabId) {
 }
 
 async function requestCompletedCallback(details) {
-  if (errorCodes.indexOf(details.statusCode) !== -1) {
+  if (errorCodes.includes(details.statusCode)) {
     await showPageAction(details.tabId);
   }
 }
