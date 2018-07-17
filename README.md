@@ -3,11 +3,11 @@
 
 <p align="center">
   </br></br>
-  <a href="https://goo.gl/j9nHXH">
+  <a href="https://chrome.google.com/webstore/detail/view-page-archive-cache/hkligngkgcpcolhcnkgccglchdafcnao">
     <img src="https://i.imgur.com/q6E8SOD.png" alt="Chrome Web Store"></a>
-  <a href="https://goo.gl/3xXyXc">
+  <a href="https://addons.mozilla.org/en-US/firefox/addon/view-page-archive/">
     <img src="https://i.imgur.com/dvof8rG.png" alt="Firefox add-ons"></a>
-  <a href="">
+  <a href="https://addons.opera.com/en/extensions/details/view-page-archive-cache/">
     <img src="https://i.imgur.com/wK10qEV.png" alt="Opera add-ons"></a>
   </br></br>
 </p>
