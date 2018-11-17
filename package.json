@@ -28,6 +28,7 @@
   "browserslist": [
     "Chrome >= 55",
     "Firefox >= 52",
+    "FirefoxAndroid >= 57",
     "Opera >= 42"
   ],
   "dependencies": {
