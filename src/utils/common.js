@@ -45,7 +45,7 @@ async function getActiveTab() {
   return tab;
 }
 
-module.exports = {
+export {
   getText,
   createTab,
   executeCode,

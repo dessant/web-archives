@@ -90,8 +90,4 @@ const errorCodes = [
   527
 ];
 
-module.exports = {
-  optionKeys,
-  engines,
-  errorCodes
-};
+export {optionKeys, engines, errorCodes};

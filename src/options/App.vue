@@ -1,3 +1,4 @@
+<!-- prettier-ignore -->
 <template>
 <div id="app" v-if="dataLoaded">
   <div class="section">
@@ -84,7 +85,7 @@
 
 <script>
 import browser from 'webextension-polyfill';
-import _ from 'lodash';
+import {includes, without} from 'lodash-es';
 import draggable from 'vuedraggable';
 import {Checkbox, FormField, Switch, Select} from 'ext-components';
 
@@ -132,12 +133,12 @@ export default {
     getText,
 
     engineEnabled: function(engine) {
-      return !_.includes(this.options.disabledEngines, engine);
+      return !includes(this.options.disabledEngines, engine);
     },
 
     setEngineState: async function(engine, enabled) {
       if (enabled) {
-        this.options.disabledEngines = _.without(
+        this.options.disabledEngines = without(
           this.options.disabledEngines,
           engine
         );
@@ -184,11 +185,6 @@ body {
   overflow: visible !important;
 }
 
-.mdc-select__menu {
-  top: inherit !important;
-  left: inherit !important;
-}
-
 .mdc-checkbox {
   margin-left: 8px;
 }
@@ -205,15 +201,15 @@ body {
 
 .section-title,
 .section-desc {
-  @include mdc-theme-prop('color', 'text-primary-on-light');
+  @include mdc-theme-prop(color, text-primary-on-light);
 }
 
 .section-title {
-  @include mdc-typography('title');
+  @include mdc-typography(headline6);
 }
 
 .section-desc {
-  @include mdc-typography('body1');
+  @include mdc-typography(body2);
   padding-top: 8px;
 }
 

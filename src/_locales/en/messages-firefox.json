@@ -35,11 +35,6 @@
     }
   },
 
-  "contextMenuGroupTitle_viewArchive_main": {
-    "message": "View Page Archive On...",
-    "description": "Title of the context menu group."
-  },
-
   "optionSectionTitle_engines": {
     "message": "Search Engines",
     "description": "Title of the search engine options section."

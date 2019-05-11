@@ -1,5 +1,6 @@
 import browser from 'webextension-polyfill';
 
+import {initStorage} from 'storage/init';
 import storage from 'storage/storage';
 import {
   getText,
@@ -109,7 +110,7 @@ async function createMenu(options) {
 
     createMenuItem({
       id: 'par-1',
-      title: getText('contextMenuGroupTitle_viewArchive_main'),
+      title: getText('extensionShortName'),
       contexts
     });
 
@@ -310,7 +311,7 @@ async function onActionPopupClick(engine, url) {
 
 function onMessage(request, sender, sendResponse) {
   if (request.id === 'actionPopupSubmit') {
-    onActionPopupClick(request.engine, request.customUrl);
+    onActionPopupClick(request.engine, request.pageUrl);
   }
 }
 
@@ -475,7 +476,7 @@ async function setBrowserAction() {
     return;
   }
 
-  browser.browserAction.setTitle({title: getText('extensionName')});
+  browser.browserAction.setTitle({title: getText('extensionShortName')});
   if (enEngines.length === 0) {
     if (!hasListener) {
       browser.browserAction.onClicked.addListener(onActionClick);
@@ -498,7 +499,7 @@ function addMessageListener() {
 }
 
 async function onLoad() {
-  await storage.init('sync');
+  await initStorage('sync');
   await setContextMenu();
   await setBrowserAction();
   setRequestListeners();

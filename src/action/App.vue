@@ -1,24 +1,32 @@
+<!-- prettier-ignore -->
 <template>
 <div id="app" v-show="dataLoaded">
   <div class="header">
     <div class="title">
-      {{ getText('extensionName') }}
+      {{ getText('extensionShortName') }}
     </div>
     <div class="header-buttons">
-      <img class="contribute-icon"
+      <v-icon-button class="contribute-button"
+          :ripple="false"
           src="/src/contribute/assets/heart.svg"
           @click="showContribute">
-      <img class="settings-icon" src="/src/icons/misc/settings.svg"
-          @click="showSettings = !showSettings"/>
+      </v-icon-button>
+
+      <v-icon-button class="settings-button"
+          :ripple="false"
+          @click="showSettings = !showSettings">
+        <img class="mdc-icon-button__icon"
+            :src="`/src/icons/misc/${showSettings ? 'linkOn': 'link'}.svg`"/>
+      </v-icon-button>
     </div>
   </div>
 
-  <transition name="settings"
-      @after-enter="handleSizeChange"
-      @after-leave="handleSizeChange">
+  <transition name="settings" v-if="dataLoaded"
+      @after-enter="settingsAfterEnter"
+      @after-leave="settingsAfterLeave">
     <div class="settings" v-show="showSettings">
-      <v-textfield v-model="customUrl"
-          :placeholder="getText('inputPlaceholder_customURL')"
+      <v-textfield ref="pageUrlInput" v-model.trim="pageUrl"
+          :placeholder="getText('inputPlaceholder_pageURL')"
           :fullwidth="true">
       </v-textfield>
     </div>
@@ -26,8 +34,8 @@
 
   <div class="list-padding-top"></div>
   <ul class="mdc-list list list-bulk-button" v-if="searchAllEngines">
-    <li class="mdc-list-item list-item ripple-surface"
-        @click="selectEngine('allEngines')">
+    <li class="mdc-list-item list-item"
+        @click="selectItem('allEngines')">
       <img class="mdc-list-item__graphic list-item-icon"
           :src="getEngineIcon('allEngines')">
       {{ getText('engineName_allEngines_full') }}
@@ -40,10 +48,10 @@
   <div class="list-items-wrap" ref="items" :class="listClasses">
     <resize-observer @notify="handleSizeChange"></resize-observer>
     <ul class="mdc-list list list-items">
-      <li class="mdc-list-item list-item ripple-surface"
+      <li class="mdc-list-item list-item"
           v-for="engine in engines"
           :key="engine.id"
-          @click="selectEngine(engine)">
+          @click="selectItem(engine)">
         <img class="mdc-list-item__graphic list-item-icon"
             :src="getEngineIcon(engine)">
         {{ getText(`engineName_${engine}_short`) }}
@@ -57,7 +65,9 @@
 <script>
 import browser from 'webextension-polyfill';
 import {ResizeObserver} from 'vue-resize';
-import {TextField} from 'ext-components';
+import {MDCList} from '@material/list';
+import {MDCRipple} from '@material/ripple';
+import {IconButton, TextField} from 'ext-components';
 
 import storage from 'storage/storage';
 import {
@@ -71,6 +81,7 @@ import {targetEnv} from 'utils/config';
 
 export default {
   components: {
+    [IconButton.name]: IconButton,
     [TextField.name]: TextField,
     [ResizeObserver.name]: ResizeObserver
   },
@@ -85,7 +96,7 @@ export default {
 
       engines: [],
       searchAllEngines: false,
-      customUrl: ''
+      pageUrl: ''
     };
   },
 
@@ -111,18 +122,17 @@ export default {
       return `/src/icons/engines/${engine}.${ext}`;
     },
 
-    selectEngine: async function(engine) {
-      let customUrl = this.customUrl;
-      if (customUrl) {
-        customUrl = customUrl.trim();
-        if (!validateUrl(customUrl)) {
+    selectItem: async function(engine) {
+      if (this.showSettings) {
+        if (!validateUrl(this.pageUrl)) {
+          this.focusPageUrlInput();
           showNotification({messageId: 'error_invalidUrl'});
           return;
         }
       }
       browser.runtime.sendMessage({
         id: 'actionPopupSubmit',
-        customUrl,
+        pageUrl: this.pageUrl,
         engine
       });
 
@@ -142,15 +152,28 @@ export default {
       }
     },
 
+    focusPageUrlInput: function() {
+      this.$refs.pageUrlInput.$refs.input.focus();
+    },
+
     handleSizeChange: function() {
       const items = this.$refs.items;
       this.hasScrollBar = items.scrollHeight > items.clientHeight;
+    },
+
+    settingsAfterEnter: function() {
+      this.handleSizeChange();
+      this.focusPageUrlInput();
+    },
+
+    settingsAfterLeave: function() {
+      this.handleSizeChange();
+      this.pageUrl = '';
     }
   },
 
   created: async function() {
-    const currentTab = await browser.tabs.getCurrent();
-    this.isPopup = !currentTab || currentTab instanceof Array;
+    this.isPopup = !(await browser.tabs.getCurrent());
     if (!this.isPopup) {
       document.documentElement.style.height = '100%';
       document.body.style.minWidth = 'initial';
@@ -168,7 +191,7 @@ export default {
       (await isAndroid()) &&
       (enEngines.length <= 1 || options.searchAllEnginesAction === 'main')
     ) {
-      // Removing the action popup has no effect on Android
+      // Removing the action popup has no effect on Firefox for Android
       showNotification({messageId: 'error_optionsNotApplied'});
       return;
     }
@@ -177,6 +200,19 @@ export default {
     this.engines = enEngines;
 
     this.dataLoaded = true;
+  },
+
+  mounted: function() {
+    window.setTimeout(() => {
+      for (const listEl of document.querySelectorAll(
+        '.list-bulk-button, .list-items'
+      )) {
+        const list = new MDCList(listEl);
+        for (const el of list.listElements) {
+          MDCRipple.attachTo(el);
+        }
+      }
+    }, 500);
   }
 };
 </script>
@@ -185,9 +221,9 @@ export default {
 $mdc-theme-primary: #1abc9c;
 
 @import '@material/list/mdc-list';
+@import '@material/icon-button/mixins';
 @import '@material/theme/mixins';
 @import '@material/typography/mixins';
-@import '@material/ripple/mixins';
 
 @import 'vue-resize/dist/vue-resize';
 
@@ -203,7 +239,7 @@ body,
 
 body {
   margin: 0;
-  min-width: 413px;
+  min-width: 340px;
   overflow: hidden;
   @include mdc-typography-base;
   font-size: 100%;
@@ -217,32 +253,33 @@ body {
   white-space: nowrap;
   padding-top: 16px;
   padding-left: 16px;
-  padding-right: 16px;
+  padding-right: 12px;
 }
 
 .title {
   overflow: hidden;
   text-overflow: ellipsis;
-  @include mdc-typography('title');
-  @include mdc-theme-prop('color', 'text-primary-on-light');
+  @include mdc-typography(headline6);
+  @include mdc-theme-prop(color, text-primary-on-light);
 }
 
 .header-buttons {
   display: flex;
   align-items: center;
+  height: 24px;
   margin-left: 56px;
-  @media (max-width: 412px) {
+  @media (max-width: 339px) {
     margin-left: 32px;
   }
 }
 
-.contribute-icon {
-  margin-right: 16px;
-  cursor: pointer;
+.contribute-button,
+.settings-button {
+  @include mdc-icon-button-size(24px, 24px, 8px);
 }
 
-.settings-icon {
-  cursor: pointer;
+.contribute-button {
+  margin-right: 4px;
 }
 
 .settings {
@@ -275,10 +312,12 @@ body {
 }
 
 .list-bulk-button {
+  position: relative;
   height: 48px;
 }
 
 .list-separator {
+  position: relative;
   height: 1px;
 }
 
@@ -302,15 +341,5 @@ body {
 
 .list-item-icon {
   margin-right: 16px !important;
-}
-
-.ripple-surface {
-  @include mdc-ripple-surface;
-  @include mdc-ripple-radius-bounded;
-  @include mdc-states;
-
-  position: sticky;
-  outline: none;
-  overflow: hidden;
 }
 </style>

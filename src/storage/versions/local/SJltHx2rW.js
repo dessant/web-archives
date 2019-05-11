@@ -55,9 +55,4 @@ async function downgrade() {
   return storage.clear();
 }
 
-module.exports = {
-  message,
-  revision,
-  upgrade,
-  downgrade
-};
+export {message, revision, upgrade, downgrade};

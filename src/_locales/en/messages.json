@@ -4,9 +4,13 @@
     "description": "Name of the extension."
   },
 
+  "extensionShortName": {
+    "message": "View Page Archive",
+    "description": "Short name of the extension."
+  },
+
   "extensionDescription": {
-    "message":
-      "View archived and cached versions of web pages on 10+ search engines, such as the Wayback Machine, Archive.is, Google, Bing, Yandex, Gigablast, WebCite, Sogou, Memento, Naver and Yahoo Japan.",
+    "message": "View archived and cached versions of web pages on 10+ search engines, such as the Wayback Machine, Archive.is, Google, Bing, Yandex, Gigablast, WebCite, Sogou, Memento, Naver and Yahoo Japan.",
     "description": "Description of the extension."
   },
 
@@ -51,7 +55,7 @@
   },
 
   "engineName_archiveOrg_short": {
-    "message": "Archive.org",
+    "message": "Wayback Machine",
     "description": "Short name of the search engine."
   },
 
@@ -196,19 +200,13 @@
     }
   },
 
-  "contextMenuGroupTitle_viewArchive_main": {
-    "message": "View page archive on...",
-    "description": "Title of the context menu group."
-  },
-
   "optionSectionTitle_engines": {
     "message": "Search engines",
     "description": "Title of the search engine options section."
   },
 
   "optionSectionDescription_engines": {
-    "message":
-      "Toggle search engines and customize their order (drag and drop)",
+    "message": "Toggle search engines and customize their order (drag and drop)",
     "description": "Description of the search engine options section."
   },
 
@@ -297,8 +295,8 @@
     "description": "Title of the option."
   },
 
-  "inputPlaceholder_customURL": {
-    "message": "Custom URL",
+  "inputPlaceholder_pageURL": {
+    "message": "Page URL",
     "description": "Placeholder of the input."
   },
 
@@ -333,14 +331,12 @@
   },
 
   "error_allEnginesDisabled": {
-    "message":
-      "All search engines have been disabled. Visit the options page and enable at least one search engine.",
+    "message": "All search engines have been disabled. Visit the options page and enable at least one search engine.",
     "description": "Error message."
   },
 
   "error_internalError": {
-    "message":
-      "Something went wrong. Try viewing the page archive or cache again.",
+    "message": "Something went wrong. Try viewing the page archive or cache again.",
     "description": "Error message."
   }
 }

@@ -1,5 +1,5 @@
 import browser from 'webextension-polyfill';
-import _ from 'lodash';
+import {difference, isString} from 'lodash-es';
 
 import storage from 'storage/storage';
 import {getText, createTab, getActiveTab} from 'utils/common';
@@ -8,7 +8,7 @@ async function getEnabledEngines(options) {
   if (typeof options === 'undefined') {
     options = await storage.get(['engines', 'disabledEngines'], 'sync');
   }
-  return _.difference(options.engines, options.disabledEngines);
+  return difference(options.engines, options.disabledEngines);
 }
 
 function showNotification({message, messageId, title, type = 'info'}) {
@@ -41,14 +41,14 @@ function getOptionLabels(data, scope = 'optionValue') {
 }
 
 function validateUrl(url) {
-  if (url.length > 2048) {
+  if (!isString(url) || url.length > 2048) {
     return;
   }
 
   let parsedUrl;
   try {
     parsedUrl = new URL(url);
-  } catch (e) {
+  } catch (err) {
     return;
   }
 
@@ -69,7 +69,7 @@ async function showContributePage(action = false) {
   await createTab(url, activeTab.index + 1);
 }
 
-module.exports = {
+export {
   getEnabledEngines,
   showNotification,
   getOptionLabels,
