@@ -1,6 +1,21 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [1.6.0](https://github.com/dessant/view-page-archive/compare/v1.5.3...v1.6.0) (2019-05-11)
+
+
+### Bug Fixes
+
+* remove URL hash before search ([1ebf421](https://github.com/dessant/view-page-archive/commit/1ebf421)), closes [#7](https://github.com/dessant/view-page-archive/issues/7)
+
+
+### Features
+
+* change license to GPLv3 ([f950b0a](https://github.com/dessant/view-page-archive/commit/f950b0a))
+* update dependencies and refresh user interface ([bb3407d](https://github.com/dessant/view-page-archive/commit/bb3407d))
+
+
 
 <a name="1.5.3"></a>
 ## [1.5.3](https://github.com/dessant/view-page-archive/compare/v1.5.2...v1.5.3) (2018-07-12)
