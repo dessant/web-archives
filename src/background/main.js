@@ -15,6 +15,7 @@ import {
   getEnabledEngines,
   showNotification,
   validateUrl,
+  normalizeUrl,
   showContributePage
 } from 'utils/app';
 import {optionKeys, engines, errorCodes} from 'utils/data';
@@ -156,6 +157,7 @@ async function searchUrl(url, menuId, tabIndex, tabId) {
     await showNotification({messageId: 'error_invalidUrl'});
     return;
   }
+  url = normalizeUrl(url);
   const options = await storage.get(optionKeys, 'sync');
 
   let tabActive = !options.tabInBackgound;

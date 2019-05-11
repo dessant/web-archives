@@ -59,6 +59,15 @@ function validateUrl(url) {
   return true;
 }
 
+function normalizeUrl(url) {
+  const parsedUrl = new URL(url);
+  if (parsedUrl.hash) {
+    parsedUrl.hash = '';
+  }
+
+  return parsedUrl.toString();
+}
+
 async function showContributePage(action = false) {
   await storage.set({contribPageLastOpen: new Date().getTime()}, 'sync');
   const activeTab = await getActiveTab();
@@ -74,5 +83,6 @@ export {
   showNotification,
   getOptionLabels,
   validateUrl,
+  normalizeUrl,
   showContributePage
 };
