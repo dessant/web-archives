@@ -16,6 +16,7 @@ const jsonmin = require('gulp-jsonmin');
 const imagemin = require('gulp-imagemin');
 const svg2png = require('svg2png');
 const sharp = require('sharp');
+const dedent = require('dedent');
 
 const targetEnv = process.env.TARGET_ENV || 'firefox';
 const isProduction = process.env.NODE_ENV === 'production';
@@ -177,11 +178,31 @@ gulp.task('manifest', function(done) {
   done();
 });
 
+gulp.task('license', function(done) {
+  let year = '2017';
+  const currentYear = new Date().getFullYear().toString();
+  if (year !== currentYear) {
+    year = `${year}-${currentYear}`;
+  }
+
+  const notice = dedent`
+    View Page Archive & Cache
+    Copyright (c) ${year} Armin Sebastian
+
+    This software is released under the terms of the GNU General Public License v3.0.
+    See the LICENSE file for further information.
+  `;
+
+  writeFileSync(`${distDir}/NOTICE`, notice);
+  gulp.src(['LICENSE']).pipe(gulp.dest(distDir));
+  done();
+});
+
 gulp.task('copy', function(done) {
   gulp
     .src('node_modules/ext-contribute/src/assets/*.@(jpg|png)')
     .pipe(gulp.dest(`${distDir}/src/contribute/assets`));
-  gulp.src(['LICENSE', 'src*/icons/**/*.@(jpg|png)']).pipe(gulp.dest(distDir));
+  gulp.src(['src*/icons/**/*.@(jpg|png)']).pipe(gulp.dest(distDir));
   done();
 });
 
@@ -189,7 +210,15 @@ gulp.task(
   'build',
   gulp.series(
     'clean',
-    gulp.parallel('js', 'html', 'icons', 'fonts', 'locale', 'manifest'),
+    gulp.parallel(
+      'js',
+      'html',
+      'icons',
+      'fonts',
+      'locale',
+      'manifest',
+      'license'
+    ),
     'copy'
   )
 );
