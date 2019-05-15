@@ -3,7 +3,7 @@
   "version": "1.6.0",
   "author": "Armin Sebastian",
   "repository": "https://github.com/dessant/view-page-archive",
-  "license": "MIT",
+  "license": "GPL-3.0-only",
   "scripts": {
     "_build": "cross-env NODE_ENV=development gulp",
     "build:chrome": "cross-env TARGET_ENV=chrome yarn _build",

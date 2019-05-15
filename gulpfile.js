@@ -142,7 +142,7 @@ gulp.task('locale', function(done) {
 });
 
 gulp.task('manifest', function(done) {
-  return gulp
+  gulp
     .src('src/manifest.json')
     .pipe(
       jsonMerge({
