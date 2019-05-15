@@ -157,7 +157,7 @@ async function searchUrl(url, menuId, tabIndex, tabId) {
     await showNotification({messageId: 'error_invalidUrl'});
     return;
   }
-  url = normalizeUrl(url);
+
   const options = await storage.get(optionKeys, 'sync');
 
   let tabActive = !options.tabInBackgound;
@@ -192,6 +192,10 @@ async function searchEngine(
   tabIndex,
   tabActive
 ) {
+  if (engineId === 'archiveOrg') {
+    url = normalizeUrl(url);
+  }
+
   const tabUrl = await getTabUrl(url, engineId, options);
 
   if (options.openNewTab) {
