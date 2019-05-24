@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/dessant/view-page-archive/compare/v1.6.1...v1.7.0) (2019-05-24)
+
+
+### Features
+
+* build with travis ([92f9d54](https://github.com/dessant/view-page-archive/commit/92f9d54))
+
+
+
 ### [1.6.1](https://github.com/dessant/view-page-archive/compare/v1.6.0...v1.6.1) (2019-05-15)
 
 
