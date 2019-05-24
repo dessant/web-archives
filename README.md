@@ -16,8 +16,10 @@
 
 The continued development of View Page Archive & Cache is made possible
 thanks to the support of awesome backers. If you'd like to join them,
-please consider contributing with [Patreon](https://www.patreon.com/dessant),
-[PayPal](https://www.paypal.me/ArminSebastian) or [Bitcoin](https://goo.gl/uJUAaU).
+please consider contributing with
+[Patreon](https://armin.dev/go/patreon?pr=view-page-archive&src=repo),
+[PayPal](https://armin.dev/go/paypal?pr=view-page-archive&src=repo) or
+[Bitcoin](https://armin.dev/go/bitcoin?pr=view-page-archive&src=repo).
 
 ## Description
 
