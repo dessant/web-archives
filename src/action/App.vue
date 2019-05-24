@@ -220,6 +220,7 @@ export default {
 <style lang="scss">
 $mdc-theme-primary: #1abc9c;
 
+@import '@material/icon-button/mdc-icon-button';
 @import '@material/list/mdc-list';
 @import '@material/icon-button/mixins';
 @import '@material/theme/mixins';
