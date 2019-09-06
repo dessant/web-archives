@@ -144,7 +144,11 @@ async function createMenu(options) {
 }
 
 async function getTabUrl(url, engineId, options) {
-  let tabUrl = engines[engineId].url.replace(/{url}/g, encodeURIComponent(url));
+  if (engineId !== 'archiveIs') {
+    url = encodeURIComponent(url);
+  }
+
+  let tabUrl = engines[engineId].url.replace(/{url}/g, url);
   if (engineId === 'webcite') {
     tabUrl = tabUrl.replace('{date}', new Date().toISOString().split('T')[0]);
   }
