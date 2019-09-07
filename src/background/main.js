@@ -149,7 +149,11 @@ async function createMenu(options) {
 }
 
 async function getTabUrl(url, engineId, options) {
-  if (!['archiveIs', 'archiveIsAll'].includes(engineId)) {
+  if (
+    !['archiveOrg', 'archiveOrgAll', 'archiveIs', 'archiveIsAll'].includes(
+      engineId
+    )
+  ) {
     url = encodeURIComponent(url);
   }
 
