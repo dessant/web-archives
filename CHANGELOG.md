@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/dessant/view-page-archive/compare/v1.7.2...v1.8.0) (2019-09-07)
+
+
+### Bug Fixes
+
+* do not encode URL for Archive.is ([e222485](https://github.com/dessant/view-page-archive/commit/e222485)), closes [#12](https://github.com/dessant/view-page-archive/issues/12)
+* do not encode URL for Wayback Machine ([ab2f19b](https://github.com/dessant/view-page-archive/commit/ab2f19b))
+
+
+### Features
+
+* new engines for listing all versions on Wayback Machine and Archive.is ([9f389db](https://github.com/dessant/view-page-archive/commit/9f389db)), closes [#11](https://github.com/dessant/view-page-archive/issues/11)
+
 ### [1.7.2](https://github.com/dessant/view-page-archive/compare/v1.7.1...v1.7.2) (2019-08-25)
 
 ### [1.7.1](https://github.com/dessant/view-page-archive/compare/v1.7.0...v1.7.1) (2019-06-25)
