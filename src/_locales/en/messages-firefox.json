@@ -9,6 +9,26 @@
     "description": "Full name of the search engine."
   },
 
+  "engineName_archiveOrgAll_short": {
+    "message": "Wayback Machine (All)",
+    "description": "Short name of the search engine."
+  },
+
+  "engineName_archiveOrgAll_full": {
+    "message": "Wayback Machine (All)",
+    "description": "Full name of the search engine."
+  },
+
+  "engineName_archiveIsAll_short": {
+    "message": "Archive.is (All)",
+    "description": "Short name of the search engine."
+  },
+
+  "engineName_archiveIsAll_full": {
+    "message": "Archive.is (All)",
+    "description": "Full name of the search engine."
+  },
+
   "engineName_allEngines_short": {
     "message": "All Engines",
     "description": "Short name of the search engine."

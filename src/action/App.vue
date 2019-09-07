@@ -114,11 +114,17 @@ export default {
     getEngineIcon: function(engine) {
       if (engine === 'googleText') {
         engine = 'google';
+      } else if (engine === 'archiveOrgAll') {
+        engine = 'archiveOrg';
+      } else if (engine === 'archiveIsAll') {
+        engine = 'archiveIs';
       }
+
       let ext = 'svg';
       if (['gigablast', 'megalodon'].includes(engine)) {
         ext = 'png';
       }
+
       return `/src/icons/engines/${engine}.${ext}`;
     },
 

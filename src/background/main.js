@@ -24,7 +24,12 @@ import {targetEnv} from 'utils/config';
 function getEngineMenuIcons(engine) {
   if (engine === 'googleText') {
     engine = 'google';
+  } else if (engine === 'archiveOrgAll') {
+    engine = 'archiveOrg';
+  } else if (engine === 'archiveIsAll') {
+    engine = 'archiveIs';
   }
+
   if (['gigablast', 'megalodon'].includes(engine)) {
     return {
       '16': `src/icons/engines/${engine}-16.png`,
@@ -144,7 +149,7 @@ async function createMenu(options) {
 }
 
 async function getTabUrl(url, engineId, options) {
-  if (engineId !== 'archiveIs') {
+  if (!['archiveIs', 'archiveIsAll'].includes(engineId)) {
     url = encodeURIComponent(url);
   }
 
@@ -196,7 +201,7 @@ async function searchEngine(
   tabIndex,
   tabActive
 ) {
-  if (engineId === 'archiveOrg') {
+  if (['archiveOrg', 'archiveOrgAll'].includes(engineId)) {
     url = normalizeUrl(url);
   }
 

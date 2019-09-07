@@ -13,6 +13,9 @@ const engines = {
   archiveOrg: {
     url: 'https://web.archive.org/web/{url}'
   },
+  archiveOrgAll: {
+    url: 'https://web.archive.org/web/*/{url}'
+  },
   google: {
     url: 'https://webcache.googleusercontent.com/search?q=cache:{url}'
   },
@@ -27,6 +30,9 @@ const engines = {
   },
   archiveIs: {
     url: 'https://archive.is/newest/{url}'
+  },
+  archiveIsAll: {
+    url: 'https://archive.is/{url}'
   },
   memento: {
     url: 'https://timetravel.mementoweb.org/reconstruct/{url}'
