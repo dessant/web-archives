@@ -32,7 +32,6 @@ Supported search engines, archive and cache sources:
 
 * Wayback Machine
 * Google Cache
-* Google Cache (text-only)
 * Bing Cache
 * Yandex Cache
 * Archive.is
