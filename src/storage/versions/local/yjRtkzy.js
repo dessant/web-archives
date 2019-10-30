@@ -5,7 +5,7 @@ const message = 'Revision description';
 const revision = 'yjRtkzy';
 const downRevision = 'rJXbW1ZHmM';
 
-const storage = browser.storage.sync;
+const storage = browser.storage.local;
 
 async function upgrade() {
   const changes = {};
