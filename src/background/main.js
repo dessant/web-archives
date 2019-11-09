@@ -212,7 +212,7 @@ async function searchEngine(
   const tabUrl = await getTabUrl(url, engineId, options);
 
   if (options.openNewTab) {
-    const tab = await createTab(tabUrl, tabIndex, tabActive);
+    const tab = await createTab(tabUrl, tabIndex, tabId, tabActive);
     tabId = tab.id;
   } else {
     await browser.tabs.update(tabId, {url: tabUrl});

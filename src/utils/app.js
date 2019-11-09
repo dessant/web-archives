@@ -75,7 +75,7 @@ async function showContributePage(action = false) {
   if (action) {
     url = `${url}?action=${action}`;
   }
-  await createTab(url, activeTab.index + 1);
+  await createTab(url, activeTab.index + 1, activeTab.id);
 }
 
 export {

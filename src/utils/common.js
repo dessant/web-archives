@@ -2,10 +2,13 @@ import browser from 'webextension-polyfill';
 
 const getText = browser.i18n.getMessage;
 
-function createTab(url, index, active = true) {
+function createTab(url, index, openerTabId, active = true) {
   const props = {url: url, active: active};
   if (typeof index !== 'undefined') {
     props['index'] = index;
+  }
+  if (typeof openerTabId !== 'undefined') {
+    props['openerTabId'] = openerTabId;
   }
   return browser.tabs.create(props);
 }
