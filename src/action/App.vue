@@ -1,65 +1,82 @@
-<!-- prettier-ignore -->
 <template>
-<div id="app" v-show="dataLoaded">
-  <div class="header">
-    <div class="title">
-      {{ getText('extensionName') }}
-    </div>
-    <div class="header-buttons">
-      <v-icon-button class="contribute-button"
+  <div id="app" v-show="dataLoaded">
+    <div class="header">
+      <div class="title">
+        {{ getText('extensionName') }}
+      </div>
+      <div class="header-buttons">
+        <v-icon-button
+          class="contribute-button"
           :ripple="false"
           src="/src/contribute/assets/heart.svg"
-          @click="showContribute">
-      </v-icon-button>
+          @click="showContribute"
+        >
+        </v-icon-button>
 
-      <v-icon-button class="settings-button"
+        <v-icon-button
+          class="settings-button"
           :ripple="false"
-          @click="showSettings = !showSettings">
-        <img class="mdc-icon-button__icon"
-            :src="`/src/icons/misc/${showSettings ? 'linkOn': 'link'}.svg`"/>
-      </v-icon-button>
+          @click="showSettings = !showSettings"
+        >
+          <img
+            class="mdc-icon-button__icon"
+            :src="`/src/icons/misc/${showSettings ? 'linkOn' : 'link'}.svg`"
+          />
+        </v-icon-button>
+      </div>
     </div>
-  </div>
 
-  <transition name="settings" v-if="dataLoaded"
+    <transition
+      name="settings"
+      v-if="dataLoaded"
       @after-enter="settingsAfterEnter"
-      @after-leave="settingsAfterLeave">
-    <div class="settings" v-show="showSettings">
-      <v-textfield ref="pageUrlInput" v-model.trim="pageUrl"
+      @after-leave="settingsAfterLeave"
+    >
+      <div class="settings" v-show="showSettings">
+        <v-textfield
+          ref="pageUrlInput"
+          v-model.trim="pageUrl"
           :placeholder="getText('inputPlaceholder_pageURL')"
-          :fullwidth="true">
-      </v-textfield>
-    </div>
-  </transition>
+          :fullwidth="true"
+        >
+        </v-textfield>
+      </div>
+    </transition>
 
-  <div class="list-padding-top"></div>
-  <ul class="mdc-list list list-bulk-button" v-if="searchAllEngines">
-    <li class="mdc-list-item list-item"
-        @click="selectItem('allEngines')">
-      <img class="mdc-list-item__graphic list-item-icon"
-          :src="getEngineIcon('allEngines')">
-      {{ getText('engineName_allEngines_full') }}
-    </li>
-  </ul>
-  <ul class="mdc-list list list-separator"
-      v-if="searchAllEngines || hasScrollBar">
-    <li role="separator" class="mdc-list-divider"></li>
-  </ul>
-  <div class="list-items-wrap" ref="items" :class="listClasses">
-    <resize-observer @notify="handleSizeChange"></resize-observer>
-    <ul class="mdc-list list list-items">
-      <li class="mdc-list-item list-item"
-          v-for="engine in engines"
-          :key="engine.id"
-          @click="selectItem(engine)">
-        <img class="mdc-list-item__graphic list-item-icon"
-            :src="getEngineIcon(engine)">
-        {{ getText(`engineName_${engine}_short`) }}
+    <div class="list-padding-top"></div>
+    <ul class="mdc-list list list-bulk-button" v-if="searchAllEngines">
+      <li class="mdc-list-item list-item" @click="selectItem('allEngines')">
+        <img
+          class="mdc-list-item__graphic list-item-icon"
+          :src="getEngineIcon('allEngines')"
+        />
+        {{ getText('engineName_allEngines_full') }}
       </li>
     </ul>
+    <ul
+      class="mdc-list list list-separator"
+      v-if="searchAllEngines || hasScrollBar"
+    >
+      <li role="separator" class="mdc-list-divider"></li>
+    </ul>
+    <div class="list-items-wrap" ref="items" :class="listClasses">
+      <resize-observer @notify="handleSizeChange"></resize-observer>
+      <ul class="mdc-list list list-items">
+        <li
+          class="mdc-list-item list-item"
+          v-for="engine in engines"
+          :key="engine.id"
+          @click="selectItem(engine)"
+        >
+          <img
+            class="mdc-list-item__graphic list-item-icon"
+            :src="getEngineIcon(engine)"
+          />
+          {{ getText(`engineName_${engine}_short`) }}
+        </li>
+      </ul>
+    </div>
   </div>
-
-</div>
 </template>
 
 <script>

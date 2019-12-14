@@ -1,86 +1,101 @@
-<!-- prettier-ignore -->
 <template>
-<div id="app" v-if="dataLoaded">
-  <div class="section">
-    <div class="section-title" v-once>
-      {{ getText('optionSectionTitle_engines') }}
-    </div>
-    <div class="section-desc" v-once>
-      {{ getText('optionSectionDescription_engines') }}
-    </div>
-    <v-draggable class="option-wrap" :list="options.engines">
-      <div class="option" v-for="engine in options.engines" :key="engine.id">
-        <v-form-field :input-id="engine"
-            :label="getText(`engineName_${engine}_full`)">
-          <v-checkbox :id="engine" :checked="engineEnabled(engine)"
-              @change="setEngineState(engine, $event)">
-          </v-checkbox>
-        </v-form-field>
+  <div id="app" v-if="dataLoaded">
+    <div class="section">
+      <div class="section-title" v-once>
+        {{ getText('optionSectionTitle_engines') }}
       </div>
-    </v-draggable>
-  </div>
-
-  <div class="section" v-if="contextMenuEnabled">
-    <div class="section-title" v-once>
-      {{ getText('optionSectionTitle_contextmenu') }}
+      <div class="section-desc" v-once>
+        {{ getText('optionSectionDescription_engines') }}
+      </div>
+      <v-draggable class="option-wrap" :list="options.engines">
+        <div class="option" v-for="engine in options.engines" :key="engine.id">
+          <v-form-field
+            :input-id="engine"
+            :label="getText(`engineName_${engine}_full`)"
+          >
+            <v-checkbox
+              :id="engine"
+              :checked="engineEnabled(engine)"
+              @change="setEngineState(engine, $event)"
+            >
+            </v-checkbox>
+          </v-form-field>
+        </div>
+      </v-draggable>
     </div>
-    <div class="option-wrap">
-      <div class="option select">
-        <v-select :label="getText('optionTitle_showInContextMenu')"
+
+    <div class="section" v-if="contextMenuEnabled">
+      <div class="section-title" v-once>
+        {{ getText('optionSectionTitle_contextmenu') }}
+      </div>
+      <div class="option-wrap">
+        <div class="option select">
+          <v-select
+            :label="getText('optionTitle_showInContextMenu')"
             v-model="options.showInContextMenu"
-            :options="selectOptions.showInContextMenu">
-        </v-select>
-      </div>
-      <div class="option select">
-        <v-select :label="getText('optionTitle_searchAllEngines')"
+            :options="selectOptions.showInContextMenu"
+          >
+          </v-select>
+        </div>
+        <div class="option select">
+          <v-select
+            :label="getText('optionTitle_searchAllEngines')"
             v-model="options.searchAllEnginesContextMenu"
-            :options="selectOptions.searchAllEnginesContextMenu">
-        </v-select>
+            :options="selectOptions.searchAllEnginesContextMenu"
+          >
+          </v-select>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="section">
-    <div class="section-title" v-once>
-      {{ getText('optionSectionTitle_toolbar') }}
-    </div>
-    <div class="option-wrap">
-      <div class="option select">
-        <v-select :label="getText('optionTitle_searchAllEngines')"
+    <div class="section">
+      <div class="section-title" v-once>
+        {{ getText('optionSectionTitle_toolbar') }}
+      </div>
+      <div class="option-wrap">
+        <div class="option select">
+          <v-select
+            :label="getText('optionTitle_searchAllEngines')"
             v-model="options.searchAllEnginesAction"
-            :options="selectOptions.searchAllEnginesAction">
-        </v-select>
+            :options="selectOptions.searchAllEnginesAction"
+          >
+          </v-select>
+        </div>
+        <div class="option" v-show="targetEnv === 'firefox'">
+          <v-form-field
+            input-id="spa"
+            :label="getText('optionTitle_showPageAction')"
+          >
+            <v-switch id="spa" v-model="options.showPageAction"></v-switch>
+          </v-form-field>
+        </div>
       </div>
-      <div class="option" v-show="targetEnv === 'firefox'">
-        <v-form-field input-id="spa"
-            :label="getText('optionTitle_showPageAction')">
-          <v-switch id="spa" v-model="options.showPageAction"></v-switch>
-        </v-form-field>
+    </div>
+
+    <div class="section">
+      <div class="section-title" v-once>
+        {{ getText('optionSectionTitle_misc') }}
+      </div>
+      <div class="option-wrap">
+        <div class="option">
+          <v-form-field
+            input-id="ont"
+            :label="getText('optionTitle_openNewTab')"
+          >
+            <v-switch id="ont" v-model="options.openNewTab"></v-switch>
+          </v-form-field>
+        </div>
+        <div class="option">
+          <v-form-field
+            input-id="tib"
+            :label="getText('optionTitle_tabInBackgound')"
+          >
+            <v-switch id="tib" v-model="options.tabInBackgound"></v-switch>
+          </v-form-field>
+        </div>
       </div>
     </div>
   </div>
-
-  <div class="section">
-    <div class="section-title" v-once>
-      {{ getText('optionSectionTitle_misc') }}
-    </div>
-    <div class="option-wrap">
-      <div class="option">
-        <v-form-field input-id="ont"
-            :label="getText('optionTitle_openNewTab')">
-          <v-switch id="ont" v-model="options.openNewTab"></v-switch>
-        </v-form-field>
-      </div>
-      <div class="option">
-        <v-form-field input-id="tib"
-            :label="getText('optionTitle_tabInBackgound')">
-          <v-switch id="tib" v-model="options.tabInBackgound"></v-switch>
-        </v-form-field>
-      </div>
-    </div>
-  </div>
-
-</div>
 </template>
 
 <script>
