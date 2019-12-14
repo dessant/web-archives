@@ -1,8 +1,8 @@
 {
-  "name": "view-page-archive",
+  "name": "web-archives",
   "version": "1.8.0",
   "author": "Armin Sebastian",
-  "repository": "https://github.com/dessant/view-page-archive",
+  "repository": "https://github.com/dessant/web-archives",
   "license": "GPL-3.0-only",
   "scripts": {
     "_build": "cross-env NODE_ENV=development gulp",

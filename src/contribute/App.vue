@@ -19,7 +19,7 @@ export default {
   data: function() {
     return {
       extName: getText('extensionName'),
-      extSlug: 'view-page-archive',
+      extSlug: 'web-archives',
       notice: ''
     };
   },

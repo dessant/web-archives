@@ -1,9 +1,9 @@
 <p align="center"><img src="https://i.imgur.com/riAvJQD.png"></p>
-<h1 align="center">View Page Archive & Cache</h1>
+<h1 align="center">Web Archives</h1>
 
 <p align="center">
   </br></br>
-  <a href="https://chrome.google.com/webstore/detail/view-page-archive-cache/hkligngkgcpcolhcnkgccglchdafcnao">
+  <a href="https://chrome.google.com/webstore/detail/hkligngkgcpcolhcnkgccglchdafcnao">
     <img src="https://i.imgur.com/B0i5sn3.png" alt="Chrome Web Store"></a>
   <a href="https://addons.mozilla.org/en-US/firefox/addon/view-page-archive/">
     <img src="https://i.imgur.com/dvof8rG.png" alt="Firefox add-ons"></a>
@@ -14,16 +14,16 @@
 
 ## Supporting the Project
 
-The continued development of View Page Archive & Cache is made possible
+The continued development of Web Archives is made possible
 thanks to the support of awesome backers. If you'd like to join them,
 please consider contributing with
-[Patreon](https://armin.dev/go/patreon?pr=view-page-archive&src=repo),
-[PayPal](https://armin.dev/go/paypal?pr=view-page-archive&src=repo) or
-[Bitcoin](https://armin.dev/go/bitcoin?pr=view-page-archive&src=repo).
+[Patreon](https://armin.dev/go/patreon?pr=web-archives&src=repo),
+[PayPal](https://armin.dev/go/paypal?pr=web-archives&src=repo) or
+[Bitcoin](https://armin.dev/go/bitcoin?pr=web-archives&src=repo).
 
 ## Description
 
-View Page Archive & Cache is a browser extension which helps you to find
+Web Archives is a browser extension which helps you to find
 archived and cached versions of web pages. Searches can be initiated from
 the right-click context menu, the browser toolbar, or the address bar
 in case of a server error.

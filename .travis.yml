@@ -21,6 +21,6 @@ deploy:
   file_glob: true
   overwrite: true
   skip_cleanup: true
-  body: "Download and install the extension from the [extension store](https://github.com/dessant/view-page-archive#readme) of your browser.<br>Learn more about this release from the [changelog](https://github.com/dessant/view-page-archive/blob/master/CHANGELOG.md#changelog).<br><br>The assets listed below are not for general use."
+  body: "Download and install the extension from the [extension store](https://github.com/dessant/web-archives#readme) of your browser.<br>Learn more about this release from the [changelog](https://github.com/dessant/web-archives/blob/master/CHANGELOG.md#changelog).<br><br>The assets listed below are not for general use."
   on:
     tags: true

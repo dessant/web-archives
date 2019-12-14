@@ -184,7 +184,7 @@ gulp.task('license', function(done) {
     year = `${year}-${currentYear}`;
   }
 
-  const notice = `View Page Archive & Cache
+  const notice = `Web Archives
 Copyright (c) ${year} Armin Sebastian
 
 This software is released under the terms of the GNU General Public License v3.0.

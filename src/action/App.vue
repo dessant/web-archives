@@ -3,7 +3,7 @@
 <div id="app" v-show="dataLoaded">
   <div class="header">
     <div class="title">
-      {{ getText('extensionShortName') }}
+      {{ getText('extensionName') }}
     </div>
     <div class="header-buttons">
       <v-icon-button class="contribute-button"

@@ -1,12 +1,7 @@
 {
   "extensionName": {
-    "message": "View Page Archive & Cache",
+    "message": "Web Archives",
     "description": "Name of the extension."
-  },
-
-  "extensionShortName": {
-    "message": "View Page Archive",
-    "description": "Short name of the extension."
   },
 
   "extensionDescription": {
