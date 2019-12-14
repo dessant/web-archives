@@ -282,7 +282,7 @@ body {
 
 .contribute-button,
 .settings-button {
-  @include mdc-icon-button-size(24px, 24px, 8px);
+  @include mdc-icon-button-icon-size(24px, 24px, 8px);
 }
 
 .contribute-button {
