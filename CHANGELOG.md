@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/dessant/web-archives/compare/v1.8.0...v2.0.0) (2019-12-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* browser versions before Chrome 76, Firefox 68 and Opera 63
+are no longer supported
+
+### Features
+
+* add overflow menu with links for options and website ([e44c6e7](https://github.com/dessant/web-archives/commit/e44c6e748dfed32fc401491eba9296b908c97f4f))
+* rename project to Web Archives ([8ed68d0](https://github.com/dessant/web-archives/commit/8ed68d04228a2e385d09a5be5637f8a95c392e18))
+
+
+### Bug Fixes
+
+* reference appropriate storage ([e78fb74](https://github.com/dessant/web-archives/commit/e78fb74226dcdf70b01a8f1290900f79a080a54c))
+* set parent tab for search results opened in new tabs ([94f9fb0](https://github.com/dessant/web-archives/commit/94f9fb0d3f3bf96f262641b16c7da6fb2eb6f6d5)), closes [#14](https://github.com/dessant/web-archives/issues/14)
+
 ## [1.8.0](https://github.com/dessant/web-archives/compare/v1.7.2...v1.8.0) (2019-09-07)
 
 
