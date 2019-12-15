@@ -116,7 +116,7 @@ async function createMenu(options) {
 
     createMenuItem({
       id: 'par-1',
-      title: getText('extensionShortName'),
+      title: getText('extensionName'),
       contexts
     });
 
@@ -212,7 +212,7 @@ async function searchEngine(
   const tabUrl = await getTabUrl(url, engineId, options);
 
   if (options.openNewTab) {
-    const tab = await createTab(tabUrl, tabIndex, tabActive);
+    const tab = await createTab(tabUrl, {index: tabIndex, active: tabActive});
     tabId = tab.id;
   } else {
     await browser.tabs.update(tabId, {url: tabUrl});
@@ -495,7 +495,7 @@ async function setBrowserAction() {
     return;
   }
 
-  browser.browserAction.setTitle({title: getText('extensionShortName')});
+  browser.browserAction.setTitle({title: getText('extensionName')});
   if (enEngines.length === 0) {
     if (!hasListener) {
       browser.browserAction.onClicked.addListener(onActionClick);

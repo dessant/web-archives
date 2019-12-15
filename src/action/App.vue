@@ -7,7 +7,6 @@
       <div class="header-buttons">
         <v-icon-button
           class="contribute-button"
-          :ripple="false"
           src="/src/contribute/assets/heart.svg"
           @click="showContribute"
         >
@@ -15,15 +14,31 @@
 
         <v-icon-button
           class="settings-button"
-          :ripple="false"
-          @click="showSettings = !showSettings"
+          @click="showActionSettings = !showActionSettings"
         >
           <img
             class="mdc-icon-button__icon"
-            :src="`/src/icons/misc/${showSettings ? 'linkOn' : 'link'}.svg`"
+            :src="
+              `/src/icons/misc/${showActionSettings ? 'linkOn' : 'link'}.svg`
+            "
           />
         </v-icon-button>
+
+        <v-icon-button
+          class="menu-button"
+          src="/src/icons/misc/more.svg"
+          @click="showActionMenu"
+        >
+        </v-icon-button>
       </div>
+
+      <v-menu
+        ref="actionMenu"
+        class="action-menu"
+        :ripple="true"
+        :items="listItems.actionMenu"
+        @selected="onActionMenuSelect"
+      ></v-menu>
     </div>
 
     <transition
@@ -32,7 +47,7 @@
       @after-enter="settingsAfterEnter"
       @after-leave="settingsAfterLeave"
     >
-      <div class="settings" v-show="showSettings">
+      <div class="settings" v-show="showActionSettings">
         <v-textfield
           ref="pageUrlInput"
           v-model.trim="pageUrl"
@@ -84,14 +99,16 @@ import browser from 'webextension-polyfill';
 import {ResizeObserver} from 'vue-resize';
 import {MDCList} from '@material/list';
 import {MDCRipple} from '@material/ripple';
-import {IconButton, TextField} from 'ext-components';
+import {IconButton, TextField, Menu} from 'ext-components';
 
 import storage from 'storage/storage';
 import {
   getEnabledEngines,
   showNotification,
   validateUrl,
-  showContributePage
+  getListItems,
+  showContributePage,
+  showProjectPage
 } from 'utils/app';
 import {getText, isAndroid} from 'utils/common';
 import {targetEnv} from 'utils/config';
@@ -100,6 +117,7 @@ export default {
   components: {
     [IconButton.name]: IconButton,
     [TextField.name]: TextField,
+    [Menu.name]: Menu,
     [ResizeObserver.name]: ResizeObserver
   },
 
@@ -107,7 +125,12 @@ export default {
     return {
       dataLoaded: false,
 
-      showSettings: false,
+      listItems: getListItems(
+        {actionMenu: ['options', 'website']},
+        {scope: 'actionMenu'}
+      ),
+
+      showActionSettings: false,
       hasScrollBar: false,
       isPopup: false,
 
@@ -146,7 +169,7 @@ export default {
     },
 
     selectItem: async function(engine) {
-      if (this.showSettings) {
+      if (this.showActionSettings) {
         if (!validateUrl(this.pageUrl)) {
           this.focusPageUrlInput();
           showNotification({messageId: 'error_invalidUrl'});
@@ -165,6 +188,28 @@ export default {
     showContribute: async function() {
       await showContributePage();
       this.closeAction();
+    },
+
+    showOptions: async function() {
+      await browser.runtime.openOptionsPage();
+      this.closeAction();
+    },
+
+    showWebsite: async function() {
+      await showProjectPage();
+      this.closeAction();
+    },
+
+    showActionMenu: function() {
+      this.$refs.actionMenu.$emit('open');
+    },
+
+    onActionMenuSelect: async function(item) {
+      if (item === 'options') {
+        await this.showOptions();
+      } else if (item === 'website') {
+        await this.showWebsite();
+      }
     },
 
     closeAction: async function() {
@@ -263,7 +308,7 @@ body,
 
 body {
   margin: 0;
-  min-width: 340px;
+  min-width: 326px;
   overflow: hidden;
   @include mdc-typography-base;
   font-size: 100%;
@@ -277,7 +322,7 @@ body {
   white-space: nowrap;
   padding-top: 16px;
   padding-left: 16px;
-  padding-right: 12px;
+  padding-right: 8px;
 }
 
 .title {
@@ -292,18 +337,37 @@ body {
   align-items: center;
   height: 24px;
   margin-left: 56px;
-  @media (max-width: 339px) {
+  @media (max-width: 325px) {
     margin-left: 32px;
   }
 }
 
 .contribute-button,
-.settings-button {
-  @include mdc-icon-button-icon-size(24px, 24px, 8px);
+.settings-button,
+.menu-button {
+  @include mdc-icon-button-icon-size(24px, 24px, 6px);
+
+  &::before {
+    --mdc-ripple-fg-size: 20px;
+    --mdc-ripple-fg-scale: 1.8;
+    --mdc-ripple-left: 8px;
+    --mdc-ripple-top: 8px;
+  }
 }
 
 .contribute-button {
+  margin-right: 8px;
+}
+
+.settings-button {
   margin-right: 4px;
+}
+
+.action-menu {
+  left: auto !important;
+  top: 56px !important;
+  right: 16px;
+  transform-origin: top right !important;
 }
 
 .settings {

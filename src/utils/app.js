@@ -3,6 +3,7 @@ import {difference, isString} from 'lodash-es';
 
 import storage from 'storage/storage';
 import {getText, createTab, getActiveTab} from 'utils/common';
+import {projectUrl} from 'utils/data';
 
 async function getEnabledEngines(options) {
   if (typeof options === 'undefined') {
@@ -26,15 +27,19 @@ function showNotification({message, messageId, title, type = 'info'}) {
   });
 }
 
-function getOptionLabels(data, scope = 'optionValue') {
+function getListItems(data, {scope = '', shortScope = ''} = {}) {
   const labels = {};
   for (const [group, items] of Object.entries(data)) {
     labels[group] = [];
     items.forEach(function(value) {
-      labels[group].push({
+      const item = {
         id: value,
-        label: getText(`${scope}_${group}_${value}`)
-      });
+        label: getText(`${scope ? scope + '_' : ''}${value}`)
+      };
+      if (shortScope) {
+        item.shortLabel = getText(`${shortScope}_${value}`);
+      }
+      labels[group].push(item);
     });
   }
   return labels;
@@ -75,14 +80,20 @@ async function showContributePage(action = false) {
   if (action) {
     url = `${url}?action=${action}`;
   }
-  await createTab(url, activeTab.index + 1);
+  await createTab(url, {index: activeTab.index + 1});
+}
+
+async function showProjectPage() {
+  const activeTab = await getActiveTab();
+  await createTab(projectUrl, {index: activeTab.index + 1});
 }
 
 export {
   getEnabledEngines,
   showNotification,
-  getOptionLabels,
+  getListItems,
   validateUrl,
   normalizeUrl,
-  showContributePage
+  showContributePage,
+  showProjectPage
 };
