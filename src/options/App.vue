@@ -267,6 +267,7 @@ body {
 }
 
 .option.select {
+  align-items: start;
   height: 56px;
 
   & .mdc-select__anchor,
