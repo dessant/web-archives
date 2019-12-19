@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1](https://github.com/dessant/web-archives/compare/v2.0.0...v2.0.1) (2019-12-19)
+
+
+### Bug Fixes
+
+* better align select component ([54c924f](https://github.com/dessant/web-archives/commit/54c924fed18a418ad051ef9833e90d5f183a1577))
+* flip button positions ([a19c16c](https://github.com/dessant/web-archives/commit/a19c16cde95d8c401ffebd2078d2892f04dc48dc))
+
 ## [2.0.0](https://github.com/dessant/web-archives/compare/v1.8.0...v2.0.0) (2019-12-15)
 
 
