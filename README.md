@@ -49,10 +49,9 @@ Supported search engines, archive and cache sources:
 ## Screenshots
 
 <p>
-  <img width="280" src="https://i.imgur.com/Mp2Ugm8.png">
-  <img width="280" src="https://i.imgur.com/T9VTNBf.png">
-  <img width="280" src="https://i.imgur.com/rw1erDG.png">
-  <img width="280" src="https://i.imgur.com/19MNjSo.png">
+  <img width="280" src="https://i.imgur.com/dereVK7.png">
+  <img width="280" src="https://i.imgur.com/Vq44x2U.png">
+  <img width="280" src="https://i.imgur.com/HTQXSoB.png">
 </p>
 
 ## License
