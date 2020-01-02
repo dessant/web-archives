@@ -7,6 +7,8 @@
     <img src="https://i.imgur.com/B0i5sn3.png" alt="Chrome Web Store"></a>
   <a href="https://addons.mozilla.org/en-US/firefox/addon/view-page-archive/">
     <img src="https://i.imgur.com/dvof8rG.png" alt="Firefox add-ons"></a>
+  <a href="https://microsoftedge.microsoft.com/addons/detail/apcfghlggldjdjepjnahfdjgdcdekhda">
+    <img src="https://i.imgur.com/n49Wiu2.png" alt="Microsoft Store"></a>
   <a href="https://addons.opera.com/en/extensions/details/view-page-archive-cache/">
     <img src="https://i.imgur.com/wK10qEV.png" alt="Opera add-ons"></a>
   </br></br>
@@ -56,7 +58,7 @@ Supported search engines, archive and cache sources:
 
 ## License
 
-Copyright (c) 2017-2019 Armin Sebastian
+Copyright (c) 2017-2020 Armin Sebastian
 
 This software is released under the terms of the GNU General Public License v3.0.
 See the [LICENSE](LICENSE) file for further information.
