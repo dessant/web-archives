@@ -165,6 +165,7 @@ gulp.task('manifest', function(done) {
 
           if (targetEnv === 'firefox') {
             delete parsedJson.options_ui.chrome_style;
+            delete parsedJson.incognito;
           }
 
           parsedJson.version = require('./package.json').version;

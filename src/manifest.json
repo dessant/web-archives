@@ -78,5 +78,7 @@
 
   "background": {
     "page": "src/background/index.html"
-  }
+  },
+
+  "incognito": "split"
 }
