@@ -80,14 +80,7 @@ async function createMenu(options) {
           'video'
         ]
       : ['link'];
-  const urlPatterns = ['http://*/*', 'https://*/*', 'ftp://*/*'];
-  let setIcons = false;
-  if (targetEnv === 'firefox') {
-    const {version} = await browser.runtime.getBrowserInfo();
-    if (parseInt(version.slice(0, 2), 10) >= 56) {
-      setIcons = true;
-    }
-  }
+  const setIcons = targetEnv === 'firefox';
 
   if (enEngines.length === 1) {
     const engine = enEngines[0];
