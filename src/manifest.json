@@ -7,7 +7,7 @@
   "homepage_url": "https://github.com/dessant/web-archives",
   "default_locale": "en",
 
-  "applications": {
+  "browser_specific_settings": {
     "gecko": {
       "id": "{d07ccf11-c0cd-4938-a265-2a4d6ad01189}",
       "strict_min_version": "68.0"

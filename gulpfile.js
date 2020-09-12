@@ -149,7 +149,7 @@ gulp.task('manifest', function(done) {
         jsonSpace: '  ',
         edit: (parsedJson, file) => {
           if (['chrome', 'edge', 'opera'].includes(targetEnv)) {
-            delete parsedJson.applications;
+            delete parsedJson.browser_specific_settings;
             delete parsedJson.page_action;
             delete parsedJson.browser_action.browser_style;
             delete parsedJson.options_ui.browser_style;
