@@ -9,6 +9,11 @@
     "description": "Description of the extension."
   },
 
+  "contextMenuLabel": {
+    "message": "Web &Archives",
+    "description": "Main context menu label."
+  },
+
   "engineName_google_short": {
     "message": "Google",
     "description": "Short name of the search engine."

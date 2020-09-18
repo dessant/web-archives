@@ -109,7 +109,7 @@ async function createMenu(options) {
 
     createMenuItem({
       id: 'par-1',
-      title: getText('extensionName'),
+      title: getText('contextMenuLabel'),
       contexts
     });
 
