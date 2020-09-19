@@ -1,4 +1,7 @@
-function viewCache() {
+var storageKey;
+var scriptKey;
+
+function viewCache(url) {
   const nodes = document.querySelectorAll(
     'div#main_pack li.sh_web_top a[href*="where=web_html&from=webkr"]'
   );
@@ -21,9 +24,17 @@ function viewCache() {
     }
   }
 
-  if (cacheUrls.length !== 0) {
+  if (cacheUrls.length) {
     window.location.href = cacheUrls[0];
   }
 }
 
-viewCache();
+function init(request) {
+  if (request.id === 'initScript') {
+    viewCache(request.url);
+  }
+}
+
+chrome.runtime.onMessage.addListener(init);
+
+chrome.runtime.sendMessage({id: 'initScript', storageKey, scriptKey});

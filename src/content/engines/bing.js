@@ -1,4 +1,7 @@
-function viewCache() {
+var storageKey;
+var scriptKey;
+
+function viewCache(url) {
   const node = document.querySelector(
     'ol#b_results li.b_algo:first-of-type div.b_attribution'
   );
@@ -15,4 +18,12 @@ function viewCache() {
   }
 }
 
-viewCache();
+function init(request) {
+  if (request.id === 'initScript') {
+    viewCache(request.url);
+  }
+}
+
+chrome.runtime.onMessage.addListener(init);
+
+chrome.runtime.sendMessage({id: 'initScript', storageKey, scriptKey});

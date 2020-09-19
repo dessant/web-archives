@@ -1,4 +1,5 @@
 import browser from 'webextension-polyfill';
+import {v4 as uuidv4} from 'uuid';
 
 import {initStorage} from 'storage/init';
 import storage from 'storage/storage';
@@ -21,6 +22,47 @@ import {
 import {optionKeys, engines, errorCodes} from 'utils/data';
 import {targetEnv} from 'utils/config';
 
+const dataStorage = {};
+
+function addStorageItem(data, {deleteFn, expiryTime = 0} = {}) {
+  const storageKey = uuidv4();
+  dataStorage[storageKey] = {...data, deleteFn};
+
+  if (expiryTime) {
+    window.setTimeout(function () {
+      deleteStorageItem(storageKey);
+    }, expiryTime);
+  }
+
+  return storageKey;
+}
+
+function getStorageItem(storageKey) {
+  return dataStorage[storageKey];
+}
+
+function updateStorageItem(storageKey, data) {
+  const storedData = dataStorage[storageKey];
+  if (storedData) {
+    Object.assign(storedData, data);
+  } else {
+    throw new Error('storage item does not exist');
+  }
+
+  return storedData;
+}
+
+function deleteStorageItem(storageKey) {
+  const storedData = dataStorage[storageKey];
+  if (storedData) {
+    if (storedData.deleteFn) {
+      storedData.deleteFn(storedData);
+    }
+    delete dataStorage[storageKey];
+    return storedData;
+  }
+}
+
 function getEngineMenuIcons(engine) {
   if (engine === 'googleText') {
     engine = 'google';
@@ -32,12 +74,12 @@ function getEngineMenuIcons(engine) {
 
   if (['gigablast', 'megalodon'].includes(engine)) {
     return {
-      '16': `src/icons/engines/${engine}-16.png`,
-      '32': `src/icons/engines/${engine}-32.png`
+      16: `src/icons/engines/${engine}-16.png`,
+      32: `src/icons/engines/${engine}-32.png`
     };
   } else {
     return {
-      '16': `src/icons/engines/${engine}.svg`
+      16: `src/icons/engines/${engine}.svg`
     };
   }
 }
@@ -129,7 +171,7 @@ async function createMenu(options) {
       });
     }
 
-    enEngines.forEach(function(engine) {
+    enEngines.forEach(function (engine) {
       createMenuItem({
         id: engine,
         title: getText(`engineName_${engine}_short`),
@@ -166,6 +208,21 @@ async function searchUrl(url, menuId, tabIndex, tabId) {
 
   const options = await storage.get(optionKeys, 'sync');
 
+  const searchEngines =
+    menuId === 'allEngines' ? await getEnabledEngines(options) : [menuId];
+
+  const storageKey = addStorageItem(
+    {url, searchEngines, scripts: {}},
+    {
+      deleteFn: function (data) {
+        for (const {script} of Object.values(data.scripts)) {
+          script.unregister();
+        }
+      },
+      expiryTime: 600000 // 10 minutes
+    }
+  );
+
   let tabActive = !options.tabInBackgound;
   tabIndex = tabIndex + 1;
 
@@ -178,15 +235,31 @@ async function searchUrl(url, menuId, tabIndex, tabId) {
     tabActive = false;
   }
 
-  if (menuId === 'allEngines') {
+  if (searchEngines.length > 1) {
     options.openNewTab = true;
-    for (const engine of await getEnabledEngines(options)) {
-      await searchEngine(url, engine, options, tabId, tabIndex, tabActive);
+    for (const engine of searchEngines) {
+      await searchEngine(
+        url,
+        engine,
+        options,
+        tabId,
+        tabIndex,
+        tabActive,
+        storageKey
+      );
       tabIndex = tabIndex + 1;
       tabActive = false;
     }
   } else {
-    await searchEngine(url, menuId, options, tabId, tabIndex, tabActive);
+    await searchEngine(
+      url,
+      searchEngines[0],
+      options,
+      tabId,
+      tabIndex,
+      tabActive,
+      storageKey
+    );
   }
 }
 
@@ -196,10 +269,43 @@ async function searchEngine(
   options,
   tabId,
   tabIndex,
-  tabActive
+  tabActive,
+  storageKey
 ) {
   if (['archiveOrg', 'archiveOrgAll'].includes(engineId)) {
     url = normalizeUrl(url);
+  }
+
+  // workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=1267027
+  const registerContentScript =
+    engineId === 'yandex' && targetEnv === 'firefox';
+  const registeredScripts = {};
+
+  if (registerContentScript) {
+    const scriptKey = uuidv4();
+    registeredScripts[scriptKey] = {
+      script: await browser.contentScripts.register({
+        matches: [
+          'https://*.yandex.com/*',
+          'https://*.yandex.ru/*',
+          'https://*.yandex.ua/*',
+          'https://*.yandex.by/*',
+          'https://*.yandex.kz/*',
+          'https://*.yandex.uz/*',
+          'https://*.yandex.com.tr/*'
+        ],
+        js: [
+          {
+            code: `
+            var scriptKey = '${scriptKey}';
+            var storageKey = '${storageKey}';
+            `
+          },
+          {file: '/src/content/engines/yandex.js'}
+        ],
+        runAt: 'document_idle'
+      })
+    };
   }
 
   const tabUrl = await getTabUrl(url, engineId, options);
@@ -215,10 +321,17 @@ async function searchEngine(
     await browser.tabs.update(tabId, {url: tabUrl});
   }
 
-  await evalExecEngine(tabId, engineId, url);
+  if (registerContentScript) {
+    Object.values(registeredScripts).forEach(script => {
+      script.tabId = tabId;
+    });
+    Object.assign(getStorageItem(storageKey).scripts, registeredScripts);
+  } else {
+    await evalExecEngine(tabId, engineId, storageKey);
+  }
 }
 
-async function evalExecEngine(tabId, engineId, url) {
+async function evalExecEngine(tabId, engineId, storageKey) {
   const execEngines = [
     'bing',
     'yandex',
@@ -231,42 +344,59 @@ async function evalExecEngine(tabId, engineId, url) {
     'megalodon'
   ];
   if (execEngines.includes(engineId)) {
-    const requestCompletedCallback = async function(response) {
+    const scriptKey = uuidv4();
+
+    const requestCallback = async function (response) {
       if (response.statusCode === 200) {
-        removeCallbacks();
-        await execEngineContent(tabId, engineId, url);
+        await execEngineContent(tabId, engineId, storageKey, scriptKey);
       }
     };
-    const removeCallbacks = function(details) {
+    const removeCallbacks = function (details) {
       window.clearTimeout(timeoutId);
-      browser.webRequest.onCompleted.removeListener(requestCompletedCallback);
+      browser.webRequest.onHeadersReceived.removeListener(requestCallback);
       browser.webRequest.onErrorOccurred.removeListener(removeCallbacks);
     };
     const timeoutId = window.setTimeout(removeCallbacks, 120000); // 2 minutes
 
-    browser.webRequest.onCompleted.addListener(requestCompletedCallback, {
-      tabId: tabId,
+    getStorageItem(storageKey).scripts[scriptKey] = {
+      tabId,
+      script: {
+        unregister: removeCallbacks
+      }
+    };
+
+    const requestFilter = {
+      tabId,
       types: ['main_frame'],
       urls: ['http://*/*', 'https://*/*']
-    });
-    browser.webRequest.onErrorOccurred.addListener(removeCallbacks, {
-      tabId: tabId,
-      types: ['main_frame'],
-      urls: ['http://*/*', 'https://*/*']
-    });
+    };
+    browser.webRequest.onHeadersReceived.addListener(
+      requestCallback,
+      requestFilter
+    );
+    browser.webRequest.onErrorOccurred.addListener(
+      removeCallbacks,
+      requestFilter
+    );
   }
 }
 
-async function execEngineContent(tabId, engineId, url) {
-  const urlExecEngines = ['bing', 'sogou', 'qihoo', 'naver', 'yahooJp'];
-
-  // workaround for Bugzilla@Mozilla#1290016
-  const tabUpdateCallback = async function(eventTabId, changes, tab) {
+async function execEngineContent(tabId, engineId, storageKey, scriptKey) {
+  // workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=1290016
+  const tabUpdateCallback = async function (eventTabId, changes, tab) {
     if (eventTabId === tabId && tab.status === 'complete') {
       removeCallbacks();
-      if (urlExecEngines.includes(engineId)) {
-        await executeCode(`var url = '${url}';`, tabId, 0, 'document_idle');
-      }
+
+      await executeCode(
+        `
+        var storageKey = '${storageKey}';
+        var scriptKey = '${scriptKey}';
+        `,
+        tabId,
+        0,
+        'document_idle'
+      );
+
       executeFile(
         `/src/content/engines/${engineId}.js`,
         tabId,
@@ -275,18 +405,14 @@ async function execEngineContent(tabId, engineId, url) {
       );
     }
   };
-  const removeCallbacks = function(details) {
+
+  const removeCallbacks = function (details) {
     window.clearTimeout(timeoutId);
     browser.tabs.onUpdated.removeListener(tabUpdateCallback);
   };
   const timeoutId = window.setTimeout(removeCallbacks, 120000); // 2 minutes
 
   browser.tabs.onUpdated.addListener(tabUpdateCallback);
-
-  const tab = await browser.tabs.get(tabId);
-  if (tab.status === 'complete') {
-    tabUpdateCallback();
-  }
 }
 
 async function onContextMenuItemClick(info, tab) {
@@ -328,6 +454,27 @@ async function onActionPopupClick(engine, url) {
 function onMessage(request, sender, sendResponse) {
   if (request.id === 'actionPopupSubmit') {
     onActionPopupClick(request.engine, request.pageUrl);
+  } else if (request.id === 'initScript') {
+    const data = getStorageItem(request.storageKey);
+    if (data) {
+      const scriptKey = request.scriptKey;
+      const scriptData = data.scripts[scriptKey];
+
+      if (scriptData) {
+        const tabId = sender.tab.id;
+
+        if (scriptData.tabId === tabId) {
+          scriptData.script.unregister();
+          delete data.scripts[scriptKey];
+
+          browser.tabs.sendMessage(
+            tabId,
+            {id: 'initScript', url: data.url},
+            {frameId: 0}
+          );
+        }
+      }
+    }
   }
 }
 
@@ -387,15 +534,20 @@ async function setRequestListeners() {
 
   if (showPageAction) {
     if (!hasListener) {
-      browser.webRequest.onCompleted.addListener(requestCompletedCallback, {
+      const requestFilter = {
         types: ['main_frame'],
         urls: ['http://*/*', 'https://*/*']
-      });
+      };
 
-      browser.webRequest.onErrorOccurred.addListener(requestErrorCallback, {
-        types: ['main_frame'],
-        urls: ['http://*/*', 'https://*/*']
-      });
+      browser.webRequest.onCompleted.addListener(
+        requestCompletedCallback,
+        requestFilter
+      );
+
+      browser.webRequest.onErrorOccurred.addListener(
+        requestErrorCallback,
+        requestFilter
+      );
     }
   } else {
     if (hasListener) {

@@ -1,4 +1,7 @@
-function viewCache() {
+var storageKey;
+var scriptKey;
+
+function viewCache(url) {
   const nodes = document.querySelectorAll('a[id^="sogou_snapshot_"]');
 
   const cacheUrls = [];
@@ -19,9 +22,17 @@ function viewCache() {
     }
   }
 
-  if (cacheUrls.length !== 0) {
+  if (cacheUrls.length) {
     window.location.href = cacheUrls[0];
   }
 }
 
-viewCache();
+function init(request) {
+  if (request.id === 'initScript') {
+    viewCache(request.url);
+  }
+}
+
+chrome.runtime.onMessage.addListener(init);
+
+chrome.runtime.sendMessage({id: 'initScript', storageKey, scriptKey});

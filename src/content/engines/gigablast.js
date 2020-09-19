@@ -1,3 +1,6 @@
+var storageKey;
+var scriptKey;
+
 function viewCache() {
   const node = document.evaluate(
     '//table[@class="result"][1]/tbody/tr/td//a[text()="cached"]',
@@ -12,18 +15,18 @@ function viewCache() {
   }
 }
 
-function init() {
+function start() {
   const loaderImg = document.querySelector(
     'div#bodycont > div:only-child > img[src="/gears.gif"]'
   );
 
   if (loaderImg) {
-    const observer = new MutationObserver(function(mutations) {
+    const observer = new MutationObserver(function (mutations) {
       removeCallbacks();
       viewCache();
     });
 
-    const removeCallbacks = function() {
+    const removeCallbacks = function () {
       window.clearTimeout(timeoutId);
       observer.disconnect();
     };
@@ -35,4 +38,12 @@ function init() {
   }
 }
 
-init();
+function init(request) {
+  if (request.id === 'initScript') {
+    start();
+  }
+}
+
+chrome.runtime.onMessage.addListener(init);
+
+chrome.runtime.sendMessage({id: 'initScript', storageKey, scriptKey});

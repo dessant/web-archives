@@ -1,5 +1,8 @@
-function viewCache() {
-  const nodes = document.querySelectorAll('li.res-list p.res-linkinfo > a.m');
+var storageKey;
+var scriptKey;
+
+function viewCache(url) {
+  const nodes = document.querySelectorAll('li.res-list > p.g-linkinfo > a.m');
 
   const cacheNodes = [];
   const rxUrl = /^(?:https?|ftp):\/\/(.*)$/i;
@@ -19,11 +22,19 @@ function viewCache() {
     }
   }
 
-  if (cacheNodes.length !== 0) {
+  if (cacheNodes.length) {
     const node = cacheNodes[0];
     node.setAttribute('target', '_top');
     node.click();
   }
 }
 
-viewCache();
+function init(request) {
+  if (request.id === 'initScript') {
+    viewCache(request.url);
+  }
+}
+
+chrome.runtime.onMessage.addListener(init);
+
+chrome.runtime.sendMessage({id: 'initScript', storageKey, scriptKey});

@@ -1,18 +1,14 @@
-function viewCache() {
-  const nodes = document.evaluate(
-    '//div[@class="bd"]//a[text()="キャッシュ"]',
-    document,
-    null,
-    XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
-    null
-  );
+var storageKey;
+var scriptKey;
+
+function viewCache(url) {
+  const nodes = document.querySelectorAll('a.Algo__cache');
 
   const cacheUrls = [];
   const rxUrl = /^(?:https?|ftp):\/\/(.*)$/i;
   const noschUrl = url.replace(rxUrl, '$1');
-  const nodeCount = nodes.snapshotLength;
-  for (let i = 0; i < nodeCount; i++) {
-    let node = nodes.snapshotItem(i);
+
+  for (const node of nodes) {
     const cacheUrl = node.href;
     const cacheParam = new URL(cacheUrl).searchParams.get('u');
 
@@ -28,9 +24,19 @@ function viewCache() {
     }
   }
 
-  if (cacheUrls.length !== 0) {
+  if (cacheUrls.length) {
     window.location.href = cacheUrls[0];
   }
 }
 
-viewCache();
+function init(request) {
+  if (request.id === 'initScript') {
+    viewCache(request.url);
+  }
+}
+
+chrome.runtime.onMessage.addListener(init);
+
+chrome.runtime.sendMessage({id: 'initScript', storageKey, scriptKey});
+
+document.querySelectorAll('a.sw-Card__titleInner');

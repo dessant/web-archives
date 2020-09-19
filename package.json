@@ -49,6 +49,7 @@
     "lodash-es": "^4.17.15",
     "storage-versions": "dessant/storage-versions#^0.2.6",
     "typeface-roboto": "^0.0.75",
+    "uuid": "^8.3.0",
     "vue": "^2.6.12",
     "vue-resize": "^0.5.0",
     "vuedraggable": "^2.24.1",
