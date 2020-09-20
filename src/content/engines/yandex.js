@@ -9,7 +9,15 @@ function viewCache() {
     const cacheUrl = data.extralinks.copy;
 
     if (cacheUrl) {
-      window.location.href = cacheUrl;
+      node.click();
+
+      window.setTimeout(function () {
+        const link = document.querySelector(
+          '.extralinks-popup a[href^="https://yandexwebcache.net/"]'
+        );
+        link.setAttribute('target', '_top');
+        link.click();
+      }, 100);
       break;
     }
   }
