@@ -19,7 +19,7 @@ import {
   normalizeUrl,
   showContributePage
 } from 'utils/app';
-import {optionKeys, engines, errorCodes} from 'utils/data';
+import {optionKeys, engines, errorCodes, chromeDesktopUA} from 'utils/data';
 import {targetEnv} from 'utils/config';
 
 const dataStorage = {};
@@ -319,6 +319,30 @@ async function searchEngine(
     tabId = tab.id;
   } else {
     await browser.tabs.update(tabId, {url: tabUrl});
+  }
+
+  // Some search engines only show cache links on desktop
+  if (await isAndroid()) {
+    if (['qihoo'].includes(engineId)) {
+      const requestCallback = function (details) {
+        for (const header of details.requestHeaders) {
+          if (header.name.toLowerCase() === 'user-agent') {
+            header.value = chromeDesktopUA;
+            break;
+          }
+        }
+        return {requestHeaders: details.requestHeaders};
+      };
+
+      browser.webRequest.onBeforeSendHeaders.addListener(
+        requestCallback,
+        {
+          urls: ['http://*/*', 'https://*/*'],
+          tabId
+        },
+        ['blocking', 'requestHeaders']
+      );
+    }
   }
 
   if (registerContentScript) {

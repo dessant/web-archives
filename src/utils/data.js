@@ -98,4 +98,7 @@ const errorCodes = [
 
 const projectUrl = 'https://github.com/dessant/web-archives';
 
-export {optionKeys, engines, errorCodes, projectUrl};
+const chromeDesktopUA =
+  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.101 Safari/537.36';
+
+export {optionKeys, engines, errorCodes, projectUrl, chromeDesktopUA};
