@@ -61,7 +61,7 @@
           >
           </v-select>
         </div>
-        <div class="option" v-show="targetEnv === 'firefox'">
+        <div class="option" v-if="pageActionEnabled">
           <v-form-field
             input-id="spa"
             :label="getText('optionTitle_showPageAction')"
@@ -141,8 +141,8 @@ export default {
           {scope: 'optionValue_searchAllEnginesAction'}
         )
       },
-      targetEnv,
       contextMenuEnabled: true,
+      pageActionEnabled: true,
 
       options: {
         engines: [],
@@ -188,6 +188,9 @@ export default {
 
     if (targetEnv === 'firefox' && (await isAndroid())) {
       this.contextMenuEnabled = false;
+    }
+    if (targetEnv !== 'firefox' || (await isAndroid())) {
+      this.pageActionEnabled = false;
     }
 
     document.title = getText('pageTitle', [

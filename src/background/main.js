@@ -547,7 +547,7 @@ async function requestErrorCallback(details) {
 }
 
 async function setRequestListeners() {
-  if (targetEnv !== 'firefox') {
+  if (targetEnv !== 'firefox' || (await isAndroid())) {
     return;
   }
 
