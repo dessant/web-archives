@@ -42,6 +42,11 @@ function onComplete(n) {
   }
 }
 
+async function getBrowser() {
+  const {name, version} = await browser.runtime.getBrowserInfo();
+  return {name, version};
+}
+
 async function isAndroid() {
   const {os} = await browser.runtime.getPlatformInfo();
   return os === 'android';
@@ -62,5 +67,6 @@ export {
   executeFile,
   onComplete,
   isAndroid,
-  getActiveTab
+  getActiveTab,
+  getBrowser
 };

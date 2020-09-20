@@ -119,7 +119,7 @@ export default {
     [FormField.name]: FormField
   },
 
-  data: function() {
+  data: function () {
     return {
       dataLoaded: false,
 
@@ -160,11 +160,11 @@ export default {
   methods: {
     getText,
 
-    engineEnabled: function(engine) {
+    engineEnabled: function (engine) {
       return !includes(this.options.disabledEngines, engine);
     },
 
-    setEngineState: async function(engine, enabled) {
+    setEngineState: async function (engine, enabled) {
       if (enabled) {
         this.options.disabledEngines = without(
           this.options.disabledEngines,
@@ -176,12 +176,12 @@ export default {
     }
   },
 
-  created: async function() {
+  created: async function () {
     const options = await storage.get(optionKeys, 'sync');
 
     for (const option of Object.keys(this.options)) {
       this.options[option] = options[option];
-      this.$watch(`options.${option}`, async function(value) {
+      this.$watch(`options.${option}`, async function (value) {
         await storage.set({[option]: value}, 'sync');
       });
     }
@@ -204,6 +204,8 @@ export default {
 $mdc-theme-primary: #1abc9c;
 
 @import '@material/select/mdc-select';
+@import '@material/checkbox/mixins';
+@import '@material/switch/mixins';
 @import '@material/theme/mixins';
 @import '@material/typography/mixins';
 
@@ -279,6 +281,42 @@ body {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+  }
+}
+
+.fenix {
+  & .section-title,
+  & .section-desc,
+  & .mdc-form-field,
+  & .mdc-list-item {
+    @include mdc-theme-prop(color, #20123a);
+  }
+
+  & .mdc-checkbox {
+    @include mdc-checkbox-container-colors(
+      #312a65,
+      #00000000,
+      #312a65,
+      #312a65
+    );
+    @include mdc-checkbox-focus-indicator-color(#312a65);
+  }
+
+  & .mdc-switch {
+    @include mdc-switch-toggled-on-color(#312a65);
+  }
+
+  & .mdc-select {
+    @include mdc-select-ink-color(#20123a);
+    @include mdc-select-focused-label-color(#20123a);
+    @include mdc-select-bottom-line-color(#20123a);
+    @include mdc-select-focused-bottom-line-color(#312a65);
+    @include mdc-select-focused-outline-color(#312a65);
+
+    &.mdc-select--focused .mdc-select__dropdown-icon {
+      filter: brightness(0) saturate(100%) invert(10%) sepia(43%)
+        saturate(1233%) hue-rotate(225deg) brightness(97%) contrast(105%);
+    }
   }
 }
 </style>

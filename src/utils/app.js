@@ -2,7 +2,14 @@ import browser from 'webextension-polyfill';
 import {difference, isString} from 'lodash-es';
 
 import storage from 'storage/storage';
-import {getText, createTab, getActiveTab} from 'utils/common';
+import {
+  getText,
+  createTab,
+  getActiveTab,
+  isAndroid,
+  getBrowser
+} from 'utils/common';
+import {targetEnv} from 'utils/config';
 import {projectUrl} from 'utils/data';
 
 async function getEnabledEngines(options) {
@@ -31,7 +38,7 @@ function getListItems(data, {scope = '', shortScope = ''} = {}) {
   const labels = {};
   for (const [group, items] of Object.entries(data)) {
     labels[group] = [];
-    items.forEach(function(value) {
+    items.forEach(function (value) {
       const item = {
         id: value,
         label: getText(`${scope ? scope + '_' : ''}${value}`)
@@ -88,6 +95,23 @@ async function showProjectPage() {
   await createTab(projectUrl, {index: activeTab.index + 1});
 }
 
+async function isFenix() {
+  if (targetEnv === 'firefox' && (await isAndroid())) {
+    const {version} = await getBrowser();
+
+    if (parseInt(version.split('.')[0], 10) > 68) {
+      return true;
+    }
+  }
+}
+
+async function configFenix() {
+  if (await isFenix()) {
+    document.documentElement.classList.add('fenix');
+    return true;
+  }
+}
+
 export {
   getEnabledEngines,
   showNotification,
@@ -95,5 +119,6 @@ export {
   validateUrl,
   normalizeUrl,
   showContributePage,
-  showProjectPage
+  showProjectPage,
+  configFenix
 };

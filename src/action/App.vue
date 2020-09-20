@@ -1,9 +1,7 @@
 <template>
   <div id="app" v-show="dataLoaded">
     <div class="header">
-      <div class="title">
-        {{ getText('extensionName') }}
-      </div>
+      <div class="title">{{ getText('extensionName') }}</div>
       <div class="header-buttons">
         <v-icon-button
           class="settings-button"
@@ -11,9 +9,9 @@
         >
           <img
             class="mdc-icon-button__icon"
-            :src="
-              `/src/icons/misc/${showActionSettings ? 'linkOn' : 'link'}.svg`
-            "
+            :src="`/src/icons/misc/${
+              showActionSettings ? 'linkOn' : 'link'
+            }.svg`"
           />
         </v-icon-button>
 
@@ -121,7 +119,7 @@ export default {
     [ResizeObserver.name]: ResizeObserver
   },
 
-  data: function() {
+  data: function () {
     return {
       dataLoaded: false,
 
@@ -133,6 +131,7 @@ export default {
       showActionSettings: false,
       hasScrollBar: false,
       isPopup: false,
+      tabId: null,
 
       engines: [],
       searchAllEngines: false,
@@ -141,7 +140,7 @@ export default {
   },
 
   computed: {
-    listClasses: function() {
+    listClasses: function () {
       return {
         'list-items-max-height': this.isPopup
       };
@@ -151,7 +150,7 @@ export default {
   methods: {
     getText,
 
-    getEngineIcon: function(engine) {
+    getEngineIcon: function (engine) {
       if (engine === 'googleText') {
         engine = 'google';
       } else if (engine === 'archiveOrgAll') {
@@ -168,7 +167,7 @@ export default {
       return `/src/icons/engines/${engine}.${ext}`;
     },
 
-    selectItem: async function(engine) {
+    selectItem: async function (engine) {
       if (this.showActionSettings) {
         if (!validateUrl(this.pageUrl)) {
           this.focusPageUrlInput();
@@ -185,26 +184,26 @@ export default {
       this.closeAction();
     },
 
-    showContribute: async function() {
+    showContribute: async function () {
       await showContributePage();
       this.closeAction();
     },
 
-    showOptions: async function() {
+    showOptions: async function () {
       await browser.runtime.openOptionsPage();
       this.closeAction();
     },
 
-    showWebsite: async function() {
+    showWebsite: async function () {
       await showProjectPage();
       this.closeAction();
     },
 
-    showActionMenu: function() {
+    showActionMenu: function () {
       this.$refs.actionMenu.$emit('open');
     },
 
-    onActionMenuSelect: async function(item) {
+    onActionMenuSelect: async function (item) {
       if (item === 'options') {
         await this.showOptions();
       } else if (item === 'website') {
@@ -212,36 +211,40 @@ export default {
       }
     },
 
-    closeAction: async function() {
-      if (!this.isPopup) {
-        browser.tabs.remove((await browser.tabs.getCurrent()).id);
+    closeAction: async function () {
+      if (this.tabId) {
+        browser.tabs.remove(this.tabId);
       } else {
         window.close();
       }
     },
 
-    focusPageUrlInput: function() {
+    focusPageUrlInput: function () {
       this.$refs.pageUrlInput.$refs.input.focus();
     },
 
-    handleSizeChange: function() {
+    handleSizeChange: function () {
       const items = this.$refs.items;
       this.hasScrollBar = items.scrollHeight > items.clientHeight;
     },
 
-    settingsAfterEnter: function() {
+    settingsAfterEnter: function () {
       this.handleSizeChange();
       this.focusPageUrlInput();
     },
 
-    settingsAfterLeave: function() {
+    settingsAfterLeave: function () {
       this.handleSizeChange();
       this.pageUrl = '';
     }
   },
 
-  created: async function() {
-    this.isPopup = !(await browser.tabs.getCurrent());
+  created: async function () {
+    const currentTab = await browser.tabs.getCurrent();
+    if (currentTab) {
+      this.tabId = currentTab.id;
+    }
+    this.isPopup = !this.tabId && !this.$isFenix;
     if (!this.isPopup) {
       document.documentElement.style.height = '100%';
       document.body.style.minWidth = 'initial';
@@ -270,7 +273,7 @@ export default {
     this.dataLoaded = true;
   },
 
-  mounted: function() {
+  mounted: function () {
     window.setTimeout(() => {
       for (const listEl of document.querySelectorAll(
         '.list-bulk-button, .list-items'
@@ -292,6 +295,7 @@ $mdc-theme-primary: #1abc9c;
 @import '@material/list/mdc-list';
 @import '@material/icon-button/mixins';
 @import '@material/theme/mixins';
+@import '@material/textfield/mixins';
 @import '@material/typography/mixins';
 
 @import 'vue-resize/dist/vue-resize';
@@ -429,5 +433,31 @@ body {
 
 .list-item-icon {
   margin-right: 16px !important;
+}
+
+html.fenix {
+  height: 100%;
+}
+.fenix {
+  & .title {
+    visibility: hidden;
+  }
+
+  & .mdc-list-item {
+    @include mdc-theme-prop(color, #20123a);
+  }
+
+  & .mdc-text-field {
+    @include mdc-text-field-ink-color(#20123a);
+    @include mdc-text-field-caret-color(#312a65);
+    @include mdc-text-field-bottom-line-color(#20123a);
+    @include mdc-text-field-line-ripple-color(#312a65);
+  }
+
+  & .settings-button img,
+  & .menu-button img {
+    filter: brightness(0) saturate(100%) invert(10%) sepia(43%) saturate(1233%)
+      hue-rotate(225deg) brightness(97%) contrast(105%);
+  }
 }
 </style>
