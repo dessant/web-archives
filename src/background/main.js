@@ -323,7 +323,11 @@ async function searchEngine(
 
   // Some search engines only show cache links on desktop
   if (await isAndroid()) {
-    if (['qihoo'].includes(engineId)) {
+    if (
+      ['yandex', 'sogou', 'qihoo', 'baidu', 'naver', 'yahooJp'].includes(
+        engineId
+      )
+    ) {
       const requestCallback = function (details) {
         for (const header of details.requestHeaders) {
           if (header.name.toLowerCase() === 'user-agent') {
