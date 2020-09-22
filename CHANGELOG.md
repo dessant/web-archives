@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/dessant/web-archives/compare/v2.0.1...v2.1.0) (2020-09-22)
+
+
+### Features
+
+* add support for Firefox Daylight ([7440eec](https://github.com/dessant/web-archives/commit/7440eecbe56e07ef9ce8e7a1fff8ae5720aafe8f))
+* support Chrome Incognito ([a1cecce](https://github.com/dessant/web-archives/commit/a1cecce202caf846c1d7514b5739d2adf1af012a))
+
+
+### Bug Fixes
+
+* disable page action on Android ([296b75a](https://github.com/dessant/web-archives/commit/296b75a30bbc7ddea745448c4d1478ffb3b52298))
+* increase favicon size ([8851280](https://github.com/dessant/web-archives/commit/8851280168340aa789a8bfd72ef243adc8939c86))
+* load desktop site of Yandex, Sogou, Baidu, Naver and Yahoo Japan on mobile ([a74a72a](https://github.com/dessant/web-archives/commit/a74a72a45efe23e2074afa13e9ae08e94dbc4578))
+* remove legacy browser check ([ebb4f81](https://github.com/dessant/web-archives/commit/ebb4f81ce008782283a7d0417b2e1f7f7ee0c7bd))
+* set desktop user agent for Qihoo on Android ([a4b5d92](https://github.com/dessant/web-archives/commit/a4b5d92d0e4373528573bef0454af87daacdbb5d))
+* update engines and rework script injection ([fc580a6](https://github.com/dessant/web-archives/commit/fc580a69b828d00f8a41db7743665bd7c26b9e7a))
+* update Yandex ([952feff](https://github.com/dessant/web-archives/commit/952feff6a249873268fd25800fea77723a943086))
+
 ### [2.0.1](https://github.com/dessant/web-archives/compare/v2.0.0...v2.0.1) (2019-12-19)
 
 
