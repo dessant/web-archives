@@ -1,6 +1,6 @@
 import browser from 'webextension-polyfill';
 
-const message = 'Revision description';
+const message = 'Add archiveOrgAll and archiveIsAll';
 
 const revision = 'yjRtkzy';
 const downRevision = 'rJXbW1ZHmM';
@@ -35,10 +35,10 @@ async function downgrade() {
   ]);
   const newEngines = ['archiveOrgAll', 'archiveIsAll'];
 
-  changes.engines = engines.filter(function(item) {
+  changes.engines = engines.filter(function (item) {
     return !newEngines.includes(item);
   });
-  changes.disabledEngines = disabledEngines.filter(function(item) {
+  changes.disabledEngines = disabledEngines.filter(function (item) {
     return !newEngines.includes(item);
   });
 
