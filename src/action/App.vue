@@ -460,4 +460,10 @@ html.fenix {
       hue-rotate(225deg) brightness(97%) contrast(105%);
   }
 }
+@media (prefers-color-scheme: dark) {
+body, div.title, ul, li {
+    background-color: #313131;
+    color: #bfbfbf;
+}
+}
 </style>
