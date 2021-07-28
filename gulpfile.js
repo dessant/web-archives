@@ -164,31 +164,11 @@ async function locale(done) {
 }
 
 function manifest() {
-  return src('src/manifest.json')
+  return src(`src/manifest/${targetEnv}.json`)
     .pipe(
       jsonMerge({
         fileName: 'manifest.json',
         edit: (parsedJson, file) => {
-          if (['chrome', 'edge', 'opera'].includes(targetEnv)) {
-            delete parsedJson.browser_specific_settings;
-            delete parsedJson.page_action;
-            delete parsedJson.browser_action.browser_style;
-            delete parsedJson.options_ui.browser_style;
-          }
-
-          if (['firefox', 'edge', 'chrome'].includes(targetEnv)) {
-            delete parsedJson.minimum_opera_version;
-          }
-
-          if (['firefox', 'opera'].includes(targetEnv)) {
-            delete parsedJson.minimum_chrome_version;
-          }
-
-          if (targetEnv === 'firefox') {
-            delete parsedJson.options_ui.chrome_style;
-            delete parsedJson.incognito;
-          }
-
           parsedJson.version = require('./package.json').version;
           return parsedJson;
         }
