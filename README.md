@@ -1,16 +1,16 @@
-<p align="center"><img src="https://i.imgur.com/riAvJQD.png"></p>
+<p align="center"><img width="128" height="128" src="https://i.imgur.com/H9zwf8l.png"></p>
 <h1 align="center">Web Archives</h1>
 
 <p align="center">
   </br></br>
   <a href="https://chrome.google.com/webstore/detail/hkligngkgcpcolhcnkgccglchdafcnao">
-    <img src="https://i.imgur.com/B0i5sn3.png" alt="Chrome Web Store"></a>
+    <img height="58" src="https://i.imgur.com/K9Yh8G9.png" alt="Chrome Web Store"></a>
   <a href="https://addons.mozilla.org/en-US/firefox/addon/view-page-archive/">
-    <img src="https://i.imgur.com/kMH6r1a.png" alt="Firefox add-ons"></a>
+    <img height="58" src="https://i.imgur.com/2jJOtTI.png" alt="Firefox add-ons"></a>
   <a href="https://microsoftedge.microsoft.com/addons/detail/apcfghlggldjdjepjnahfdjgdcdekhda">
-    <img src="https://i.imgur.com/n49Wiu2.png" alt="Microsoft Store"></a>
+    <img height="58" src="https://i.imgur.com/es2YFRA.png" alt="Microsoft Store"></a>
   <a href="https://addons.opera.com/en/extensions/details/view-page-archive-cache/">
-    <img src="https://i.imgur.com/wK10qEV.png" alt="Opera add-ons"></a>
+    <img height="58" src="https://i.imgur.com/IYYsrwg.png" alt="Opera add-ons"></a>
   </br></br>
 </p>
 
@@ -48,7 +48,7 @@ https://github.com/dessant/web-archives/wiki/Search-engines
 
 ## License
 
-Copyright (c) 2017-2020 Armin Sebastian
+Copyright (c) 2017-2021 Armin Sebastian
 
 This software is released under the terms of the GNU General Public License v3.0.
 See the [LICENSE](LICENSE) file for further information.
