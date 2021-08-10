@@ -1,0 +1,87 @@
+{
+  "engineName_googleText_short": {
+    "message": "Google (alleen-tekst)",
+    "description": "Short name of the search engine."
+  },
+
+  "engineName_googleText_full": {
+    "message": "Google-cache (alleen tekst)",
+    "description": "Full name of the search engine."
+  },
+
+  "engineName_archiveOrgAll_short": {
+    "message": "Wayback Machine (alles)",
+    "description": "Short name of the search engine."
+  },
+
+  "engineName_archiveOrgAll_full": {
+    "message": "Wayback Machine (alles)",
+    "description": "Full name of the search engine."
+  },
+
+  "engineName_archiveIsAll_short": {
+    "message": "Archive.is (alles)",
+    "description": "Short name of the search engine."
+  },
+
+  "engineName_archiveIsAll_full": {
+    "message": "Archive.is (alles)",
+    "description": "Full name of the search engine."
+  },
+
+  "engineName_allEngines_short": {
+    "message": "Alle zoekmachines",
+    "description": "Short name of the search engine."
+  },
+
+  "engineName_allEngines_full": {
+    "message": "Alle zoekmachines",
+    "description": "Full name of the search engine."
+  },
+
+  "actionTitle_allEngines_main": {
+    "message": "Archief opvragen via alle zoekmachines",
+    "description": "Title of the context menu item."
+  },
+
+  "actionTitle_engine_main": {
+    "message": "Archief opvragen op $ENGINE$",
+    "description": "Title of the context menu item.",
+    "placeholders": {
+      "engine": {
+        "content": "$1",
+        "example": "Google"
+      }
+    }
+  },
+
+  "optionSectionTitle_engines": {
+    "message": "Zoekmachines",
+    "description": "Title of the search engine options section."
+  },
+
+  "optionSectionTitle_contextmenu": {
+    "message": "Rechtermuisknopmenu",
+    "description": "Title of the options section."
+  },
+
+  "optionSectionTitle_toolbar": {
+    "message": "Browserwerkbalk",
+    "description": "Title of the options section."
+  },
+
+  "optionValue_searchAllEnginesAction_main": {
+    "message": "Van browserwerkbalk en adresbalk",
+    "description": "Value of the option."
+  },
+
+  "optionValue_searchAllEnginesAction_sub": {
+    "message": "Van browserwerkbalk en pop-upvenster",
+    "description": "Value of the option."
+  },
+
+  "error_optionsNotApplied": {
+    "message": "Herstart de browser om de wijzigingen toe te passen.",
+    "description": "Error message."
+  }
+}
