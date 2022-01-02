@@ -1,30 +1,23 @@
 <template>
   <div id="app" v-show="dataLoaded">
     <div class="header">
-      <div class="title">{{ getText('extensionName') }}</div>
+      <v-dense-select
+        class="search-mode-menu"
+        v-model="searchModeAction"
+        :options="listItems.searchModeAction"
+      >
+      </v-dense-select>
       <div class="header-buttons">
         <v-icon-button
-          class="settings-button"
-          @click="showActionSettings = !showActionSettings"
-        >
-          <img
-            class="mdc-icon-button__icon"
-            :src="`/src/icons/misc/${
-              showActionSettings ? 'linkOn' : 'link'
-            }.svg`"
-          />
-        </v-icon-button>
-
-        <v-icon-button
+          v-if="enableContributions"
           class="contribute-button"
           src="/src/contribute/assets/heart.svg"
           @click="showContribute"
-        >
-        </v-icon-button>
+        ></v-icon-button>
 
         <v-icon-button
           class="menu-button"
-          src="/src/icons/misc/more.svg"
+          src="/src/assets/icons/misc/more.svg"
           @click="showActionMenu"
         >
         </v-icon-button>
@@ -42,15 +35,17 @@
     <transition
       name="settings"
       v-if="dataLoaded"
+      @before-enter="settingsBeforeEnter"
+      @before-leave="settingsBeforeLeave"
       @after-enter="settingsAfterEnter"
       @after-leave="settingsAfterLeave"
     >
-      <div class="settings" v-show="showActionSettings">
+      <div class="settings" v-if="searchModeAction === 'url'">
         <v-textfield
-          ref="pageUrlInput"
-          v-model.trim="pageUrl"
-          :placeholder="getText('inputPlaceholder_pageURL')"
-          :fullwidth="true"
+          ref="docUrlInput"
+          v-model.trim="docUrl"
+          :placeholder="getText('inputPlaceholder_docUrl')"
+          fullwidth
         >
         </v-textfield>
       </div>
@@ -63,17 +58,14 @@
           class="mdc-list-item__graphic list-item-icon"
           :src="getEngineIcon('allEngines')"
         />
-        {{ getText('engineName_allEngines_full') }}
+        {{ getText('menuItemTitle_allEngines') }}
       </li>
     </ul>
-    <ul
-      class="mdc-list list list-separator"
-      v-if="searchAllEngines || hasScrollBar"
-    >
+    <ul class="mdc-list list list-separator" :class="separatorClasses">
       <li role="separator" class="mdc-list-divider"></li>
     </ul>
-    <div class="list-items-wrap" ref="items" :class="listClasses">
-      <resize-observer @notify="handleSizeChange"></resize-observer>
+    <div class="list-items-wrap" ref="items" @scroll="onListScroll">
+      <resize-observer @notify="onListSizeChange"></resize-observer>
       <ul class="mdc-list list list-items">
         <li
           class="mdc-list-item list-item"
@@ -85,7 +77,7 @@
             class="mdc-list-item__graphic list-item-icon"
             :src="getEngineIcon(engine)"
           />
-          {{ getText(`engineName_${engine}_short`) }}
+          {{ getText(`menuItemTitle_${engine}`) }}
         </li>
       </ul>
     </div>
@@ -99,6 +91,8 @@ import {MDCList} from '@material/list';
 import {MDCRipple} from '@material/ripple';
 import {IconButton, TextField, Menu} from 'ext-components';
 
+import DenseSelect from './components/DenseSelect';
+
 import storage from 'storage/storage';
 import {
   getEnabledEngines,
@@ -108,14 +102,16 @@ import {
   showContributePage,
   showProjectPage
 } from 'utils/app';
-import {getText, isAndroid} from 'utils/common';
-import {targetEnv} from 'utils/config';
+import {getText, getActiveTab, createTab} from 'utils/common';
+import {enableContributions} from 'utils/config';
+import {optionKeys} from 'utils/data';
 
 export default {
   components: {
     [IconButton.name]: IconButton,
     [TextField.name]: TextField,
     [Menu.name]: Menu,
+    [DenseSelect.name]: DenseSelect,
     [ResizeObserver.name]: ResizeObserver
   },
 
@@ -123,26 +119,31 @@ export default {
     return {
       dataLoaded: false,
 
-      listItems: getListItems(
-        {actionMenu: ['options', 'website']},
-        {scope: 'actionMenu'}
-      ),
-
-      showActionSettings: false,
+      searchModeAction: '',
+      docUrl: '',
+      listItems: {
+        ...getListItems(
+          {actionMenu: ['options', 'website']},
+          {scope: 'actionMenu'}
+        ),
+        ...getListItems(
+          {searchModeAction: ['tab', 'url']},
+          {scope: 'optionValue_action_searchModeAction'}
+        )
+      },
       hasScrollBar: false,
-      isPopup: false,
-      tabId: null,
 
       engines: [],
       searchAllEngines: false,
-      pageUrl: ''
+
+      enableContributions
     };
   },
 
   computed: {
-    listClasses: function () {
+    separatorClasses: function () {
       return {
-        'list-items-max-height': this.isPopup
+        visible: this.searchAllEngines || this.hasScrollBar
       };
     }
   },
@@ -160,24 +161,25 @@ export default {
       }
 
       let ext = 'svg';
-      if (['gigablast', 'megalodon'].includes(engine)) {
+      if (['gigablast'].includes(engine)) {
         ext = 'png';
       }
 
-      return `/src/icons/engines/${engine}.${ext}`;
+      return `/src/assets/icons/engines/${engine}.${ext}`;
     },
 
     selectItem: async function (engine) {
-      if (this.showActionSettings) {
-        if (!validateUrl(this.pageUrl)) {
-          this.focusPageUrlInput();
+      if (this.searchModeAction === 'url') {
+        if (!validateUrl(this.docUrl)) {
+          this.focusDocUrlInput();
           showNotification({messageId: 'error_invalidUrl'});
           return;
         }
       }
+
       browser.runtime.sendMessage({
         id: 'actionPopupSubmit',
-        pageUrl: this.pageUrl,
+        docUrl: this.docUrl,
         engine
       });
 
@@ -190,7 +192,15 @@ export default {
     },
 
     showOptions: async function () {
-      await browser.runtime.openOptionsPage();
+      if (this.$isSamsung) {
+        // Samsung Internet 13: runtime.openOptionsPage fails.
+        await createTab({
+          url: browser.runtime.getURL('/src/options/index.html')
+        });
+      } else {
+        await browser.runtime.openOptionsPage();
+      }
+
       this.closeAction();
     },
 
@@ -212,54 +222,133 @@ export default {
     },
 
     closeAction: async function () {
-      if (this.tabId) {
-        browser.tabs.remove(this.tabId);
+      const currentTab = await browser.tabs.getCurrent();
+
+      // Safari 14: tabs.getCurrent returns active tab instead of undefined.
+      if (
+        currentTab &&
+        currentTab.id !== browser.tabs.TAB_ID_NONE &&
+        !this.$isSafari
+      ) {
+        browser.tabs.remove(currentTab.id);
       } else {
         window.close();
       }
     },
 
-    focusPageUrlInput: function () {
-      this.$refs.pageUrlInput.$refs.input.focus();
+    focusDocUrlInput: function () {
+      this.$refs.docUrlInput.$refs.input.focus();
     },
 
-    handleSizeChange: function () {
-      const items = this.$refs.items;
-      this.hasScrollBar = items.scrollHeight > items.clientHeight;
+    settingsBeforeEnter: function () {
+      this.lockPopupHeight();
+    },
+
+    settingsBeforeLeave: function () {
+      this.lockPopupHeight();
     },
 
     settingsAfterEnter: function () {
-      this.handleSizeChange();
-      this.focusPageUrlInput();
+      this.configureScrollBar();
+      this.focusDocUrlInput();
     },
 
     settingsAfterLeave: function () {
-      this.handleSizeChange();
-      this.pageUrl = '';
+      this.unlockPopupHeight();
+      this.configureScrollBar();
+      this.docUrl = '';
+    },
+
+    onListSizeChange: function () {
+      this.configureScrollBar();
+      if (this.$isMobile && this.$isSafari) {
+        // Safari 15: window.onresize is not always fired on mobile.
+        this.setViewportSize();
+      }
+    },
+
+    onListScroll: function () {
+      this.configureScrollBar();
+    },
+
+    configureScrollBar: function () {
+      if (this.$isAndroid || this.$isSafari) {
+        this.hasScrollBar = this.$refs.items.scrollTop;
+      } else {
+        const items = this.$refs.items;
+        this.hasScrollBar = items.scrollHeight > items.clientHeight;
+      }
+    },
+
+    lockPopupHeight: function () {
+      if (
+        (this.$isAndroid || this.$isFirefox) &&
+        !document.documentElement.style.height
+      ) {
+        const {height} = document.documentElement.getBoundingClientRect();
+        document.documentElement.style.height = `${height}px`;
+      }
+    },
+
+    unlockPopupHeight: function () {
+      if (
+        (this.$isAndroid || this.$isFirefox) &&
+        document.documentElement.style.height.endsWith('px')
+      ) {
+        document.documentElement.style.height = '';
+      }
+    },
+
+    setViewportSize: async function () {
+      const activeTab = await getActiveTab();
+      const actionWidth = window.innerWidth;
+
+      if (activeTab && actionWidth && activeTab.width > actionWidth) {
+        // popup
+        if (this.$isMobile) {
+          // mobile popup
+          if (activeTab.width < 394) {
+            document.body.style.minWidth = `${activeTab.width - 40}px`;
+          } else {
+            document.body.style.minWidth = '354px';
+          }
+          this.$el.style.maxHeight = `${activeTab.height - 40}px`;
+          document.documentElement.style.height = '';
+
+          if (this.$isIpados) {
+            this.$refs.items.style.maxHeight = '392px';
+          }
+        } else {
+          // desktop popup
+          this.$refs.items.style.maxHeight = '392px';
+        }
+      } else {
+        // full-width page
+        document.documentElement.style.height = '100%';
+        if (activeTab && activeTab.width >= 354) {
+          document.body.style.minWidth = '354px';
+        } else {
+          document.body.style.minWidth = 'initial';
+        }
+        this.$el.style.maxHeight = 'initial';
+        this.$refs.items.style.maxHeight = 'initial';
+      }
     }
   },
 
   created: async function () {
-    const currentTab = await browser.tabs.getCurrent();
-    if (currentTab) {
-      this.tabId = currentTab.id;
-    }
-    this.isPopup = !this.tabId && !this.$isFenix;
-    if (!this.isPopup) {
-      document.documentElement.style.height = '100%';
-      document.body.style.minWidth = 'initial';
-    }
-
-    const options = await storage.get(
-      ['engines', 'disabledEngines', 'searchAllEnginesAction'],
-      'sync'
+    window.addEventListener('resize', this.setViewportSize);
+    window.addEventListener('orientationchange', () =>
+      window.setTimeout(this.setViewportSize, 1000)
     );
+    await this.setViewportSize();
 
+    const options = await storage.get(optionKeys);
     const enEngines = await getEnabledEngines(options);
 
     if (
-      targetEnv === 'firefox' &&
-      (await isAndroid()) &&
+      this.$isFirefox &&
+      this.$isAndroid &&
       (enEngines.length <= 1 || options.searchAllEnginesAction === 'main')
     ) {
       // Removing the action popup has no effect on Firefox for Android
@@ -267,8 +356,14 @@ export default {
       return;
     }
 
-    this.searchAllEngines = options.searchAllEnginesAction === 'sub';
     this.engines = enEngines;
+    this.searchAllEngines =
+      options.searchAllEnginesAction === 'sub' && !this.$isSamsung;
+    this.searchModeAction = options.searchModeAction;
+
+    this.$watch('searchModeAction', async function (value) {
+      await storage.set({searchModeAction: value});
+    });
 
     this.dataLoaded = true;
   },
@@ -283,16 +378,24 @@ export default {
           MDCRipple.attachTo(el);
         }
       }
+
+      if (this.searchModeAction === 'url' && !this.$isMobile) {
+        this.focusDocUrlInput();
+      }
+
+      if (this.$isMobile && this.$isSafari) {
+        // Safari 15: window.onresize is not always fired on mobile.
+        this.setViewportSize();
+      }
     }, 500);
   }
 };
 </script>
 
 <style lang="scss">
-$mdc-theme-primary: #1abc9c;
-
-@import '@material/icon-button/mdc-icon-button';
 @import '@material/list/mdc-list';
+@import '@material/select/mdc-select';
+
 @import '@material/icon-button/mixins';
 @import '@material/theme/mixins';
 @import '@material/textfield/mixins';
@@ -312,7 +415,7 @@ body,
 
 body {
   margin: 0;
-  min-width: 326px;
+  min-width: 354px;
   overflow: hidden;
   @include mdc-typography-base;
   font-size: 100%;
@@ -329,25 +432,14 @@ body {
   padding-right: 4px;
 }
 
-.title {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  @include mdc-typography(headline6);
-  @include mdc-theme-prop(color, text-primary-on-light);
-}
-
 .header-buttons {
   display: flex;
   align-items: center;
   height: 24px;
   margin-left: 56px;
-  @media (max-width: 325px) {
-    margin-left: 32px;
-  }
 }
 
 .contribute-button,
-.settings-button,
 .menu-button {
   @include mdc-icon-button-icon-size(24px, 24px, 6px);
 
@@ -360,11 +452,17 @@ body {
 }
 
 .contribute-button {
-  margin-right: 4px;
+  margin-left: 12px;
 }
 
-.settings-button {
-  margin-right: 12px;
+.menu-button {
+  margin-left: 4px;
+}
+
+.search-mode-menu .mdc-select__menu {
+  position: fixed !important;
+  top: 56px !important;
+  left: 16px !important;
 }
 
 .action-menu {
@@ -411,14 +509,16 @@ body {
 .list-separator {
   position: relative;
   height: 1px;
+  opacity: 0;
+  transition: opacity 0.1s ease;
+}
+
+.visible {
+  opacity: 1;
 }
 
 .list-items-wrap {
   overflow-y: auto;
-}
-
-.list-items-max-height {
-  max-height: 392px;
 }
 
 .list-items {
@@ -435,29 +535,58 @@ body {
   margin-right: 16px !important;
 }
 
-html.fenix {
+.mdc-list {
+  padding: 0;
+}
+
+.mdc-list-item {
+  @include mdc-theme-prop(color, #252525);
+}
+
+.mdc-menu-surface {
+  border-radius: 16px;
+}
+
+.mdc-text-field {
+  @include mdc-text-field-ink-color(#252525);
+  @include mdc-text-field-caret-color(#8188e9);
+  @include mdc-text-field-bottom-line-color(#4e5bb6);
+  @include mdc-text-field-line-ripple-color(#8188e9);
+}
+
+.mdc-select {
+  @include mdc-select-ink-color(#252525);
+
+  & .mdc-select__dropdown-icon {
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24px' viewBox='0 0 24 24' width='24px' fill='%23454545'%3E%3Cpath d='M0 0h24v24H0V0z' fill='none'/%3E%3Cpath d='M8.71 11.71l2.59 2.59c.39.39 1.02.39 1.41 0l2.59-2.59c.63-.63.18-1.71-.71-1.71H9.41c-.89 0-1.33 1.08-.7 1.71z'/%3E%3C/svg%3E")
+      no-repeat center !important;
+  }
+
+  & .mdc-select__selected-text {
+    height: 29px !important;
+    border-bottom: none !important;
+  }
+}
+
+html:not(.firefox) .mdc-select {
+  & .mdc-select__selected-text {
+    padding-top: 1px !important;
+  }
+}
+
+html.safari .mdc-select {
+  & .mdc-select__selected-text {
+    padding-top: 2px !important;
+  }
+}
+
+html.firefox.android {
   height: 100%;
 }
-.fenix {
-  & .title {
-    visibility: hidden;
-  }
 
-  & .mdc-list-item {
-    @include mdc-theme-prop(color, #20123a);
-  }
-
-  & .mdc-text-field {
-    @include mdc-text-field-ink-color(#20123a);
-    @include mdc-text-field-caret-color(#312a65);
-    @include mdc-text-field-bottom-line-color(#20123a);
-    @include mdc-text-field-line-ripple-color(#312a65);
-  }
-
-  & .settings-button img,
-  & .menu-button img {
-    filter: brightness(0) saturate(100%) invert(10%) sepia(43%) saturate(1233%)
-      hue-rotate(225deg) brightness(97%) contrast(105%);
+.safari {
+  & .list-item:hover::before {
+    opacity: 0 !important;
   }
 }
 </style>

@@ -5,65 +5,61 @@ const optionKeys = [
   'searchAllEnginesContextMenu',
   'searchAllEnginesAction',
   'showPageAction',
-  'openNewTab',
-  'tabInBackgound'
+  'tabInBackgound',
+  'searchModeAction',
+  'searchModeContextMenu'
 ];
 
 const engines = {
   archiveOrg: {
-    url: 'https://web.archive.org/web/{url}'
+    target: 'https://web.archive.org/web/{url}'
   },
   archiveOrgAll: {
-    url: 'https://web.archive.org/web/*/{url}'
+    target: 'https://web.archive.org/web/*/{url}'
   },
   google: {
-    url: 'https://webcache.googleusercontent.com/search?q=cache:{url}'
+    target: 'https://webcache.googleusercontent.com/search?q=cache:{url}'
   },
   googleText: {
-    url: 'https://webcache.googleusercontent.com/search?strip=1&q=cache:{url}'
+    target:
+      'https://webcache.googleusercontent.com/search?strip=1&q=cache:{url}'
   },
   bing: {
-    url: 'https://www.bing.com/search?q=url:{url}&go=Search&qs=bs&form=QBRE'
+    target: 'https://www.bing.com/search?q=url:{url}&go=Search&qs=bs&form=QBRE',
+    isExec: true
   },
   yandex: {
-    url: 'https://www.yandex.com/search/?text={url}&url={url}'
+    target: 'https://www.yandex.com/',
+    isExec: true
   },
   archiveIs: {
-    url: 'https://archive.is/newest/{url}'
+    target: 'https://archive.is/newest/{url}'
   },
   archiveIsAll: {
-    url: 'https://archive.is/{url}'
+    target: 'https://archive.is/{url}'
   },
   memento: {
-    url: 'https://timetravel.mementoweb.org/reconstruct/{url}'
-  },
-  webcite: {
-    url: 'https://www.webcitation.org/query?url={url}&date={date}'
-  },
-  exalead: {
-    url: 'https://www.exalead.com/search/web/cached/?url={url}&q={url}'
+    target: 'http://timetravel.mementoweb.org/memento/{date}/{url}'
   },
   gigablast: {
-    url: 'https://www.gigablast.com/search?q=url:{url}'
-  },
-  sogou: {
-    url: 'https://www.sogou.com/web?query={url}'
+    target: 'https://www.gigablast.com/search?q=url:{url}',
+    isExec: true
   },
   qihoo: {
-    url: 'https://www.so.com/s?ie=utf-8&fr=none&src=home_www&q={url}'
+    target: 'https://www.so.com/s?ie=utf-8&fr=none&src=home_www&q={url}',
+    isExec: true
   },
   baidu: {
-    url: 'https://www.baidu.com/s?wd={url}&ie=utf-8'
-  },
-  naver: {
-    url:
-      'https://search.naver.com/search.naver?where=webkr&query=site:{url}&ie=utf8'
+    target: 'https://www.baidu.com/s?wd={url}&ie=utf-8',
+    isExec: true
   },
   yahooJp: {
-    url: 'https://search.yahoo.co.jp/search?ei=UTF-8&p={url}'
+    target: 'https://search.yahoo.co.jp/search?ei=UTF-8&p={url}',
+    isExec: true
   },
   megalodon: {
-    url: 'https://megalodon.jp/?url={url}'
+    target: 'https://megalodon.jp/?url={url}',
+    isExec: true
   }
 };
 
@@ -96,9 +92,19 @@ const errorCodes = [
   527
 ];
 
+const chromeDesktopUA =
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36';
+
+const chromeMobileUA =
+  'Mozilla/5.0 (Linux; Android 11; Pixel 4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Mobile Safari/537.36';
+
 const projectUrl = 'https://github.com/dessant/web-archives';
 
-const chromeDesktopUA =
-  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.101 Safari/537.36';
-
-export {optionKeys, engines, errorCodes, projectUrl, chromeDesktopUA};
+export {
+  optionKeys,
+  engines,
+  errorCodes,
+  chromeDesktopUA,
+  chromeMobileUA,
+  projectUrl
+};

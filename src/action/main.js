@@ -1,15 +1,15 @@
 import Vue from 'vue';
 
-import {configFenix} from 'utils/app';
+import {configUI} from 'utils/app';
 import App from './App';
 
 async function init() {
+  await configUI(Vue);
+
   try {
     await document.fonts.load('400 14px Roboto');
     await document.fonts.load('500 14px Roboto');
   } catch (err) {}
-
-  Vue.prototype.$isFenix = await configFenix();
 
   new Vue({
     el: '#app',

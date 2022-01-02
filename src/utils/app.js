@@ -1,37 +1,61 @@
 import browser from 'webextension-polyfill';
-import {difference, isString} from 'lodash-es';
+import {difference} from 'lodash-es';
 
 import storage from 'storage/storage';
 import {
   getText,
   createTab,
   getActiveTab,
-  isAndroid,
-  getBrowser
+  getPlatform,
+  isAndroid
 } from 'utils/common';
 import {targetEnv} from 'utils/config';
-import {projectUrl} from 'utils/data';
+import {engines, projectUrl} from 'utils/data';
 
 async function getEnabledEngines(options) {
   if (typeof options === 'undefined') {
-    options = await storage.get(['engines', 'disabledEngines'], 'sync');
+    options = await storage.get(['engines', 'disabledEngines']);
   }
   return difference(options.engines, options.disabledEngines);
 }
 
-function showNotification({message, messageId, title, type = 'info'}) {
+async function getSearches(targetEngines) {
+  const searches = [];
+  for (const engine of targetEngines) {
+    const isExec = engines[engine].isExec;
+    const isTaskId = engines[engine].isTaskId;
+    searches.push({
+      engine,
+      isExec,
+      isTaskId,
+      sendsReceipt: isExec || isTaskId
+    });
+  }
+
+  return searches;
+}
+
+function showNotification({message, messageId, title, type = 'info'} = {}) {
   if (!title) {
     title = getText('extensionName');
   }
   if (messageId) {
     message = getText(messageId);
   }
-  return browser.notifications.create(`vpa-notification-${type}`, {
-    type: 'basic',
-    title: title,
-    message: message,
-    iconUrl: '/src/icons/app/icon-48.png'
-  });
+
+  if (targetEnv === 'safari') {
+    return browser.runtime.sendNativeMessage('application.id', {
+      id: 'notification',
+      message
+    });
+  } else {
+    return browser.notifications.create(`wa-notification-${type}`, {
+      type: 'basic',
+      title,
+      message,
+      iconUrl: '/src/assets/icons/app/icon-64.png'
+    });
+  }
 }
 
 function getListItems(data, {scope = '', shortScope = ''} = {}) {
@@ -53,22 +77,17 @@ function getListItems(data, {scope = '', shortScope = ''} = {}) {
 }
 
 function validateUrl(url) {
-  if (!isString(url) || url.length > 2048) {
-    return;
-  }
-
-  let parsedUrl;
   try {
-    parsedUrl = new URL(url);
-  } catch (err) {
-    return;
-  }
+    if (url.length > 2048) {
+      return;
+    }
 
-  if (!/^(?:https?|ftp):$/i.test(parsedUrl.protocol)) {
-    return;
-  }
+    const parsedUrl = new URL(url);
 
-  return true;
+    if (/^(?:https?|ftp):$/i.test(parsedUrl.protocol)) {
+      return true;
+    }
+  } catch (err) {}
 }
 
 function normalizeUrl(url) {
@@ -80,45 +99,151 @@ function normalizeUrl(url) {
   return parsedUrl.toString();
 }
 
-async function showContributePage(action = false) {
-  await storage.set({contribPageLastOpen: new Date().getTime()}, 'sync');
+async function showContributePage(action = '') {
+  await storage.set({contribPageLastOpen: new Date().getTime()});
   const activeTab = await getActiveTab();
-  let url = browser.extension.getURL('/src/contribute/index.html');
+  let url = browser.runtime.getURL('/src/contribute/index.html');
   if (action) {
     url = `${url}?action=${action}`;
   }
-  await createTab(url, {index: activeTab.index + 1});
+  return createTab({url, index: activeTab.index + 1});
 }
 
 async function showProjectPage() {
   const activeTab = await getActiveTab();
-  await createTab(projectUrl, {index: activeTab.index + 1});
+  await createTab({url: projectUrl, index: activeTab.index + 1});
 }
 
-async function isFenix() {
-  if (targetEnv === 'firefox' && (await isAndroid())) {
-    const {version} = await getBrowser();
+async function configUI(Vue) {
+  const {os} = await getPlatform();
 
-    if (parseInt(version.split('.')[0], 10) > 68) {
-      return true;
-    }
+  document.documentElement.classList.add(targetEnv, os);
+
+  if (Vue) {
+    Vue.prototype.$isChrome = targetEnv === 'chrome';
+    Vue.prototype.$isEdge = targetEnv === 'edge';
+    Vue.prototype.$isFirefox = targetEnv === 'firefox';
+    Vue.prototype.$isOpera = targetEnv === 'opera';
+    Vue.prototype.$isSafari = targetEnv === 'safari';
+    Vue.prototype.$isSamsung = targetEnv === 'samsung';
+
+    Vue.prototype.$isWindows = os === 'windows';
+    Vue.prototype.$isMacos = os === 'macos';
+    Vue.prototype.$isLinux = os === 'linux';
+    Vue.prototype.$isAndroid = os === 'android';
+    Vue.prototype.$isIos = os === 'ios';
+    Vue.prototype.$isIpados = os === 'ipados';
+
+    Vue.prototype.$isMobile = ['android', 'ios', 'ipados'].includes(os);
   }
 }
 
-async function configFenix() {
-  if (await isFenix()) {
-    document.documentElement.classList.add('fenix');
+async function hasBaseModule(tabId, frameId = 0) {
+  try {
+    const [isBaseModule] = await browser.tabs.executeScript(tabId, {
+      frameId,
+      runAt: 'document_start',
+      code: `typeof baseModule !== 'undefined'`
+    });
+
+    if (isBaseModule) {
+      return true;
+    }
+  } catch (err) {}
+}
+
+async function insertBaseModule({activeTab = false} = {}) {
+  const tabs = [];
+  if (activeTab) {
+    const tab = await getActiveTab();
+    if (tab) {
+      tabs.push(tab);
+    }
+  } else {
+    tabs.push(
+      ...(await browser.tabs.query({
+        url: ['http://*/*', 'https://*/*'],
+        windowType: 'normal'
+      }))
+    );
+  }
+
+  for (const tab of tabs) {
+    browser.tabs.executeScript(tab.id, {
+      allFrames: true,
+      runAt: 'document_start',
+      file: '/src/insert/script.js'
+    });
+  }
+}
+
+async function isContextMenuSupported() {
+  if (await isAndroid()) {
+    if (targetEnv === 'samsung') {
+      return true;
+    }
+  } else if (browser.contextMenus) {
     return true;
+  }
+
+  return false;
+}
+
+async function checkSearchEngineAccess() {
+  // Check if search engine access is enabled in Opera
+  if (/ opr\//i.test(navigator.userAgent)) {
+    const {lastEngineAccessCheck} = await storage.get('lastEngineAccessCheck');
+    // run at most once a week
+    if (Date.now() - lastEngineAccessCheck > 604800000) {
+      await storage.set({lastEngineAccessCheck: Date.now()});
+
+      const url = 'https://www.google.com/generate_204';
+
+      const hasAccess = await new Promise(resolve => {
+        let access = false;
+
+        function requestCallback() {
+          access = true;
+          removeCallback();
+          return {cancel: true};
+        }
+
+        const removeCallback = function () {
+          window.clearTimeout(timeoutId);
+          browser.webRequest.onBeforeRequest.removeListener(requestCallback);
+
+          resolve(access);
+        };
+        const timeoutId = window.setTimeout(removeCallback, 3000); // 3 seconds
+
+        browser.webRequest.onBeforeRequest.addListener(
+          requestCallback,
+          {urls: [url], types: ['xmlhttprequest']},
+          ['blocking']
+        );
+
+        fetch(url).catch(err => null);
+      });
+
+      if (!hasAccess) {
+        await showNotification({messageId: 'error_noSearchEngineAccess'});
+      }
+    }
   }
 }
 
 export {
   getEnabledEngines,
+  getSearches,
   showNotification,
   getListItems,
-  validateUrl,
-  normalizeUrl,
   showContributePage,
   showProjectPage,
-  configFenix
+  validateUrl,
+  normalizeUrl,
+  configUI,
+  hasBaseModule,
+  insertBaseModule,
+  isContextMenuSupported,
+  checkSearchEngineAccess
 };

@@ -1,0 +1,485 @@
+{
+  "extensionName": {
+    "message": "Web Archives",
+    "description": "Name of the extension."
+  },
+
+  "extensionDescription": {
+    "message": "View archived and cached versions of web pages on 10+ search engines, such as the Wayback Machine, Archive.is, Google, Bing, Yandex, Gigablast, Memento and Yahoo Japan.",
+    "description": "Description of the extension."
+  },
+
+  "engineName_google": {
+    "message": "Google",
+    "description": "Name of the search engine."
+  },
+
+  "engineName_googleText": {
+    "message": "Google (text-only)",
+    "description": "Name of the search engine."
+  },
+
+  "engineName_bing": {
+    "message": "Bing",
+    "description": "Name of the search engine."
+  },
+
+  "engineName_yandex": {
+    "message": "Yandex",
+    "description": "Name of the search engine."
+  },
+
+  "engineName_archiveOrg": {
+    "message": "Wayback Machine",
+    "description": "Name of the search engine."
+  },
+
+  "engineName_archiveOrgAll": {
+    "message": "Wayback Machine (all)",
+    "description": "Name of the search engine."
+  },
+
+  "engineName_memento": {
+    "message": "Memento",
+    "description": "Name of the search engine."
+  },
+
+  "engineName_archiveIs": {
+    "message": "Archive.is",
+    "description": "Name of the search engine."
+  },
+
+  "engineName_archiveIsAll": {
+    "message": "Archive.is (all)",
+    "description": "Name of the search engine."
+  },
+
+  "engineName_gigablast": {
+    "message": "Gigablast",
+    "description": "Name of the search engine."
+  },
+
+  "engineName_qihoo": {
+    "message": "360 Search",
+    "description": "Name of the search engine."
+  },
+
+  "engineName_baidu": {
+    "message": "Baidu",
+    "description": "Name of the search engine."
+  },
+
+  "engineName_yahooJp": {
+    "message": "Yahoo Japan",
+    "description": "Name of the search engine."
+  },
+
+  "engineName_megalodon": {
+    "message": "Megalodon",
+    "description": "Name of the search engine."
+  },
+
+  "engineName_allEngines": {
+    "message": "All search engines",
+    "description": "Name of the search engine."
+  },
+
+  "actionTitle_allEngines": {
+    "message": "Search all engines for page",
+    "description": "Title of the action."
+  },
+
+  "actionTitle_engine": {
+    "message": "Search $ENGINE$ for page",
+    "description": "Title of the action.",
+    "placeholders": {
+      "engine": {
+        "content": "$1",
+        "example": "Google"
+      }
+    }
+  },
+
+  "menuItemTitle_google": {
+    "message": "Google",
+    "description": "Title of the menu item."
+  },
+
+  "menuItemTitle_googleText": {
+    "message": "Google (text-only)",
+    "description": "Title of the menu item."
+  },
+
+  "menuItemTitle_bing": {
+    "message": "Bing",
+    "description": "Title of the menu item."
+  },
+
+  "menuItemTitle_yandex": {
+    "message": "Yandex",
+    "description": "Title of the menu item."
+  },
+
+  "menuItemTitle_archiveOrg": {
+    "message": "Wayback Machine",
+    "description": "Title of the menu item."
+  },
+
+  "menuItemTitle_archiveOrgAll": {
+    "message": "Wayback Machine (all)",
+    "description": "Title of the menu item."
+  },
+
+  "menuItemTitle_memento": {
+    "message": "Memento",
+    "description": "Title of the menu item."
+  },
+
+  "menuItemTitle_archiveIs": {
+    "message": "Archive.is",
+    "description": "Title of the menu item."
+  },
+
+  "menuItemTitle_archiveIsAll": {
+    "message": "Archive.is (all)",
+    "description": "Title of the menu item."
+  },
+
+  "menuItemTitle_gigablast": {
+    "message": "Gigablast",
+    "description": "Title of the menu item."
+  },
+
+  "menuItemTitle_qihoo": {
+    "message": "360 Search",
+    "description": "Title of the menu item."
+  },
+
+  "menuItemTitle_baidu": {
+    "message": "Baidu",
+    "description": "Title of the menu item."
+  },
+
+  "menuItemTitle_yahooJp": {
+    "message": "Yahoo Japan",
+    "description": "Title of the menu item."
+  },
+
+  "menuItemTitle_megalodon": {
+    "message": "Megalodon",
+    "description": "Title of the menu item."
+  },
+
+  "menuItemTitle_allEngines": {
+    "message": "All search engines",
+    "description": "Title of the menu item."
+  },
+
+  "mainMenuItemTitle_allEngines": {
+    "message": "Search all engines for page",
+    "description": "Title of the menu item."
+  },
+
+  "mainMenuItemTitle_engine": {
+    "message": "Search $ENGINE$ for page",
+    "description": "Title of the menu item.",
+    "placeholders": {
+      "engine": {
+        "content": "$1",
+        "example": "Google"
+      }
+    }
+  },
+
+  "optionSectionTitle_engines": {
+    "message": "Search engines",
+    "description": "Title of the options section."
+  },
+
+  "optionSectionDescription_engines": {
+    "message": "Toggle search engines and customize their order (drag and drop)",
+    "description": "Description of the options section."
+  },
+
+  "optionTitle_google": {
+    "message": "Google Cache",
+    "description": "Title of the option."
+  },
+
+  "optionTitle_googleText": {
+    "message": "Google Cache (text-only)",
+    "description": "Title of the option."
+  },
+
+  "optionTitle_bing": {
+    "message": "Bing Cache",
+    "description": "Title of the option."
+  },
+
+  "optionTitle_yandex": {
+    "message": "Yandex Cache",
+    "description": "Title of the option."
+  },
+
+  "optionTitle_archiveOrg": {
+    "message": "Wayback Machine",
+    "description": "Title of the option."
+  },
+
+  "optionTitle_archiveOrgAll": {
+    "message": "Wayback Machine (all)",
+    "description": "Title of the option."
+  },
+
+  "optionTitle_memento": {
+    "message": "Memento Time Travel",
+    "description": "Title of the option."
+  },
+
+  "optionTitle_archiveIs": {
+    "message": "Archive.is",
+    "description": "Title of the option."
+  },
+
+  "optionTitle_archiveIsAll": {
+    "message": "Archive.is (all)",
+    "description": "Title of the option."
+  },
+
+  "optionTitle_gigablast": {
+    "message": "Gigablast Cache",
+    "description": "Title of the option."
+  },
+
+  "optionTitle_qihoo": {
+    "message": "Qihoo 360 Search Snapshot",
+    "description": "Title of the option."
+  },
+
+  "optionTitle_baidu": {
+    "message": "Baidu Snapshot",
+    "description": "Title of the option."
+  },
+
+  "optionTitle_yahooJp": {
+    "message": "Yahoo Japan Cache",
+    "description": "Title of the option."
+  },
+
+  "optionTitle_megalodon": {
+    "message": "Megalodon",
+    "description": "Title of the option."
+  },
+
+  "optionTitle_searchMode": {
+    "message": "Search mode",
+    "description": "Title of the option."
+  },
+
+  "optionTitle_searchAllEngines": {
+    "message": "Search all engines",
+    "description": "Title of the option."
+  },
+
+  "optionSectionTitle_contextmenu": {
+    "message": "Context menu",
+    "description": "Title of the options section."
+  },
+
+  "optionTitle_showInContextMenu": {
+    "message": "Visibility",
+    "description": "Title of the option."
+  },
+
+  "optionValue_showInContextMenu_all": {
+    "message": "Show",
+    "description": "Value of the option."
+  },
+
+  "optionValue_showInContextMenu_link": {
+    "message": "Show for links",
+    "description": "Value of the option."
+  },
+
+  "optionValue_showInContextMenu_false": {
+    "message": "Hide",
+    "description": "Value of the option."
+  },
+
+  "optionValue_searchAllEnginesContextMenu_main": {
+    "message": "From context menu",
+    "description": "Value of the option."
+  },
+
+  "optionValue_searchAllEnginesContextMenu_sub": {
+    "message": "From submenu of context menu",
+    "description": "Value of the option."
+  },
+
+  "optionValue_searchAllEnginesContextMenu_false": {
+    "message": "Disable",
+    "description": "Value of the option."
+  },
+
+  "optionSectionTitle_toolbar": {
+    "message": "Browser toolbar",
+    "description": "Title of the options section."
+  },
+
+  "optionValue_searchAllEnginesAction_main": {
+    "message": "From browser toolbar",
+    "description": "Value of the option."
+  },
+
+  "optionValue_searchAllEnginesAction_sub": {
+    "message": "From browser toolbar popup",
+    "description": "Value of the option."
+  },
+
+  "optionValue_searchAllEnginesAction_false": {
+    "message": "Disable",
+    "description": "Value of the option."
+  },
+
+  "optionSectionTitleMobile_toolbar": {
+    "message": "Browser menu",
+    "description": "Title of the options section."
+  },
+
+  "optionValue_searchAllEnginesActionMobile_main": {
+    "message": "From browser menu",
+    "description": "Value of the option."
+  },
+
+  "optionValue_searchAllEnginesActionMobile_sub": {
+    "message": "From browser menu popup",
+    "description": "Value of the option."
+  },
+
+  "optionValue_searchAllEnginesActionMobile_false": {
+    "message": "Disable",
+    "description": "Value of the option."
+  },
+
+  "optionValue_action_searchModeAction_tab": {
+    "message": "Tab",
+    "description": "Value of the option."
+  },
+
+  "optionValue_action_searchModeAction_url": {
+    "message": "URL",
+    "description": "Value of the option."
+  },
+
+  "optionValue_searchModeAction_tab": {
+    "message": "Tab",
+    "description": "Value of the option."
+  },
+
+  "optionValue_searchModeAction_url": {
+    "message": "URL",
+    "description": "Value of the option."
+  },
+
+  "optionSectionTitle_misc": {
+    "message": "Miscellaneous",
+    "description": "Title of the miscellaneous options section."
+  },
+
+  "optionTitle_showPageAction": {
+    "message": "Show in address bar on server error",
+    "description": "Title of the option."
+  },
+
+  "optionTitle_tabInBackgound": {
+    "message": "Open new tabs in the background",
+    "description": "Title of the option."
+  },
+
+  "inputPlaceholder_docUrl": {
+    "message": "Page URL",
+    "description": "Placeholder of the input."
+  },
+
+  "pageTitle": {
+    "message": "$PAGETITLE$ - $EXTENSIONNAME$",
+    "description": "Title of the page.",
+    "placeholders": {
+      "pageTitle": {
+        "content": "$1",
+        "example": "Options"
+      },
+      "extensionName": {
+        "content": "$2",
+        "example": "Extension Name"
+      }
+    }
+  },
+
+  "pageTitle_options": {
+    "message": "Options",
+    "description": "Title of the page."
+  },
+
+  "pageTitle_contribute": {
+    "message": "Contribute",
+    "description": "Title of the page."
+  },
+
+  "actionMenu_options": {
+    "message": "Options",
+    "description": "Title of the menu item."
+  },
+
+  "actionMenu_website": {
+    "message": "Website",
+    "description": "Title of the menu item."
+  },
+
+  "error_invalidUrl": {
+    "message": "The URL is not valid. It must point to a HTTP(S) or FTP page.",
+    "description": "Error message."
+  },
+
+  "error_sessionExpired": {
+    "message": "The session has expired. Try searching again for the page on $ENGINE$.",
+    "description": "Error message.",
+    "placeholders": {
+      "engine": {
+        "content": "$1",
+        "example": "Google"
+      }
+    }
+  },
+
+  "error_engine": {
+    "message": "Something went wrong. Searching on $ENGINE$ has failed.",
+    "description": "Error message.",
+    "placeholders": {
+      "engine": {
+        "content": "$1",
+        "example": "Google"
+      }
+    }
+  },
+
+  "error_scriptsNotAllowed": {
+    "message": "Content scripts are not allowed on this page.",
+    "description": "Error message."
+  },
+
+  "error_allEnginesDisabled": {
+    "message": "All search engines have been disabled. Visit the extensions's options to enable a search engine.",
+    "description": "Error message."
+  },
+
+  "error_noSearchEngineAccess": {
+    "message": "Cannot access search page results. Visit Menu > Extensions and enable the \"Allow access to search page results\" option for the extension.",
+    "description": "Error message."
+  },
+
+  "error_optionsNotApplied": {
+    "message": "Restart the browser for changes to take effect.",
+    "description": "Error message."
+  }
+}

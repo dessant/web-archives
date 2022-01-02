@@ -1,17 +1,17 @@
 <template>
-  <div id="app" v-if="dataLoaded">
-    <div class="section">
+  <div id="app" v-if="dataLoaded" :class="appClasses">
+    <div class="section-engines">
       <div class="section-title" v-once>
         {{ getText('optionSectionTitle_engines') }}
       </div>
       <div class="section-desc" v-once>
         {{ getText('optionSectionDescription_engines') }}
       </div>
-      <v-draggable class="option-wrap" :list="options.engines">
+      <v-draggable class="option-wrap" :list="options.engines" :delay="120">
         <div class="option" v-for="engine in options.engines" :key="engine.id">
           <v-form-field
             :input-id="engine"
-            :label="getText(`engineName_${engine}_full`)"
+            :label="getText(`optionTitle_${engine}`)"
           >
             <v-checkbox
               :id="engine"
@@ -24,7 +24,7 @@
       </v-draggable>
     </div>
 
-    <div class="section" v-if="contextMenuEnabled">
+    <div class="section-context-menu" v-if="contextMenuEnabled">
       <div class="section-title" v-once>
         {{ getText('optionSectionTitle_contextmenu') }}
       </div>
@@ -34,30 +34,48 @@
             :label="getText('optionTitle_showInContextMenu')"
             v-model="options.showInContextMenu"
             :options="listItems.showInContextMenu"
+            outlined
           >
           </v-select>
         </div>
-        <div class="option select">
+        <div class="option select" v-if="searchAllEnginesEnabled">
           <v-select
             :label="getText('optionTitle_searchAllEngines')"
             v-model="options.searchAllEnginesContextMenu"
             :options="listItems.searchAllEnginesContextMenu"
+            outlined
           >
           </v-select>
         </div>
       </div>
     </div>
 
-    <div class="section">
+    <div class="section-toolbar">
       <div class="section-title" v-once>
-        {{ getText('optionSectionTitle_toolbar') }}
+        {{
+          getText(
+            $isMobile
+              ? 'optionSectionTitleMobile_toolbar'
+              : 'optionSectionTitle_toolbar'
+          )
+        }}
       </div>
       <div class="option-wrap">
         <div class="option select">
           <v-select
+            :label="getText('optionTitle_searchMode')"
+            v-model="options.searchModeAction"
+            :options="listItems.searchModeAction"
+            outlined
+          >
+          </v-select>
+        </div>
+        <div class="option select" v-if="searchAllEnginesEnabled">
+          <v-select
             :label="getText('optionTitle_searchAllEngines')"
             v-model="options.searchAllEnginesAction"
             :options="listItems.searchAllEnginesAction"
+            outlined
           >
           </v-select>
         </div>
@@ -72,20 +90,12 @@
       </div>
     </div>
 
-    <div class="section">
+    <div class="section-misc">
       <div class="section-title" v-once>
         {{ getText('optionSectionTitle_misc') }}
       </div>
       <div class="option-wrap">
-        <div class="option">
-          <v-form-field
-            input-id="ont"
-            :label="getText('optionTitle_openNewTab')"
-          >
-            <v-switch id="ont" v-model="options.openNewTab"></v-switch>
-          </v-form-field>
-        </div>
-        <div class="option">
+        <div class="option" v-if="!$isAndroid">
           <v-form-field
             input-id="tib"
             :label="getText('optionTitle_tabInBackgound')"
@@ -106,9 +116,8 @@ import {Checkbox, FormField, Switch, Select} from 'ext-components';
 
 import storage from 'storage/storage';
 import {getListItems} from 'utils/app';
-import {getText, isAndroid} from 'utils/common';
+import {getText} from 'utils/common';
 import {optionKeys} from 'utils/data';
-import {targetEnv} from 'utils/config';
 
 export default {
   components: {
@@ -138,10 +147,19 @@ export default {
         ),
         ...getListItems(
           {searchAllEnginesAction: ['main', 'sub', 'false']},
-          {scope: 'optionValue_searchAllEnginesAction'}
+          {
+            scope: this.$isMobile
+              ? 'optionValue_searchAllEnginesActionMobile'
+              : 'optionValue_searchAllEnginesAction'
+          }
+        ),
+        ...getListItems(
+          {searchModeAction: ['tab', 'url']},
+          {scope: 'optionValue_searchModeAction'}
         )
       },
       contextMenuEnabled: true,
+      searchAllEnginesEnabled: true,
       pageActionEnabled: true,
 
       options: {
@@ -151,10 +169,18 @@ export default {
         searchAllEnginesContextMenu: '',
         searchAllEnginesAction: '',
         showPageAction: false,
-        openNewTab: false,
-        tabInBackgound: false
+        tabInBackgound: false,
+        searchModeAction: ''
       }
     };
+  },
+
+  computed: {
+    appClasses: function () {
+      return {
+        'feature-context-menu': this.contextMenuEnabled
+      };
+    }
   },
 
   methods: {
@@ -177,19 +203,26 @@ export default {
   },
 
   created: async function () {
-    const options = await storage.get(optionKeys, 'sync');
+    const options = await storage.get(optionKeys);
 
     for (const option of Object.keys(this.options)) {
       this.options[option] = options[option];
+
       this.$watch(`options.${option}`, async function (value) {
-        await storage.set({[option]: value}, 'sync');
+        await storage.set({[option]: value});
+        await browser.runtime.sendMessage({id: 'optionChange'});
       });
     }
 
-    if (targetEnv === 'firefox' && (await isAndroid())) {
-      this.contextMenuEnabled = false;
+    if (this.$isSamsung) {
+      this.searchAllEnginesEnabled = false;
+    } else {
+      if (this.$isMobile) {
+        this.contextMenuEnabled = false;
+      }
     }
-    if (targetEnv !== 'firefox' || (await isAndroid())) {
+
+    if (!this.$isFirefox || this.$isMobile) {
       this.pageActionEnabled = false;
     }
 
@@ -204,8 +237,6 @@ export default {
 </script>
 
 <style lang="scss">
-$mdc-theme-primary: #1abc9c;
-
 @import '@material/select/mdc-select';
 @import '@material/checkbox/mixins';
 @import '@material/switch/mixins';
@@ -223,20 +254,54 @@ body {
 #app {
   display: grid;
   grid-row-gap: 32px;
+  grid-column-gap: 48px;
   padding: 24px;
 }
 
 .mdc-checkbox {
+  @include mdc-checkbox-container-colors(#8188e9, #00000000, #8188e9, #8188e9);
+  @include mdc-checkbox-focus-indicator-color(#8188e9);
   margin-right: 4px;
 }
 
 .mdc-switch {
+  @include mdc-switch-toggled-on-color(#8188e9);
   margin-right: 16px;
 }
 
+.mdc-select {
+  @include mdc-select-ink-color(#252525);
+  @include mdc-select-focused-label-color(#252525);
+  @include mdc-select-outline-color(#777777);
+  @include mdc-select-hover-outline-color(#8188e9);
+  @include mdc-select-focused-outline-color(#8188e9);
+  @include mdc-select-outline-shape-radius(16px);
+
+  & .mdc-select__dropdown-icon {
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24px' viewBox='0 0 24 24' width='24px' fill='%23454545'%3E%3Cpath d='M0 0h24v24H0V0z' fill='none'/%3E%3Cpath d='M8.71 11.71l2.59 2.59c.39.39 1.02.39 1.41 0l2.59-2.59c.63-.63.18-1.71-.71-1.71H9.41c-.89 0-1.33 1.08-.7 1.71z'/%3E%3C/svg%3E")
+      no-repeat center !important;
+    top: 50% !important;
+    transform: translateY(-50%);
+  }
+
+  &.mdc-select--activated .mdc-select__dropdown-icon {
+    transform: rotate(180deg) translateY(50%);
+  }
+
+  & .mdc-list {
+    padding: 0 !important;
+  }
+
+  & .mdc-menu-surface {
+    border-radius: 16px !important;
+  }
+}
+
 .section-title,
-.section-desc {
-  @include mdc-theme-prop(color, text-primary-on-light);
+.section-desc,
+.mdc-form-field,
+.mdc-list-item {
+  @include mdc-theme-prop(color, #252525);
 }
 
 .section-title {
@@ -287,39 +352,44 @@ body {
   }
 }
 
-.fenix {
-  & .section-title,
-  & .section-desc,
-  & .mdc-form-field,
-  & .mdc-list-item {
-    @include mdc-theme-prop(color, #20123a);
-  }
+@media (min-width: 1024px) {
+  #app {
+    grid-template-columns: 464px 464px;
+    grid-template-rows: min-content min-content 1fr;
+    grid-template-areas:
+      'engines toolbar'
+      'engines misc'
+      'engines placeholder';
 
-  & .mdc-checkbox {
-    @include mdc-checkbox-container-colors(
-      #312a65,
-      #00000000,
-      #312a65,
-      #312a65
-    );
-    @include mdc-checkbox-focus-indicator-color(#312a65);
-  }
-
-  & .mdc-switch {
-    @include mdc-switch-toggled-on-color(#312a65);
-  }
-
-  & .mdc-select {
-    @include mdc-select-ink-color(#20123a);
-    @include mdc-select-focused-label-color(#20123a);
-    @include mdc-select-bottom-line-color(#20123a);
-    @include mdc-select-focused-bottom-line-color(#312a65);
-    @include mdc-select-focused-outline-color(#312a65);
-
-    &.mdc-select--focused .mdc-select__dropdown-icon {
-      filter: brightness(0) saturate(100%) invert(10%) sepia(43%)
-        saturate(1233%) hue-rotate(225deg) brightness(97%) contrast(105%);
+    &.feature-context-menu {
+      grid-template-rows: min-content min-content min-content 1fr;
+      grid-template-areas:
+        'engines context-menu'
+        'engines toolbar'
+        'engines misc'
+        'engines placeholder';
     }
+  }
+
+  .section-engines {
+    grid-area: engines;
+  }
+
+  .section-context-menu {
+    grid-area: context-menu;
+  }
+
+  .section-toolbar {
+    grid-area: toolbar;
+  }
+
+  .section-misc {
+    grid-area: misc;
+  }
+
+  .section-placeholder {
+    grid-area: placeholder;
+    display: initial;
   }
 }
 </style>

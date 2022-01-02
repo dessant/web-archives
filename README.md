@@ -41,14 +41,14 @@ https://github.com/dessant/web-archives/wiki/Search-engines
 ## Screenshots
 
 <p>
-  <img width="276" src="https://i.imgur.com/dereVK7.png">
-  <img width="276" src="https://i.imgur.com/Vq44x2U.png">
-  <img width="276" src="https://i.imgur.com/HTQXSoB.png">
+  <img width="380" src="https://i.imgur.com/dereVK7.png">
+  <img width="380" src="https://i.imgur.com/Vq44x2U.png">
+  <img width="380" src="https://i.imgur.com/HTQXSoB.png">
 </p>
 
 ## License
 
-Copyright (c) 2017-2021 Armin Sebastian
+Copyright (c) 2017-2022 Armin Sebastian
 
 This software is released under the terms of the GNU General Public License v3.0.
 See the [LICENSE](LICENSE) file for further information.

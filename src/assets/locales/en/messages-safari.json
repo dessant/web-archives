@@ -1,0 +1,92 @@
+{
+  "extensionDescription": {
+    "message": "View archived and cached versions of web pages.",
+    "description": "Description of the extension."
+  },
+
+  "engineName_googleText": {
+    "message": "Google (Text-Only)",
+    "description": "Short name of the search engine."
+  },
+
+  "engineName_archiveIsAll": {
+    "message": "Archive.is (All)",
+    "description": "Short name of the search engine."
+  },
+
+  "engineName_archiveOrgAll": {
+    "message": "Wayback Machine (All)",
+    "description": "Short name of the search engine."
+  },
+
+  "menuItemTitle_googleText": {
+    "message": "Google (Text-Only)",
+    "description": "Short name of the search engine."
+  },
+
+  "menuItemTitle_archiveIsAll": {
+    "message": "Archive.is (All)",
+    "description": "Short name of the search engine."
+  },
+
+  "menuItemTitle_archiveOrgAll": {
+    "message": "Wayback Machine (All)",
+    "description": "Short name of the search engine."
+  },
+
+  "menuItemTitle_allEngines": {
+    "message": "All Search Engines",
+    "description": "Title of the menu item."
+  },
+
+  "mainMenuItemTitle_allEngines": {
+    "message": "Search All Engines for Page",
+    "description": "Title of the menu item."
+  },
+
+  "mainMenuItemTitle_engine": {
+    "message": "Search $ENGINE$ for Page",
+    "description": "Title of the menu item.",
+    "placeholders": {
+      "engine": {
+        "content": "$1",
+        "example": "Google"
+      }
+    }
+  },
+
+  "optionSectionTitle_engines": {
+    "message": "Search Engines",
+    "description": "Title of the options section."
+  },
+
+  "optionTitle_googleText": {
+    "message": "Google Cache (Text-Only)",
+    "description": "Full name of the search engine."
+  },
+
+  "optionTitle_archiveOrgAll": {
+    "message": "Wayback Machine (All)",
+    "description": "Full name of the search engine."
+  },
+
+  "optionTitle_archiveIsAll": {
+    "message": "Archive.is (All)",
+    "description": "Full name of the search engine."
+  },
+
+  "optionSectionTitle_contextmenu": {
+    "message": "Context Menu",
+    "description": "Title of the options section."
+  },
+
+  "optionSectionTitle_toolbar": {
+    "message": "Browser Toolbar",
+    "description": "Title of the options section."
+  },
+
+  "optionSectionTitleMobile_toolbar": {
+    "message": "Browser Menu",
+    "description": "Title of the options section."
+  }
+}

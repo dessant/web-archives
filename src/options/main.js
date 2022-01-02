@@ -1,10 +1,10 @@
 import Vue from 'vue';
 
-import {configFenix} from 'utils/app';
+import {configUI} from 'utils/app';
 import App from './App';
 
 async function init() {
-  await configFenix();
+  await configUI(Vue);
 
   try {
     await document.fonts.load('400 14px Roboto');
