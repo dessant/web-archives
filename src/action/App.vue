@@ -56,6 +56,7 @@
       <li class="mdc-list-item list-item" @click="selectItem('allEngines')">
         <img
           class="mdc-list-item__graphic list-item-icon"
+          v-if="showEngineIcons"
           :src="getEngineIcon('allEngines')"
         />
         {{ getText('menuItemTitle_allEngines') }}
@@ -75,6 +76,7 @@
         >
           <img
             class="mdc-list-item__graphic list-item-icon"
+            v-if="showEngineIcons"
             :src="getEngineIcon(engine)"
           />
           {{ getText(`menuItemTitle_${engine}`) }}
@@ -135,6 +137,7 @@ export default {
 
       engines: [],
       searchAllEngines: false,
+      showEngineIcons: false,
 
       enableContributions
     };
@@ -360,6 +363,7 @@ export default {
     this.searchAllEngines =
       options.searchAllEnginesAction === 'sub' && !this.$isSamsung;
     this.searchModeAction = options.searchModeAction;
+    this.showEngineIcons = options.showEngineIcons;
 
     this.$watch('searchModeAction', async function (value) {
       await storage.set({searchModeAction: value});

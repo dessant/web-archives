@@ -381,18 +381,23 @@
     "description": "Value of the option."
   },
 
-  "optionSectionTitle_misc": {
-    "message": "Miscellaneous",
-    "description": "Title of the miscellaneous options section."
-  },
-
   "optionTitle_showPageAction": {
     "message": "Show in address bar on server error",
     "description": "Title of the option."
   },
 
+  "optionSectionTitle_misc": {
+    "message": "Miscellaneous",
+    "description": "Title of the miscellaneous options section."
+  },
+
   "optionTitle_tabInBackgound": {
     "message": "Open new tabs in the background",
+    "description": "Title of the option."
+  },
+
+  "optionTitle_showEngineIcons": {
+    "message": "Show search engine icons",
     "description": "Title of the option."
   },
 

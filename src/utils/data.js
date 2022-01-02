@@ -7,7 +7,8 @@ const optionKeys = [
   'showPageAction',
   'tabInBackgound',
   'searchModeAction',
-  'searchModeContextMenu'
+  'searchModeContextMenu',
+  'showEngineIcons'
 ];
 
 const engines = {

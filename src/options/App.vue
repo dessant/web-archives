@@ -103,6 +103,14 @@
             <v-switch id="tib" v-model="options.tabInBackgound"></v-switch>
           </v-form-field>
         </div>
+        <div class="option">
+          <v-form-field
+            input-id="sei"
+            :label="getText('optionTitle_showEngineIcons')"
+          >
+            <v-switch id="sei" v-model="options.showEngineIcons"></v-switch>
+          </v-form-field>
+        </div>
       </div>
     </div>
   </div>
@@ -170,7 +178,8 @@ export default {
         searchAllEnginesAction: '',
         showPageAction: false,
         tabInBackgound: false,
-        searchModeAction: ''
+        searchModeAction: '',
+        showEngineIcons: false
       }
     };
   },

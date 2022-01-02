@@ -129,12 +129,13 @@ async function createMenu() {
   }
 
   const urlPatterns = ['http://*/*', 'https://*/*'];
+
   let setIcons = false;
   if (targetEnv === 'firefox') {
     if (options.showInContextMenu === 'link') {
       urlPatterns.push('file:///*');
     }
-    setIcons = true;
+    setIcons = options.showEngineIcons;
   }
 
   if (enEngines.length === 1) {
