@@ -79,6 +79,16 @@
     "description": "Name of the search engine."
   },
 
+  "engineName_mailru": {
+    "message": "Mail.ru",
+    "description": "Name of the search engine."
+  },
+
+  "engineName_yahoo": {
+    "message": "Yahoo",
+    "description": "Name of the search engine."
+  },
+
   "engineName_allEngines": {
     "message": "All search engines",
     "description": "Name of the search engine."
@@ -167,6 +177,16 @@
 
   "menuItemTitle_megalodon": {
     "message": "Megalodon",
+    "description": "Title of the menu item."
+  },
+
+  "menuItemTitle_mailru": {
+    "message": "Mail.ru",
+    "description": "Title of the menu item."
+  },
+
+  "menuItemTitle_yahoo": {
+    "message": "Yahoo",
     "description": "Title of the menu item."
   },
 
@@ -268,6 +288,16 @@
 
   "optionTitle_megalodon": {
     "message": "Megalodon",
+    "description": "Title of the option."
+  },
+
+  "optionTitle_mailru": {
+    "message": "Mail.ru Cache",
+    "description": "Title of the option."
+  },
+
+  "optionTitle_yahoo": {
+    "message": "Yahoo Cache",
     "description": "Title of the option."
   },
 

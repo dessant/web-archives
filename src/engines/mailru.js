@@ -2,10 +2,10 @@ import {validateUrl} from 'utils/app';
 import {findNode} from 'utils/common';
 import {initSearch, sendReceipt} from 'utils/engines';
 
-const engine = 'yahooJp';
+const engine = 'mailru';
 
 async function search({session, search, doc, storageIds}) {
-  await findNode('button.sw-Card__titlePullDown', {throwError: false});
+  await findNode('#js-result_1', {throwError: false});
 
   let tabUrl;
   const cacheUrls = [];
@@ -13,19 +13,22 @@ async function search({session, search, doc, storageIds}) {
 
   const noschUrl = doc.docUrl.replace(rxUrl, '$1');
 
-  const nodes = document.querySelectorAll('button.sw-Card__titlePullDown');
+  const nodes = document.querySelectorAll(
+    '#js-result .SnippetResultInfo-iconDown button'
+  );
 
   for (const node of nodes) {
     node.click();
 
-    const cacheLink = await findNode(
-      'button.sw-Card__titlePullDown a.Algo__cache',
-      {rootNode: node, throwError: false, timeout: 100}
-    );
+    const cacheLink = await findNode('a.SnippetResultInfo-savedUrl', {
+      rootNode: node.parentNode,
+      throwError: false,
+      timeout: 100
+    });
 
     if (cacheLink) {
       const cacheUrl = cacheLink.href;
-      const cacheParam = new URL(cacheUrl).searchParams.get('u');
+      const cacheParam = new URL(cacheUrl).searchParams.get('qurl');
 
       if (cacheParam) {
         const noschCacheParam = cacheParam.replace(rxUrl, '$1');
@@ -53,7 +56,9 @@ async function search({session, search, doc, storageIds}) {
 }
 
 function init() {
-  initSearch(search, engine, taskId);
+  if (!document.querySelector('.DesktopCaptcha-text')) {
+    initSearch(search, engine, taskId);
+  }
 }
 
 init();

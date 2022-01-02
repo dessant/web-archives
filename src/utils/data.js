@@ -61,6 +61,14 @@ const engines = {
   megalodon: {
     target: 'https://megalodon.jp/?url={url}',
     isExec: true
+  },
+  mailru: {
+    target: 'https://go.mail.ru/search?q={url}&src=go&frm=main&fr=main',
+    isExec: true
+  },
+  yahoo: {
+    target: 'https://search.yahoo.com/search?p=url:{url}',
+    isExec: true
   }
 };
 

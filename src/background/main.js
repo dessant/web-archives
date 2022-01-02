@@ -454,7 +454,15 @@ async function getRequiredUserAgent(engine) {
     if (targetEnv === 'firefox' && ['google', 'googleText'].includes(engine)) {
       return chromeMobileUA;
     } else if (
-      ['yandex', 'qihoo', 'baidu', 'yahooJp', 'bing'].includes(engine)
+      [
+        'yandex',
+        'qihoo',
+        'baidu',
+        'yahooJp',
+        'bing',
+        'mailru',
+        'yahoo'
+      ].includes(engine)
     ) {
       return chromeDesktopUA;
     }

@@ -1,11 +1,12 @@
+import {validateUrl} from 'utils/app';
 import {findNode} from 'utils/common';
 import {initSearch, sendReceipt} from 'utils/engines';
 
-const engine = 'bing';
+const engine = 'yahoo';
 
 async function search({session, search, doc, storageIds}) {
   const button = await findNode(
-    'ol#b_results li.b_algo:first-of-type div.b_attribution a.trgr_icon',
+    '#results li:first-of-type div.options-toggle span.chevron-down',
     {throwError: false}
   );
 
@@ -13,15 +14,18 @@ async function search({session, search, doc, storageIds}) {
     button.click();
 
     const node = await findNode(
-      'ol#b_results li.b_algo:first-of-type div.b_attribution a[href*="cc.bingj.com/cache"]',
+      '#results li:first-of-type a[href*="cc.bingj.com/cache"]',
       {throwError: false, timeout: 1000}
     );
 
     await sendReceipt(storageIds);
 
     if (node) {
-      node.setAttribute('target', '_top');
-      node.click();
+      const tabUrl = node.href;
+
+      if (validateUrl(tabUrl)) {
+        window.location.href = tabUrl;
+      }
     }
   } else {
     await sendReceipt(storageIds);
@@ -29,7 +33,9 @@ async function search({session, search, doc, storageIds}) {
 }
 
 function init() {
-  initSearch(search, engine, taskId);
+  if (!window.location.hostname.startsWith('consent.')) {
+    initSearch(search, engine, taskId);
+  }
 }
 
 init();

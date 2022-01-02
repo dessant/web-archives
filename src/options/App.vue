@@ -137,14 +137,17 @@ export default {
   },
 
   data: function () {
+    let showInContextMenu = ['all', 'link', 'false'];
+    if (this.$isMobile) {
+      showInContextMenu = showInContextMenu.filter(item => item !== 'all');
+    }
+
     return {
       dataLoaded: false,
 
       listItems: {
         ...getListItems(
-          {
-            showInContextMenu: ['all', 'link', 'false']
-          },
+          {showInContextMenu},
           {scope: 'optionValue_showInContextMenu'}
         ),
         ...getListItems(
