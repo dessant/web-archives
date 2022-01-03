@@ -16,19 +16,19 @@
 
 ## Supporting the Project
 
-The continued development of Web Archives is made possible
-thanks to the support of awesome backers. If you'd like to join them,
-please consider contributing with
+Web Archives is an open source project made possible thanks to a community
+of awesome supporters. If you'd like to support the continued development
+of the extension, please consider contributing with
 [Patreon](https://armin.dev/go/patreon?pr=web-archives&src=repo),
 [PayPal](https://armin.dev/go/paypal?pr=web-archives&src=repo) or
 [Bitcoin](https://armin.dev/go/bitcoin?pr=web-archives&src=repo).
 
 ## Description
 
-Web Archives is a browser extension which helps you to find
-archived and cached versions of web pages. Searches can be initiated from
-the right-click context menu, the browser toolbar, or the address bar
-in case of a server error.
+Web Archives is a browser extension that enables you to find archived
+and cached versions of web pages, and comes with support for more than
+10 search engines. Searches can be initiated from the context menu
+and the browser toolbar.
 
 #### Search Engines
 
