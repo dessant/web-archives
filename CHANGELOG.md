@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/dessant/web-archives/compare/v2.1.1...v3.0.0) (2022-01-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* browser versions older than Chrome 83, Edge 83, Firefox 91
+and Opera 69 are no longer supported
+
+### Features
+
+* add option for hiding search engine icons ([c65f946](https://github.com/dessant/web-archives/commit/c65f9462786e0c3b4e1ca8ffaebbc1b3d8d7cd55))
+* add support for Safari and Samsung Internet ([d7cd2ef](https://github.com/dessant/web-archives/commit/d7cd2ef9e7c6717df4ffc708ae15f2b2fe207737))
+* search on Mail.ru and Yahoo ([c67a561](https://github.com/dessant/web-archives/commit/c67a5613052a7dfb1b5efca9f3367103a6f36e65))
+
 ### [2.1.1](https://github.com/dessant/web-archives/compare/v2.1.0...v2.1.1) (2020-09-22)
 
 
