@@ -41,9 +41,10 @@ https://github.com/dessant/web-archives/wiki/Search-engines
 ## Screenshots
 
 <p>
-  <img width="380" src="https://i.imgur.com/dereVK7.png">
-  <img width="380" src="https://i.imgur.com/Vq44x2U.png">
-  <img width="380" src="https://i.imgur.com/HTQXSoB.png">
+  <img width="380" src="https://i.imgur.com/Qamw5Dm.png">
+  <img width="380" src="https://i.imgur.com/jbpH7lp.png">
+  <img width="380" src="https://i.imgur.com/GCRbxh3.png">
+  <img width="380" src="https://i.imgur.com/FMvop7l.png">
 </p>
 
 ## License
