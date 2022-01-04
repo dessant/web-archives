@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.1](https://github.com/dessant/web-archives/compare/v3.0.0...v3.0.1) (2022-01-04)
+
+
+### Bug Fixes
+
+* configure browser action event listener ([4a05858](https://github.com/dessant/web-archives/commit/4a058587d8ae1ed0293f9c3d79497df776403f4d))
+
 ## [3.0.0](https://github.com/dessant/web-archives/compare/v2.1.1...v3.0.0) (2022-01-04)
 
 
