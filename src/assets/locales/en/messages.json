@@ -471,8 +471,18 @@
     "description": "Title of the menu item."
   },
 
-  "error_invalidUrl": {
-    "message": "The URL is not valid. It must point to a HTTP(S) or FTP page.",
+  "error_invalidPageUrl": {
+    "message": "The page URL is not valid. It must point to a HTTP(S) or FTP page.",
+    "description": "Error message."
+  },
+
+  "error_invalidSearchMode_url": {
+    "message": "Searching for page URLs is only supported from the browser toolbar popup. Visit the extension's options to select a different search mode.",
+    "description": "Error message."
+  },
+
+  "error_invalidSearchModeMobile_url": {
+    "message": "Searching for page URLs is only supported from the browser menu popup. Visit the extension's options to select a different search mode.",
     "description": "Error message."
   },
 

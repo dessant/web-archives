@@ -175,7 +175,7 @@ export default {
       if (this.searchModeAction === 'url') {
         if (!validateUrl(this.docUrl)) {
           this.focusDocUrlInput();
-          showNotification({messageId: 'error_invalidUrl'});
+          showNotification({messageId: 'error_invalidPageUrl'});
           return;
         }
       }

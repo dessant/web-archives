@@ -13,6 +13,7 @@ import {
   executeFile,
   onComplete,
   isAndroid,
+  isMobile,
   getActiveTab,
   getPlatform
 } from 'utils/common';
@@ -303,7 +304,7 @@ async function initSearch(session, docs) {
 
 async function searchDocument(session, doc, firstBatchItem = true) {
   if (!validateUrl(doc.docUrl)) {
-    await showNotification({messageId: 'error_invalidUrl'});
+    await showNotification({messageId: 'error_invalidPageUrl'});
     return;
   }
 
@@ -579,14 +580,8 @@ async function setBrowserAction() {
     'searchAllEnginesAction'
   ]);
   const enEngines = await getEnabledEngines(options);
-  const hasListener = browser.browserAction.onClicked.hasListener(
-    onActionClick
-  );
 
   if (enEngines.length === 1) {
-    if (!hasListener) {
-      browser.browserAction.onClicked.addListener(onActionClick);
-    }
     browser.browserAction.setTitle({
       title: getText(
         'actionTitle_engine',
@@ -598,9 +593,6 @@ async function setBrowserAction() {
   }
 
   if (options.searchAllEnginesAction === 'main' && enEngines.length > 1) {
-    if (!hasListener) {
-      browser.browserAction.onClicked.addListener(onActionClick);
-    }
     browser.browserAction.setTitle({
       title: getText('actionTitle_allEngines')
     });
@@ -610,14 +602,8 @@ async function setBrowserAction() {
 
   browser.browserAction.setTitle({title: getText('extensionName')});
   if (enEngines.length === 0) {
-    if (!hasListener) {
-      browser.browserAction.onClicked.addListener(onActionClick);
-    }
     browser.browserAction.setPopup({popup: ''});
   } else {
-    if (hasListener) {
-      browser.browserAction.onClicked.removeListener(onActionClick);
-    }
     browser.browserAction.setPopup({popup: '/src/action/index.html'});
   }
 }
@@ -675,11 +661,12 @@ async function setPageAction(tabId) {
     'searchAllEnginesAction'
   ]);
   const enEngines = await getEnabledEngines(options);
-  const hasListener = browser.pageAction.onClicked.hasListener(onActionClick);
+  const hasListener =
+    browser.pageAction.onClicked.hasListener(onActionButtonClick);
 
   if (enEngines.length === 1) {
     if (!hasListener) {
-      browser.pageAction.onClicked.addListener(onActionClick);
+      browser.pageAction.onClicked.addListener(onActionButtonClick);
     }
     browser.pageAction.setTitle({
       tabId,
@@ -694,7 +681,7 @@ async function setPageAction(tabId) {
 
   if (options.searchAllEnginesAction === 'main' && enEngines.length > 1) {
     if (!hasListener) {
-      browser.pageAction.onClicked.addListener(onActionClick);
+      browser.pageAction.onClicked.addListener(onActionButtonClick);
     }
     browser.pageAction.setTitle({
       tabId,
@@ -707,12 +694,12 @@ async function setPageAction(tabId) {
   browser.pageAction.setTitle({tabId, title: getText('extensionName')});
   if (enEngines.length === 0) {
     if (!hasListener) {
-      browser.pageAction.onClicked.addListener(onActionClick);
+      browser.pageAction.onClicked.addListener(onActionButtonClick);
     }
     browser.pageAction.setPopup({tabId, popup: ''});
   } else {
     if (hasListener) {
-      browser.pageAction.onClicked.removeListener(onActionClick);
+      browser.pageAction.onClicked.removeListener(onActionButtonClick);
     }
     browser.pageAction.setPopup({
       tabId,
