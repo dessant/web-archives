@@ -3,14 +3,19 @@
 
 <p align="center">
   </br></br>
-  <a href="https://chrome.google.com/webstore/detail/hkligngkgcpcolhcnkgccglchdafcnao">
+  <a href="https://chrome.google.com/webstore/detail/web-archives/hkligngkgcpcolhcnkgccglchdafcnao">
     <img height="58" src="https://i.imgur.com/K9Yh8G9.png" alt="Chrome Web Store"></a>
   <a href="https://addons.mozilla.org/en-US/firefox/addon/view-page-archive/">
     <img height="58" src="https://i.imgur.com/2jJOtTI.png" alt="Firefox add-ons"></a>
-  <a href="https://microsoftedge.microsoft.com/addons/detail/apcfghlggldjdjepjnahfdjgdcdekhda">
+  <a href="https://microsoftedge.microsoft.com/addons/detail/web-archives/apcfghlggldjdjepjnahfdjgdcdekhda">
     <img height="58" src="https://i.imgur.com/es2YFRA.png" alt="Microsoft Store"></a>
   <a href="https://addons.opera.com/en/extensions/details/view-page-archive-cache/">
     <img height="58" src="https://i.imgur.com/IYYsrwg.png" alt="Opera add-ons"></a>
+  </br></br>
+</p>
+<p align="center">
+  <a href="https://apps.apple.com/us/app/web-archives-for-safari/id1603181853">
+    <img height="58" src="https://i.imgur.com/JGvQ2Zc.png" alt="Mac App Store"></a>
   </br></br>
 </p>
 
