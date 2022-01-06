@@ -14,7 +14,7 @@ async function search({session, search, doc, storageIds}) {
     button.click();
 
     const node = await findNode(
-      '#results li:first-of-type a[href*="cc.bingj.com/cache"]',
+      '#results li:first-of-type a[href*="cc.bingj.com/cache"], #results li:first-of-type a[href*="cc.bingj.com%2fcache"]',
       {throwError: false, timeout: 1000}
     );
 
