@@ -1,3 +1,5 @@
+import {v4 as uuidv4} from 'uuid';
+
 import {findNode} from 'utils/common';
 import {initSearch, sendReceipt} from 'utils/engines';
 import {targetEnv} from 'utils/config';
@@ -20,13 +22,15 @@ async function search({session, search, doc, storageIds}) {
 
   // wait for search service to load
   await new Promise((resolve, reject) => {
+    const eventName = uuidv4();
+
     const onServiceReady = function () {
       window.clearTimeout(timeoutId);
       resolve();
     };
 
     const timeoutId = window.setTimeout(function () {
-      document.removeEventListener('___serviceReady', onServiceReady, {
+      document.removeEventListener(eventName, onServiceReady, {
         capture: true,
         once: true
       });
@@ -34,18 +38,18 @@ async function search({session, search, doc, storageIds}) {
       reject(new Error('Search service is not ready'));
     }, 60000); // 1 minute
 
-    document.addEventListener('___serviceReady', onServiceReady, {
+    document.addEventListener(eventName, onServiceReady, {
       capture: true,
       once: true
     });
 
-    function serviceObserver() {
+    function serviceObserver(eventName) {
       let stop;
 
       const checkService = function () {
         if (window.Ya?.reactBus?.e['extralinks-popup:open']?.length >= 2) {
           window.clearTimeout(timeoutId);
-          document.dispatchEvent(new Event('___serviceReady'));
+          document.dispatchEvent(new Event(eventName));
         } else if (!stop) {
           window.setTimeout(checkService, 200);
         }
@@ -60,9 +64,12 @@ async function search({session, search, doc, storageIds}) {
 
     const script = document.createElement('script');
     if (['firefox', 'safari'].includes(targetEnv)) {
-      script.nonce = document.querySelector('script[nonce]').nonce;
+      const nonceNode = document.querySelector('script[nonce]');
+      if (nonceNode) {
+        script.nonce = nonceNode.nonce;
+      }
     }
-    script.textContent = `(${serviceObserver.toString()})()`;
+    script.textContent = `(${serviceObserver.toString()})("${eventName}")`;
     document.documentElement.appendChild(script);
     script.remove();
   });
