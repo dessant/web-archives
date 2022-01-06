@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.2](https://github.com/dessant/web-archives/compare/v3.0.1...v3.0.2) (2022-01-06)
+
+
+### Bug Fixes
+
+* update Yahoo ([eae85ef](https://github.com/dessant/web-archives/commit/eae85ef558edbcd5bdc38358b13fb18ce19efac6))
+* update Yandex ([0cf2cc4](https://github.com/dessant/web-archives/commit/0cf2cc42f96078123ea6648169f76f3662f4d161))
+
 ### [3.0.1](https://github.com/dessant/web-archives/compare/v3.0.0...v3.0.1) (2022-01-04)
 
 
