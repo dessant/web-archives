@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/dessant/web-archives/compare/v3.0.2...v3.1.0) (2022-01-15)
+
+
+### Features
+
+* open current page ([1696f1c](https://github.com/dessant/web-archives/commit/1696f1c13df8d1013c953e4f41830f6d773daab5)), closes [#34](https://github.com/dessant/web-archives/issues/34)
+
 ### [3.0.2](https://github.com/dessant/web-archives/compare/v3.0.1...v3.0.2) (2022-01-06)
 
 
