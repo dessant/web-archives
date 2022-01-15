@@ -138,18 +138,28 @@ async function configUI(Vue) {
   }
 }
 
-async function hasBaseModule(tabId, frameId = 0) {
+async function hasModule({tabId, frameId = 0, module, insert = false} = {}) {
   try {
-    const [isBaseModule] = await browser.tabs.executeScript(tabId, {
+    const [isModule] = await browser.tabs.executeScript(tabId, {
       frameId,
       runAt: 'document_start',
-      code: `typeof baseModule !== 'undefined'`
+      code: `typeof ${module}Module !== 'undefined'`
     });
 
-    if (isBaseModule) {
+    if (!isModule && insert) {
+      await browser.tabs.executeScript(tabId, {
+        frameId,
+        runAt: 'document_start',
+        file: `/src/${module}/script.js`
+      });
+    }
+
+    if (isModule || insert) {
       return true;
     }
   } catch (err) {}
+
+  return false;
 }
 
 async function insertBaseModule({activeTab = false} = {}) {
@@ -172,7 +182,7 @@ async function insertBaseModule({activeTab = false} = {}) {
     browser.tabs.executeScript(tab.id, {
       allFrames: true,
       runAt: 'document_start',
-      file: '/src/insert/script.js'
+      file: '/src/base/script.js'
     });
   }
 }
@@ -232,6 +242,17 @@ async function checkSearchEngineAccess() {
   }
 }
 
+function isMatchingUrlHost(url, hostnames) {
+  try {
+    const {hostname} = new URL(url);
+    if (hostnames.includes(hostname)) {
+      return true;
+    }
+  } catch (err) {}
+
+  return false;
+}
+
 export {
   getEnabledEngines,
   getSearches,
@@ -242,8 +263,9 @@ export {
   validateUrl,
   normalizeUrl,
   configUI,
-  hasBaseModule,
+  hasModule,
   insertBaseModule,
   isContextMenuSupported,
-  checkSearchEngineAccess
+  checkSearchEngineAccess,
+  isMatchingUrlHost
 };

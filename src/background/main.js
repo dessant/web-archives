@@ -23,6 +23,7 @@ import {
   showNotification,
   validateUrl,
   normalizeUrl,
+  hasModule,
   insertBaseModule,
   showContributePage,
   isContextMenuSupported,
@@ -33,6 +34,9 @@ import {
   optionKeys,
   engines,
   errorCodes,
+  pageArchiveHosts,
+  linkArchiveHosts,
+  linkArchiveUrlRx,
   chromeMobileUA,
   chromeDesktopUA
 } from 'utils/data';
@@ -88,22 +92,64 @@ function createMenuItem({
   contexts,
   parent,
   type = 'normal',
-  urlPatterns,
+  documentUrlPatterns,
+  targetUrlPatterns,
   icons
 }) {
   const params = {
     id,
     title,
     contexts,
-    documentUrlPatterns: urlPatterns,
+    documentUrlPatterns,
     parentId: parent,
     type
   };
+  if (targetUrlPatterns) {
+    params.targetUrlPatterns = targetUrlPatterns;
+  }
   if (icons) {
     params.icons = icons;
   }
   // creates context menu item for current instance
   browser.contextMenus.create(params, onComplete);
+}
+
+async function createOpenCurrentDocMenuItem(
+  showInContextMenu,
+  documentUrlPatterns
+) {
+  if (showInContextMenu === 'all') {
+    const contexts = [
+      'audio',
+      'editable',
+      'frame',
+      'image',
+      'selection',
+      'video'
+    ];
+    if (!(await isAndroid())) {
+      contexts.push('page');
+    }
+
+    createMenuItem({
+      id: 'openCurrentDoc_1',
+      title: getText('menuItemTitle_openCurrentDoc'),
+      contexts,
+      documentUrlPatterns: Object.values(pageArchiveHosts)
+        .map(hosts => hosts.map(host => `*://${host}/*`))
+        .flat()
+    });
+  }
+
+  createMenuItem({
+    id: 'openCurrentDoc_2',
+    title: getText('menuItemTitle_openCurrentDoc'),
+    contexts: ['link'],
+    documentUrlPatterns,
+    targetUrlPatterns: Object.values(linkArchiveHosts)
+      .map(hosts => hosts.map(host => `*://${host}/*`))
+      .flat()
+  });
 }
 
 async function createMenu() {
@@ -129,12 +175,12 @@ async function createMenu() {
     contexts.push('link');
   }
 
-  const urlPatterns = ['http://*/*', 'https://*/*'];
+  const documentUrlPatterns = ['http://*/*', 'https://*/*'];
 
   let setIcons = false;
   if (targetEnv === 'firefox') {
     if (options.showInContextMenu === 'link') {
-      urlPatterns.push('file:///*');
+      documentUrlPatterns.push('file:///*');
     }
     setIcons = options.showEngineIcons;
   }
@@ -148,7 +194,7 @@ async function createMenu() {
         getText(`menuItemTitle_${engine}`)
       ),
       contexts,
-      urlPatterns
+      documentUrlPatterns
     });
     return;
   }
@@ -162,26 +208,48 @@ async function createMenu() {
           id: 'search_allEngines',
           title: getText('mainMenuItemTitle_allEngines'),
           contexts,
-          urlPatterns
+          documentUrlPatterns
         });
         return;
       }
 
       if (searchAllEngines === 'sub') {
+        if (options.openCurrentDocContextMenu) {
+          await createOpenCurrentDocMenuItem(
+            options.showInContextMenu,
+            documentUrlPatterns
+          );
+
+          createMenuItem({
+            id: 'sep-1',
+            contexts,
+            type: 'separator',
+            documentUrlPatterns
+          });
+        }
+
         createMenuItem({
           id: 'search_allEngines',
           title: getText('menuItemTitle_allEngines'),
           contexts,
-          urlPatterns,
+          documentUrlPatterns,
           icons: setIcons && getEngineMenuIcons('allEngines')
         });
+
         // Samsung Internet: separator not visible, creates gap that responds to input.
         createMenuItem({
-          id: 'sep-1',
+          id: 'sep-2',
           contexts,
           type: 'separator',
-          urlPatterns
+          documentUrlPatterns
         });
+      }
+    } else {
+      if (options.openCurrentDocContextMenu) {
+        await createOpenCurrentDocMenuItem(
+          options.showInContextMenu,
+          documentUrlPatterns
+        );
       }
     }
 
@@ -190,7 +258,7 @@ async function createMenu() {
         id: `search_${engine}`,
         title: getText(`menuItemTitle_${engine}`),
         contexts,
-        urlPatterns,
+        documentUrlPatterns,
         icons: setIcons && getEngineMenuIcons(engine)
       });
     });
@@ -476,6 +544,44 @@ async function execEngine(tabId, engine, taskId) {
   await executeFile(`/src/engines/${engine}/script.js`, tabId);
 }
 
+async function openCurrentDoc({linkUrl} = {}) {
+  if (linkUrl) {
+    let docUrl;
+
+    for (const [engine, rx] of Object.entries(linkArchiveUrlRx)) {
+      const match = linkUrl.match(rx);
+      if (match) {
+        if (engine === 'google') {
+          const data = new URL(linkUrl).searchParams.get('q');
+          if (data) {
+            docUrl = data.replace(/^cache.*?(https?:\/\/.*)$/, '$1').trim();
+          }
+        } else {
+          docUrl = match[1].trim();
+        }
+
+        break;
+      }
+    }
+
+    if (validateUrl(docUrl)) {
+      const activeTab = await getActiveTab();
+
+      await createTab({url: docUrl, index: activeTab.index + 1});
+    } else {
+      await showNotification({messageId: 'error_currentDocUrlNotFound'});
+    }
+  } else {
+    const activeTab = await getActiveTab();
+
+    if (await hasModule({tabId: activeTab.id, module: 'tools', insert: true})) {
+      await executeCode(`openCurrentDoc()`, activeTab.id);
+    } else {
+      await showNotification({messageId: 'error_scriptsNotAllowed'});
+    }
+  }
+}
+
 async function onContextMenuItemClick(info, tab) {
   if (targetEnv === 'samsung' && tab.id !== browser.tabs.TAB_ID_NONE) {
     // Samsung Internet 13: contextMenus.onClicked provides wrong tab index.
@@ -483,6 +589,11 @@ async function onContextMenuItemClick(info, tab) {
   }
 
   const [sessionType, engine] = info.menuItemId.split('_');
+
+  if (sessionType === 'openCurrentDoc') {
+    await openCurrentDoc({linkUrl: info.linkUrl});
+    return;
+  }
 
   const sessionData = {
     sessionOrigin: 'context',
@@ -726,6 +837,9 @@ async function processMessage(request, sender) {
 
   if (request.id === 'actionPopupSubmit') {
     onActionPopupClick(request.engine, request.docUrl);
+  }
+  if (request.id === 'openCurrentDoc') {
+    openCurrentDoc();
   } else if (request.id === 'notification') {
     showNotification({
       message: request.message,
@@ -767,6 +881,8 @@ async function processMessage(request, sender) {
     }
   } else if (request.id === 'optionChange') {
     await onOptionChange();
+  } else if (request.id === 'createTab') {
+    await createTab({url: request.url, index: sender.tab.index + 1});
   }
 }
 

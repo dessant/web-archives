@@ -211,6 +211,11 @@
     }
   },
 
+  "menuItemTitle_openCurrentDoc": {
+    "message": "Open current page",
+    "description": "Title of the menu item."
+  },
+
   "optionSectionTitle_engines": {
     "message": "Search engines",
     "description": "Title of the options section."
@@ -351,8 +356,18 @@
     "description": "Value of the option."
   },
 
+  "optionTitle_openCurrentDocContextMenu": {
+    "message": "Open current page",
+    "description": "Title of the option."
+  },
+
   "optionSectionTitle_toolbar": {
     "message": "Browser toolbar",
+    "description": "Title of the options section."
+  },
+
+  "optionSectionTitleMobile_toolbar": {
+    "message": "Browser menu",
     "description": "Title of the options section."
   },
 
@@ -371,11 +386,6 @@
     "description": "Value of the option."
   },
 
-  "optionSectionTitleMobile_toolbar": {
-    "message": "Browser menu",
-    "description": "Title of the options section."
-  },
-
   "optionValue_searchAllEnginesActionMobile_main": {
     "message": "From browser menu",
     "description": "Value of the option."
@@ -391,16 +401,6 @@
     "description": "Value of the option."
   },
 
-  "optionValue_action_searchModeAction_tab": {
-    "message": "Tab",
-    "description": "Value of the option."
-  },
-
-  "optionValue_action_searchModeAction_url": {
-    "message": "URL",
-    "description": "Value of the option."
-  },
-
   "optionValue_searchModeAction_tab": {
     "message": "Tab",
     "description": "Value of the option."
@@ -411,8 +411,23 @@
     "description": "Value of the option."
   },
 
+  "optionValue_action_searchModeAction_tab": {
+    "message": "Tab",
+    "description": "Value of the option."
+  },
+
+  "optionValue_action_searchModeAction_url": {
+    "message": "URL",
+    "description": "Value of the option."
+  },
+
   "optionTitle_showPageAction": {
     "message": "Show in address bar on server error",
+    "description": "Title of the option."
+  },
+
+  "optionTitle_openCurrentDocAction": {
+    "message": "Open current page",
     "description": "Title of the option."
   },
 
@@ -525,6 +540,11 @@
 
   "error_optionsNotApplied": {
     "message": "Restart the browser for changes to take effect.",
+    "description": "Error message."
+  },
+
+  "error_currentDocUrlNotFound": {
+    "message": "No current page URL found.",
     "description": "Error message."
   }
 }

@@ -47,6 +47,17 @@
           >
           </v-select>
         </div>
+        <div class="option">
+          <v-form-field
+            input-id="ocdcm"
+            :label="getText('optionTitle_openCurrentDocContextMenu')"
+          >
+            <v-switch
+              id="ocdcm"
+              v-model="options.openCurrentDocContextMenu"
+            ></v-switch>
+          </v-form-field>
+        </div>
       </div>
     </div>
 
@@ -85,6 +96,17 @@
             :label="getText('optionTitle_showPageAction')"
           >
             <v-switch id="spa" v-model="options.showPageAction"></v-switch>
+          </v-form-field>
+        </div>
+        <div class="option">
+          <v-form-field
+            input-id="ocda"
+            :label="getText('optionTitle_openCurrentDocAction')"
+          >
+            <v-switch
+              id="ocda"
+              v-model="options.openCurrentDocAction"
+            ></v-switch>
           </v-form-field>
         </div>
       </div>
@@ -182,7 +204,9 @@ export default {
         showPageAction: false,
         tabInBackgound: false,
         searchModeAction: '',
-        showEngineIcons: false
+        showEngineIcons: false,
+        openCurrentDocAction: false,
+        openCurrentDocContextMenu: false
       }
     };
   },

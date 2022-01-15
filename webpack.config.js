@@ -51,7 +51,8 @@ module.exports = {
     background: './src/background/main.js',
     options: './src/options/main.js',
     action: './src/action/main.js',
-    insert: './src/insert/main.js',
+    base: './src/base/main.js',
+    tools: './src/tools/main.js',
     tab: './src/tab/main.js',
     ...entries
   },

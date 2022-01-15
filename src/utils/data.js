@@ -8,7 +8,9 @@ const optionKeys = [
   'tabInBackgound',
   'searchModeAction',
   'searchModeContextMenu',
-  'showEngineIcons'
+  'showEngineIcons',
+  'openCurrentDocAction',
+  'openCurrentDocContextMenu'
 ];
 
 const engines = {
@@ -73,33 +75,58 @@ const engines = {
 };
 
 const errorCodes = [
-  400,
-  403,
-  404,
-  408,
-  410,
-  429,
-  451,
-  500,
-  502,
-  503,
-  504,
+  400, 403, 404, 408, 410, 429, 451, 500, 502, 503, 504,
   // Nonstandard
-  444,
-  450,
-  509,
-  530,
-  598,
+  444, 450, 509, 530, 598,
   // Cloudflare
-  520,
-  521,
-  522,
-  523,
-  524,
-  525,
-  526,
-  527
+  520, 521, 522, 523, 524, 525, 526, 527
 ];
+
+const pageArchiveHosts = {
+  archiveOrg: ['web.archive.org'],
+  archiveIs: [
+    'archive.is',
+    'archive.today',
+    'archive.ph',
+    'archive.vn',
+    'archive.fo',
+    'archive.li',
+    'archive.md',
+    'archiveiya74codqgiixo33q62qlrqtkgmcitqx5u2oeqnmn5bpcbiyd.onion'
+  ],
+  google: ['webcache.googleusercontent.com'],
+  bing: ['cc.bingj.com'],
+  yandex: ['yandexwebcache.net'],
+  // gigablast: ['www.gigablast.com'],
+  yahooJp: ['cache.yahoofs.jp'],
+  // megalodon: ['megalodon.jp'],
+  // baidu: ['cache.baiducontent.com'],
+  qihoo: ['c.360webcache.com'],
+  mailru: ['hl.mailru.su']
+};
+
+const linkArchiveHosts = {
+  archiveOrg: ['web.archive.org'],
+  archiveIs: [
+    'archive.is',
+    'archive.today',
+    'archive.ph',
+    'archive.vn',
+    'archive.fo',
+    'archive.li',
+    'archive.md',
+    'archiveiya74codqgiixo33q62qlrqtkgmcitqx5u2oeqnmn5bpcbiyd.onion'
+  ],
+  google: ['webcache.googleusercontent.com']
+};
+
+const linkArchiveUrlRx = {
+  archiveOrg: /^https?:\/\/web\.archive\.org\/web\/[0-9]+\/(.*)/i,
+  archiveIs:
+    /^https?:\/\/(?:archive\.(?:is|today|ph|vn|fo|li|md)|archiveiya74codqgiixo33q62qlrqtkgmcitqx5u2oeqnmn5bpcbiyd.onion)\/o\/.*?\/(.*)/i,
+  google:
+    /^https?:\/\/webcache\.googleusercontent\.com\/search.*[?&]q=cache:.*$/i
+};
 
 const chromeDesktopUA =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36';
@@ -113,6 +140,9 @@ export {
   optionKeys,
   engines,
   errorCodes,
+  pageArchiveHosts,
+  linkArchiveHosts,
+  linkArchiveUrlRx,
   chromeDesktopUA,
   chromeMobileUA,
   projectUrl

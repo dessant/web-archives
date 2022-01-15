@@ -16,6 +16,13 @@
         ></v-icon-button>
 
         <v-icon-button
+          v-if="enableOpenCurrentDoc"
+          class="current-doc-button"
+          src="/src/assets/icons/misc/open.svg"
+          @click="showCurrentDoc"
+        ></v-icon-button>
+
+        <v-icon-button
           class="menu-button"
           src="/src/assets/icons/misc/more.svg"
           @click="showActionMenu"
@@ -102,11 +109,12 @@ import {
   validateUrl,
   getListItems,
   showContributePage,
-  showProjectPage
+  showProjectPage,
+  isMatchingUrlHost
 } from 'utils/app';
 import {getText, getActiveTab, createTab} from 'utils/common';
 import {enableContributions} from 'utils/config';
-import {optionKeys} from 'utils/data';
+import {optionKeys, pageArchiveHosts} from 'utils/data';
 
 export default {
   components: {
@@ -139,6 +147,7 @@ export default {
       searchAllEngines: false,
       showEngineIcons: false,
 
+      enableOpenCurrentDoc: false,
       enableContributions
     };
   },
@@ -180,12 +189,17 @@ export default {
         }
       }
 
-      browser.runtime.sendMessage({
+      await browser.runtime.sendMessage({
         id: 'actionPopupSubmit',
         docUrl: this.docUrl,
         engine
       });
 
+      this.closeAction();
+    },
+
+    showCurrentDoc: async function () {
+      await browser.runtime.sendMessage({id: 'openCurrentDoc'});
       this.closeAction();
     },
 
@@ -362,12 +376,22 @@ export default {
     this.engines = enEngines;
     this.searchAllEngines =
       options.searchAllEnginesAction === 'sub' && !this.$isSamsung;
-    this.searchModeAction = options.searchModeAction;
     this.showEngineIcons = options.showEngineIcons;
 
+    this.searchModeAction = options.searchModeAction;
     this.$watch('searchModeAction', async function (value) {
       await storage.set({searchModeAction: value});
     });
+
+    const activeTab = await getActiveTab();
+    if (activeTab) {
+      this.enableOpenCurrentDoc =
+        options.openCurrentDocAction &&
+        isMatchingUrlHost(
+          activeTab.url,
+          Object.values(pageArchiveHosts).flat()
+        );
+    }
 
     this.dataLoaded = true;
   },
@@ -443,6 +467,7 @@ body {
   margin-left: 56px;
 }
 
+.current-doc-button,
 .contribute-button,
 .menu-button {
   @include mdc-icon-button-icon-size(24px, 24px, 6px);
@@ -455,6 +480,7 @@ body {
   }
 }
 
+.current-doc-button,
 .contribute-button {
   margin-left: 12px;
 }

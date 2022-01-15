@@ -86,7 +86,7 @@
       "matches": ["http://*/*", "https://*/*", "file:///*"],
       "all_frames": false,
       "run_at": "document_start",
-      "js": ["src/insert/script.js"]
+      "js": ["src/base/script.js"]
     }
   ]
 }
