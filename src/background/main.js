@@ -542,17 +542,7 @@ async function getRequiredUserAgent(engine) {
     // while other search engines may need a desktop user agent.
     if (targetEnv === 'firefox' && ['google', 'googleText'].includes(engine)) {
       return chromeMobileUA;
-    } else if (
-      [
-        'yandex',
-        'qihoo',
-        'baidu',
-        'yahooJp',
-        'bing',
-        'mailru',
-        'yahoo'
-      ].includes(engine)
-    ) {
+    } else if (['yandex', 'bing', 'yahoo'].includes(engine)) {
       return chromeDesktopUA;
     }
   }

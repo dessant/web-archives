@@ -47,14 +47,6 @@ function main() {
           )?.href;
         } else if (engine === 'yandex') {
           docUrl = document.querySelector('#yandex-cache-hdr > span > a')?.href;
-        } else if (engine === 'yahooJp') {
-          docUrl = new URL(window.location.href).searchParams.get('u')?.trim();
-        } else if (engine === 'qihoo') {
-          docUrl = new URL(window.location.href).searchParams.get('u')?.trim();
-        } else if (engine === 'mailru') {
-          docUrl = new URL(window.location.href).searchParams
-            .get('qurl')
-            ?.trim();
         }
 
         break;

@@ -53,24 +53,8 @@ const engines = {
     target: 'https://www.gigablast.com/search?q=url:{url}',
     isExec: true
   },
-  qihoo: {
-    target: 'https://www.so.com/s?ie=utf-8&fr=none&src=home_www&q={url}',
-    isExec: true
-  },
-  baidu: {
-    target: 'https://www.baidu.com/s?wd={url}&ie=utf-8',
-    isExec: true
-  },
-  yahooJp: {
-    target: 'https://search.yahoo.co.jp/search?ei=UTF-8&p={url}',
-    isExec: true
-  },
   megalodon: {
     target: 'https://megalodon.jp/?url={url}',
-    isExec: true
-  },
-  mailru: {
-    target: 'https://go.mail.ru/search?q={url}&src=go&frm=main&fr=main',
     isExec: true
   },
   yahoo: {
@@ -137,13 +121,9 @@ const pageArchiveHosts = {
   ],
   google: ['webcache.googleusercontent.com'],
   bing: ['cc.bingj.com'],
-  yandex: ['yandexwebcache.net'],
+  yandex: ['yandexwebcache.net']
   // gigablast: ['www.gigablast.com'],
-  yahooJp: ['cache.yahoofs.jp'],
-  // megalodon: ['megalodon.jp'],
-  // baidu: ['cache.baiducontent.com'],
-  qihoo: ['c.360webcache.com'],
-  mailru: ['hl.mailru.su']
+  // megalodon: ['megalodon.jp']
 };
 
 const linkArchiveHosts = {

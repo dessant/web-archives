@@ -5,7 +5,7 @@
   },
 
   "extensionDescription": {
-    "message": "View archived and cached versions of web pages on 10+ search engines, such as the Wayback Machine, Archive․is, Google, Bing, Yandex, Baidu and Yahoo",
+    "message": "View archived and cached versions of web pages on 10+ search engines, such as the Wayback Machine, Archive․is, Google, Bing, Yandex and Yahoo",
     "description": "Description of the extension."
   },
 
@@ -59,28 +59,8 @@
     "description": "Name of the search engine."
   },
 
-  "engineName_qihoo": {
-    "message": "360 Search",
-    "description": "Name of the search engine."
-  },
-
-  "engineName_baidu": {
-    "message": "Baidu",
-    "description": "Name of the search engine."
-  },
-
-  "engineName_yahooJp": {
-    "message": "Yahoo Japan",
-    "description": "Name of the search engine."
-  },
-
   "engineName_megalodon": {
     "message": "Megalodon",
-    "description": "Name of the search engine."
-  },
-
-  "engineName_mailru": {
-    "message": "Mail.ru",
     "description": "Name of the search engine."
   },
 
@@ -160,28 +140,8 @@
     "description": "Title of the menu item."
   },
 
-  "menuItemTitle_qihoo": {
-    "message": "360 Search",
-    "description": "Title of the menu item."
-  },
-
-  "menuItemTitle_baidu": {
-    "message": "Baidu",
-    "description": "Title of the menu item."
-  },
-
-  "menuItemTitle_yahooJp": {
-    "message": "Yahoo Japan",
-    "description": "Title of the menu item."
-  },
-
   "menuItemTitle_megalodon": {
     "message": "Megalodon",
-    "description": "Title of the menu item."
-  },
-
-  "menuItemTitle_mailru": {
-    "message": "Mail.ru",
     "description": "Title of the menu item."
   },
 
@@ -276,28 +236,8 @@
     "description": "Title of the option."
   },
 
-  "optionTitle_qihoo": {
-    "message": "Qihoo 360 Search Snapshot",
-    "description": "Title of the option."
-  },
-
-  "optionTitle_baidu": {
-    "message": "Baidu Snapshot",
-    "description": "Title of the option."
-  },
-
-  "optionTitle_yahooJp": {
-    "message": "Yahoo Japan Cache",
-    "description": "Title of the option."
-  },
-
   "optionTitle_megalodon": {
     "message": "Megalodon",
-    "description": "Title of the option."
-  },
-
-  "optionTitle_mailru": {
-    "message": "Mail.ru Cache",
     "description": "Title of the option."
   },
 
