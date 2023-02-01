@@ -76,7 +76,7 @@ async function search({session, search, doc, storageIds}) {
 
   if (results) {
     const nodes = document.querySelectorAll(
-      '#search-result .serp-item div.Organic-Extralinks'
+      '#search-result .serp-item button.Organic-Extralinks'
     );
 
     await sendReceipt(storageIds);
