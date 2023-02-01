@@ -1,6 +1,12 @@
-const path = require('path');
-const {exec} = require('child_process');
-const {lstatSync, readdirSync, readFileSync, writeFileSync} = require('fs');
+const path = require('node:path');
+const {exec} = require('node:child_process');
+const {
+  lstatSync,
+  readdirSync,
+  readFileSync,
+  writeFileSync,
+  rmSync
+} = require('node:fs');
 
 const {series, parallel, src, dest} = require('gulp');
 const postcss = require('gulp-postcss');
@@ -9,19 +15,26 @@ const jsonMerge = require('gulp-merge-json');
 const jsonmin = require('gulp-jsonmin');
 const htmlmin = require('gulp-htmlmin');
 const imagemin = require('gulp-imagemin');
-const del = require('del');
 const {ensureDirSync} = require('fs-extra');
 const recursiveReadDir = require('recursive-readdir');
 const sharp = require('sharp');
 
-const targetEnv = process.env.TARGET_ENV || 'firefox';
+const targetEnv = process.env.TARGET_ENV || 'chrome';
 const isProduction = process.env.NODE_ENV === 'production';
 const enableContributions =
   (process.env.ENABLE_CONTRIBUTIONS || 'true') === 'true';
-const distDir = path.join('dist', targetEnv);
+const distDir = path.join(__dirname, 'dist', targetEnv);
 
-function clean() {
-  return del([distDir]);
+function initEnv() {
+  process.env.BROWSERSLIST_ENV = targetEnv;
+}
+
+function init(done) {
+  initEnv();
+
+  rmSync(distDir, {recursive: true, force: true});
+  ensureDirSync(distDir);
+  done();
 }
 
 function js(done) {
@@ -100,7 +113,7 @@ async function images(done) {
 
   if (enableContributions) {
     await new Promise(resolve => {
-      src('node_modules/ext-contribute/src/assets/*.@(jpg|png|svg)')
+      src('node_modules/vueton/components/contribute/assets/*.@(png|svg)')
         .pipe(gulpif(isProduction, imagemin()))
         .pipe(dest(path.join(distDir, 'src/contribute/assets')))
         .on('error', done)
@@ -201,13 +214,13 @@ This software is released under the terms of the GNU General Public License v3.0
 See the LICENSE file for further information.
 `;
     writeFileSync(path.join(distDir, 'NOTICE'), notice);
-    return src(['LICENSE']).pipe(dest(distDir));
+    return src('LICENSE').pipe(dest(distDir));
   }
 }
 
 function zip(done) {
   exec(
-    `web-ext build -s dist/${targetEnv} -a artifacts/${targetEnv} -n '{name}-{version}-${targetEnv}.zip' --overwrite-dest`,
+    `web-ext build -s dist/${targetEnv} -a artifacts/${targetEnv} -n "{name}-{version}-${targetEnv}.zip" --overwrite-dest`,
     function (err, stdout, stderr) {
       console.log(stdout);
       console.log(stderr);
@@ -217,8 +230,13 @@ function zip(done) {
 }
 
 function inspect(done) {
+  initEnv();
+
   exec(
-    `webpack --profile --json > report.json && webpack-bundle-analyzer report.json dist/firefox/src && sleep 10 && rm report.{json,html}`,
+    `npm run build:prod:chrome && \
+    webpack --profile --json > report.json && \
+    webpack-bundle-analyzer --mode static report.json dist/chrome/src && \
+    sleep 3 && rm report.{json,html}`,
     function (err, stdout, stderr) {
       console.log(stdout);
       console.log(stderr);
@@ -228,7 +246,7 @@ function inspect(done) {
 }
 
 exports.build = series(
-  clean,
+  init,
   parallel(js, html, images, fonts, locale, manifest, license)
 );
 exports.zip = zip;

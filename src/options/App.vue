@@ -1,5 +1,5 @@
 <template>
-  <div id="app" v-if="dataLoaded" :class="appClasses">
+  <vn-app id="app" v-if="dataLoaded" :class="appClasses">
     <div class="section-engines">
       <div class="section-title" v-once>
         {{ getText('optionSectionTitle_engines') }}
@@ -7,20 +7,23 @@
       <div class="section-desc" v-once>
         {{ getText('optionSectionDescription_engines') }}
       </div>
-      <v-draggable class="option-wrap" :list="options.engines" :delay="120">
-        <div class="option" v-for="engine in options.engines" :key="engine.id">
-          <v-form-field
-            :input-id="engine"
-            :label="getText(`optionTitle_${engine}`)"
-          >
-            <v-checkbox
-              :id="engine"
-              :checked="engineEnabled(engine)"
-              @change="setEngineState(engine, $event)"
+
+      <v-draggable
+        class="option-wrap"
+        v-model="options.engines"
+        item-key="id"
+        :delay="120"
+      >
+        <template #item="{element}">
+          <div class="option">
+            <vn-checkbox
+              :label="getText(`optionTitle_${element}`)"
+              :model-value="engineEnabled(element)"
+              @click="setEngineState(element, $event.target.checked)"
             >
-            </v-checkbox>
-          </v-form-field>
-        </div>
+            </vn-checkbox>
+          </div>
+        </template>
       </v-draggable>
     </div>
 
@@ -30,33 +33,28 @@
       </div>
       <div class="option-wrap">
         <div class="option select">
-          <v-select
+          <vn-select
             :label="getText('optionTitle_showInContextMenu')"
+            :items="listItems.showInContextMenu"
             v-model="options.showInContextMenu"
-            :options="listItems.showInContextMenu"
-            outlined
+            transition="scale-transition"
           >
-          </v-select>
+          </vn-select>
         </div>
         <div class="option select" v-if="searchAllEnginesEnabled">
-          <v-select
+          <vn-select
             :label="getText('optionTitle_searchAllEngines')"
+            :items="listItems.searchAllEnginesContextMenu"
             v-model="options.searchAllEnginesContextMenu"
-            :options="listItems.searchAllEnginesContextMenu"
-            outlined
+            transition="scale-transition"
           >
-          </v-select>
+          </vn-select>
         </div>
         <div class="option">
-          <v-form-field
-            input-id="ocdcm"
+          <vn-switch
             :label="getText('optionTitle_openCurrentDocContextMenu')"
-          >
-            <v-switch
-              id="ocdcm"
-              v-model="options.openCurrentDocContextMenu"
-            ></v-switch>
-          </v-form-field>
+            v-model="options.openCurrentDocContextMenu"
+          ></vn-switch>
         </div>
       </div>
     </div>
@@ -65,7 +63,7 @@
       <div class="section-title" v-once>
         {{
           getText(
-            $isMobile
+            $env.isMobile
               ? 'optionSectionTitleMobile_toolbar'
               : 'optionSectionTitle_toolbar'
           )
@@ -73,41 +71,34 @@
       </div>
       <div class="option-wrap">
         <div class="option select">
-          <v-select
+          <vn-select
             :label="getText('optionTitle_searchMode')"
+            :items="listItems.searchModeAction"
             v-model="options.searchModeAction"
-            :options="listItems.searchModeAction"
-            outlined
+            transition="scale-transition"
           >
-          </v-select>
+          </vn-select>
         </div>
         <div class="option select" v-if="searchAllEnginesEnabled">
-          <v-select
+          <vn-select
             :label="getText('optionTitle_searchAllEngines')"
+            :items="listItems.searchAllEnginesAction"
             v-model="options.searchAllEnginesAction"
-            :options="listItems.searchAllEnginesAction"
-            outlined
+            transition="scale-transition"
           >
-          </v-select>
+          </vn-select>
         </div>
         <div class="option" v-if="pageActionEnabled">
-          <v-form-field
-            input-id="spa"
+          <vn-switch
             :label="getText('optionTitle_showPageAction')"
-          >
-            <v-switch id="spa" v-model="options.showPageAction"></v-switch>
-          </v-form-field>
+            v-model="options.showPageAction"
+          ></vn-switch>
         </div>
         <div class="option">
-          <v-form-field
-            input-id="ocda"
+          <vn-switch
             :label="getText('optionTitle_openCurrentDocAction')"
-          >
-            <v-switch
-              id="ocda"
-              v-model="options.openCurrentDocAction"
-            ></v-switch>
-          </v-form-field>
+            v-model="options.openCurrentDocAction"
+          ></vn-switch>
         </div>
       </div>
     </div>
@@ -117,50 +108,75 @@
         {{ getText('optionSectionTitle_misc') }}
       </div>
       <div class="option-wrap">
-        <div class="option" v-if="!$isAndroid">
-          <v-form-field
-            input-id="tib"
-            :label="getText('optionTitle_tabInBackgound')"
+        <div class="option select">
+          <vn-select
+            :label="getText('optionTitle_appTheme')"
+            :items="listItems.appTheme"
+            v-model="options.appTheme"
+            transition="scale-transition"
           >
-            <v-switch id="tib" v-model="options.tabInBackgound"></v-switch>
-          </v-form-field>
+          </vn-select>
+        </div>
+
+        <div class="option" v-if="!$env.isAndroid">
+          <vn-switch
+            :label="getText('optionTitle_tabInBackgound')"
+            v-model="options.tabInBackgound"
+          ></vn-switch>
         </div>
         <div class="option">
-          <v-form-field
-            input-id="sei"
+          <vn-switch
             :label="getText('optionTitle_showEngineIcons')"
-          >
-            <v-switch id="sei" v-model="options.showEngineIcons"></v-switch>
-          </v-form-field>
+            v-model="options.showEngineIcons"
+          ></vn-switch>
+        </div>
+        <div class="option" v-if="enableContributions">
+          <vn-switch
+            :label="getText('optionTitle_showContribPage')"
+            v-model="options.showContribPage"
+          ></vn-switch>
+        </div>
+        <div class="option button" v-if="enableContributions">
+          <vn-button
+            class="contribute-button vn-icon--start"
+            @click="showContribute"
+            ><vn-icon
+              src="/src/assets/icons/misc/favorite-filled.svg"
+            ></vn-icon>
+            {{ getText('buttonLabel_contribute') }}
+          </vn-button>
         </div>
       </div>
     </div>
-  </div>
+  </vn-app>
 </template>
 
 <script>
-import browser from 'webextension-polyfill';
+import {toRaw} from 'vue';
+import {App, Button, Checkbox, Icon, Select, Switch} from 'vueton';
 import {includes, without} from 'lodash-es';
 import draggable from 'vuedraggable';
-import {Checkbox, FormField, Switch, Select} from 'ext-components';
 
 import storage from 'storage/storage';
-import {getListItems} from 'utils/app';
+import {getListItems, showContributePage} from 'utils/app';
 import {getText} from 'utils/common';
+import {enableContributions} from 'utils/config';
 import {optionKeys} from 'utils/data';
 
 export default {
   components: {
     'v-draggable': draggable,
+    [App.name]: App,
+    [Button.name]: Button,
     [Checkbox.name]: Checkbox,
+    [Icon.name]: Icon,
     [Switch.name]: Switch,
-    [Select.name]: Select,
-    [FormField.name]: FormField
+    [Select.name]: Select
   },
 
   data: function () {
     let showInContextMenu = ['all', 'link', 'false'];
-    if (this.$isMobile) {
+    if (this.$env.isMobile) {
       showInContextMenu = showInContextMenu.filter(item => item !== 'all');
     }
 
@@ -181,7 +197,7 @@ export default {
         ...getListItems(
           {searchAllEnginesAction: ['main', 'sub', 'false']},
           {
-            scope: this.$isMobile
+            scope: this.$env.isMobile
               ? 'optionValue_searchAllEnginesActionMobile'
               : 'optionValue_searchAllEnginesAction'
           }
@@ -189,8 +205,15 @@ export default {
         ...getListItems(
           {searchModeAction: ['tab', 'url']},
           {scope: 'optionValue_searchModeAction'}
+        ),
+        ...getListItems(
+          {appTheme: ['auto', 'light', 'dark']},
+          {scope: 'optionValue_appTheme'}
         )
       },
+
+      enableContributions,
+
       contextMenuEnabled: true,
       searchAllEnginesEnabled: true,
       pageActionEnabled: true,
@@ -206,7 +229,9 @@ export default {
         searchModeAction: '',
         showEngineIcons: false,
         openCurrentDocAction: false,
-        openCurrentDocContextMenu: false
+        openCurrentDocContextMenu: false,
+        appTheme: '',
+        showContribPage: false
       }
     };
   },
@@ -222,6 +247,37 @@ export default {
   methods: {
     getText,
 
+    setup: async function () {
+      const options = await storage.get(optionKeys);
+
+      for (const option of Object.keys(this.options)) {
+        this.options[option] = options[option];
+
+        this.$watch(
+          `options.${option}`,
+          async function (value) {
+            await storage.set({[option]: toRaw(value)});
+            await browser.runtime.sendMessage({id: 'optionChange'});
+          },
+          {deep: true}
+        );
+      }
+
+      if (this.$env.isSamsung) {
+        this.searchAllEnginesEnabled = false;
+      } else {
+        if (this.$env.isMobile) {
+          this.contextMenuEnabled = false;
+        }
+      }
+
+      if (!this.$env.isFirefox || this.$env.isMobile) {
+        this.pageActionEnabled = false;
+      }
+
+      this.dataLoaded = true;
+    },
+
     engineEnabled: function (engine) {
       return !includes(this.options.disabledEngines, engine);
     },
@@ -235,169 +291,97 @@ export default {
       } else {
         this.options.disabledEngines.push(engine);
       }
+    },
+
+    showContribute: async function () {
+      await showContributePage();
     }
   },
 
-  created: async function () {
-    const options = await storage.get(optionKeys);
-
-    for (const option of Object.keys(this.options)) {
-      this.options[option] = options[option];
-
-      this.$watch(`options.${option}`, async function (value) {
-        await storage.set({[option]: value});
-        await browser.runtime.sendMessage({id: 'optionChange'});
-      });
-    }
-
-    if (this.$isSamsung) {
-      this.searchAllEnginesEnabled = false;
-    } else {
-      if (this.$isMobile) {
-        this.contextMenuEnabled = false;
-      }
-    }
-
-    if (!this.$isFirefox || this.$isMobile) {
-      this.pageActionEnabled = false;
-    }
-
+  created: function () {
     document.title = getText('pageTitle', [
       getText('pageTitle_options'),
       getText('extensionName')
     ]);
 
-    this.dataLoaded = true;
+    this.setup();
   }
 };
 </script>
 
 <style lang="scss">
-@import '@material/select/mdc-select';
-@import '@material/checkbox/mixins';
-@import '@material/switch/mixins';
-@import '@material/theme/mixins';
-@import '@material/typography/mixins';
+@use 'vueton/styles' as vueton;
 
-body {
-  margin: 0;
-  @include mdc-typography-base;
-  font-size: 100%;
-  background-color: #ffffff;
-  overflow: visible !important;
-}
+@include vueton.theme-base;
+@include vueton.transitions;
 
-#app {
+.v-application__wrap {
   display: grid;
   grid-row-gap: 32px;
   grid-column-gap: 48px;
   padding: 24px;
-}
-
-.mdc-checkbox {
-  @include mdc-checkbox-container-colors(#8188e9, #00000000, #8188e9, #8188e9);
-  @include mdc-checkbox-focus-indicator-color(#8188e9);
-  margin-right: 4px;
-}
-
-.mdc-switch {
-  @include mdc-switch-toggled-on-color(#8188e9);
-  margin-right: 16px;
-}
-
-.mdc-select {
-  @include mdc-select-ink-color(#252525);
-  @include mdc-select-focused-label-color(#252525);
-  @include mdc-select-outline-color(#777777);
-  @include mdc-select-hover-outline-color(#8188e9);
-  @include mdc-select-focused-outline-color(#8188e9);
-  @include mdc-select-outline-shape-radius(16px);
-
-  & .mdc-select__dropdown-icon {
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24px' viewBox='0 0 24 24' width='24px' fill='%23454545'%3E%3Cpath d='M0 0h24v24H0V0z' fill='none'/%3E%3Cpath d='M8.71 11.71l2.59 2.59c.39.39 1.02.39 1.41 0l2.59-2.59c.63-.63.18-1.71-.71-1.71H9.41c-.89 0-1.33 1.08-.7 1.71z'/%3E%3C/svg%3E")
-      no-repeat center !important;
-    top: 50% !important;
-    transform: translateY(-50%);
-  }
-
-  &.mdc-select--activated .mdc-select__dropdown-icon {
-    transform: rotate(180deg) translateY(50%);
-  }
-
-  & .mdc-list {
-    padding: 0 !important;
-  }
-
-  & .mdc-menu-surface {
-    border-radius: 16px !important;
-  }
-}
-
-.section-title,
-.section-desc,
-.mdc-form-field,
-.mdc-list-item {
-  @include mdc-theme-prop(color, #252525);
+  grid-auto-rows: min-content;
+  grid-auto-columns: min-content;
 }
 
 .section-title {
-  @include mdc-typography(headline6);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: 0.25px;
+  line-height: 32px;
 }
 
 .section-desc {
-  @include mdc-typography(body2);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.25px;
+  line-height: 20px;
+
   padding-top: 8px;
+  width: 272px;
 }
 
 .option-wrap {
   display: grid;
   grid-row-gap: 24px;
   padding-top: 24px;
-  grid-auto-columns: min-content;
 }
 
 .option {
   display: flex;
   align-items: center;
-  height: 24px;
+  height: 20px;
 
-  & .mdc-form-field {
-    max-width: calc(100vw - 48px);
+  &.button {
+    height: 40px;
+  }
 
-    & label {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
+  &.select,
+  &.text-field {
+    height: 56px;
   }
 }
 
-.option.select {
-  align-items: start;
-  height: 56px;
+.contribute-button {
+  @include vueton.theme-prop(color, primary);
 
-  & .mdc-select__anchor,
-  & .mdc-select__menu {
-    max-width: calc(100vw - 48px);
-  }
-
-  & .mdc-select__selected-text {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  & .vn-icon {
+    @include vueton.theme-prop(background-color, cta);
   }
 }
 
 @media (min-width: 1024px) {
-  #app {
+  .v-application__wrap {
     grid-template-columns: 464px 464px;
     grid-template-rows: min-content min-content 1fr;
     grid-template-areas:
       'engines toolbar'
       'engines misc'
       'engines placeholder';
+  }
 
-    &.feature-context-menu {
+  .feature-context-menu {
+    & .v-application__wrap {
       grid-template-rows: min-content min-content min-content 1fr;
       grid-template-areas:
         'engines context-menu'

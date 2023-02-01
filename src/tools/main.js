@@ -1,5 +1,3 @@
-import browser from 'webextension-polyfill';
-
 import {validateUrl} from 'utils/app';
 import {pageArchiveHosts, linkArchiveUrlRx} from 'utils/data';
 
@@ -64,7 +62,7 @@ function main() {
     }
 
     if (validateUrl(docUrl)) {
-      await browser.runtime.sendMessage({id: 'createTab', url: docUrl});
+      await browser.runtime.sendMessage({id: 'showPage', url: docUrl});
     } else {
       await browser.runtime.sendMessage({
         id: 'notification',

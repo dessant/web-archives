@@ -1,15 +1,10 @@
-import browser from 'webextension-polyfill';
-
 const message = 'Add search engines';
 
 const revision = '20220102051642_add_search_engines';
-const downRevision = '20220102035029_add_showengineicons';
-
-const storage = browser.storage.local;
 
 async function upgrade() {
   const changes = {};
-  const {engines, disabledEngines} = await storage.get([
+  const {engines, disabledEngines} = await browser.storage.local.get([
     'engines',
     'disabledEngines'
   ]);
@@ -29,7 +24,7 @@ async function upgrade() {
   changes.disabledEngines.push('mailru');
 
   changes.storageVersion = revision;
-  return storage.set(changes);
+  return browser.storage.local.set(changes);
 }
 
 export {message, revision, upgrade};

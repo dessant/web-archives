@@ -1,20 +1,18 @@
-import Vue from 'vue';
+import {createApp} from 'vue';
 
-import {configUI} from 'utils/app';
+import {configApp, loadFonts} from 'utils/app';
+import {configVuetify} from 'utils/vuetify';
 import App from './App';
 
 async function init() {
-  await configUI(Vue);
+  await loadFonts(['400 14px Roboto', '500 14px Roboto']);
 
-  try {
-    await document.fonts.load('400 14px Roboto');
-    await document.fonts.load('500 14px Roboto');
-  } catch (err) {}
+  const app = createApp(App);
 
-  new Vue({
-    el: '#app',
-    render: h => h(App)
-  });
+  await configApp(app);
+  await configVuetify(app);
+
+  app.mount('body');
 }
 
 init();

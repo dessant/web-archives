@@ -1,4 +1,3 @@
-import browser from 'webextension-polyfill';
 import {v4 as uuidv4} from 'uuid';
 import Queue from 'p-queue';
 
@@ -23,11 +22,15 @@ import {
   showNotification,
   validateUrl,
   normalizeUrl,
+  showPage,
   hasModule,
   insertBaseModule,
-  showContributePage,
   isContextMenuSupported,
-  checkSearchEngineAccess
+  checkSearchEngineAccess,
+  processAppUse,
+  processMessageResponse,
+  getEngineMenuIcon,
+  getAppTheme
 } from 'utils/app';
 import registry from 'utils/registry';
 import {
@@ -40,7 +43,7 @@ import {
   chromeMobileUA,
   chromeDesktopUA
 } from 'utils/data';
-import {targetEnv, enableContributions} from 'utils/config';
+import {targetEnv} from 'utils/config';
 
 const queue = new Queue({concurrency: 1});
 
@@ -65,27 +68,6 @@ function setUserAgentHeader(tabId, userAgent) {
   );
 }
 
-function getEngineMenuIcons(engine) {
-  if (engine === 'googleText') {
-    engine = 'google';
-  } else if (engine === 'archiveOrgAll') {
-    engine = 'archiveOrg';
-  } else if (engine === 'archiveIsAll') {
-    engine = 'archiveIs';
-  }
-
-  if (['gigablast'].includes(engine)) {
-    return {
-      16: `src/assets/icons/engines/${engine}-16.png`,
-      32: `src/assets/icons/engines/${engine}-32.png`
-    };
-  } else {
-    return {
-      16: `src/assets/icons/engines/${engine}.svg`
-    };
-  }
-}
-
 function createMenuItem({
   id,
   title = '',
@@ -100,166 +82,205 @@ function createMenuItem({
     id,
     title,
     contexts,
-    documentUrlPatterns,
     parentId: parent,
     type
   };
+
+  if (documentUrlPatterns) {
+    params.documentUrlPatterns = documentUrlPatterns;
+  }
   if (targetUrlPatterns) {
     params.targetUrlPatterns = targetUrlPatterns;
   }
   if (icons) {
     params.icons = icons;
   }
+
   // creates context menu item for current instance
   browser.contextMenus.create(params, onComplete);
 }
 
-async function createOpenCurrentDocMenuItem(
-  showInContextMenu,
-  documentUrlPatterns
-) {
-  if (showInContextMenu === 'all') {
-    const contexts = [
-      'audio',
-      'editable',
-      'frame',
-      'image',
-      'selection',
-      'video'
-    ];
-    if (!(await isAndroid())) {
-      contexts.push('page');
-    }
-
-    createMenuItem({
-      id: 'openCurrentDoc_1',
-      title: getText('menuItemTitle_openCurrentDoc'),
-      contexts,
-      documentUrlPatterns: Object.values(pageArchiveHosts)
-        .map(hosts => hosts.map(host => `*://${host}/*`))
-        .flat()
-    });
-  }
-
-  createMenuItem({
-    id: 'openCurrentDoc_2',
-    title: getText('menuItemTitle_openCurrentDoc'),
-    contexts: ['link'],
-    documentUrlPatterns,
-    targetUrlPatterns: Object.values(linkArchiveHosts)
-      .map(hosts => hosts.map(host => `*://${host}/*`))
-      .flat()
-  });
-}
-
 async function createMenu() {
+  const env = await getPlatform({fallback: false});
+
   const options = await storage.get(optionKeys);
+  const theme = await getAppTheme(options.appTheme);
 
-  const enEngines = await getEnabledEngines(options);
-
-  const contexts = [];
-  if (options.showInContextMenu === 'all') {
-    contexts.push(
-      'audio',
-      'editable',
-      'frame',
-      'image',
-      'link',
-      'selection',
-      'video'
-    );
-    if (!(await isAndroid())) {
-      contexts.push('page');
-    }
-  } else {
-    contexts.push('link');
+  const contexts = [
+    'audio',
+    'editable',
+    'frame',
+    'image',
+    'selection',
+    'video'
+  ];
+  if (env.isFirefox) {
+    contexts.push('password');
+  }
+  if (!env.isAndroid) {
+    contexts.push('page');
   }
 
   const documentUrlPatterns = ['http://*/*', 'https://*/*'];
+  const targetUrlPatterns = ['http://*/*', 'https://*/*'];
 
-  let setIcons = false;
-  if (targetEnv === 'firefox') {
-    if (options.showInContextMenu === 'link') {
-      documentUrlPatterns.push('file:///*');
-    }
-    setIcons = options.showEngineIcons;
-  }
+  const setIcons = env.isFirefox && options.showEngineIcons;
+  const searchAllEngines =
+    !env.isSamsung && options.searchAllEnginesContextMenu;
+
+  const enEngines = await getEnabledEngines(options);
 
   if (enEngines.length === 1) {
     const engine = enEngines[0];
+    const title = getText(
+      'mainMenuItemTitle_engine',
+      getText(`menuItemTitle_${engine}`)
+    );
+
+    if (options.showInContextMenu === 'all') {
+      createMenuItem({
+        id: `search_${engine}_1`,
+        title,
+        contexts,
+        documentUrlPatterns
+      });
+    }
+
     createMenuItem({
-      id: `search_${engine}`,
-      title: getText(
-        'mainMenuItemTitle_engine',
-        getText(`menuItemTitle_${engine}`)
-      ),
-      contexts,
-      documentUrlPatterns
+      id: `search_${engine}_2`,
+      title,
+      contexts: ['link'],
+      targetUrlPatterns
     });
-    return;
-  }
+  } else if (enEngines.length > 1 && searchAllEngines === 'main') {
+    const title = getText('mainMenuItemTitle_allEngines');
 
-  if (enEngines.length > 1) {
-    if (targetEnv !== 'samsung') {
-      const searchAllEngines = options.searchAllEnginesContextMenu;
+    if (options.showInContextMenu === 'all') {
+      createMenuItem({
+        id: 'search_allEngines_1',
+        title,
+        contexts,
+        documentUrlPatterns
+      });
+    }
 
-      if (searchAllEngines === 'main') {
+    createMenuItem({
+      id: 'search_allEngines_2',
+      title,
+      contexts: ['link'],
+      targetUrlPatterns
+    });
+  } else if (enEngines.length > 1) {
+    if (options.openCurrentDocContextMenu) {
+      if (options.showInContextMenu === 'all') {
+        const currentDocDocumentUrlPatterns = Object.values(pageArchiveHosts)
+          .map(hosts => hosts.map(host => `*://${host}/*`))
+          .flat();
+
         createMenuItem({
-          id: 'search_allEngines',
-          title: getText('mainMenuItemTitle_allEngines'),
+          id: 'openCurrentDoc_1',
+          title: getText('menuItemTitle_openCurrentDoc'),
           contexts,
-          documentUrlPatterns
+          documentUrlPatterns: currentDocDocumentUrlPatterns
         });
-        return;
+
+        if (!env.isSamsung) {
+          // Samsung Internet: separator not visible, creates gap that responds to input.
+          createMenuItem({
+            id: 'sep_1',
+            contexts,
+            type: 'separator',
+            documentUrlPatterns: currentDocDocumentUrlPatterns
+          });
+        }
       }
 
-      if (searchAllEngines === 'sub') {
-        if (options.openCurrentDocContextMenu) {
-          await createOpenCurrentDocMenuItem(
-            options.showInContextMenu,
-            documentUrlPatterns
-          );
+      const currentDocTargetUrlPatterns = Object.values(linkArchiveHosts)
+        .map(hosts => hosts.map(host => `*://${host}/*`))
+        .flat();
 
+      createMenuItem({
+        id: 'openCurrentDoc_2',
+        title: getText('menuItemTitle_openCurrentDoc'),
+        contexts: ['link'],
+        targetUrlPatterns: currentDocTargetUrlPatterns
+      });
+
+      if (!env.isSamsung) {
+        // Samsung Internet: separator not visible, creates gap that responds to input.
+        createMenuItem({
+          id: 'sep_2',
+          contexts: ['link'],
+          type: 'separator',
+          targetUrlPatterns: currentDocTargetUrlPatterns
+        });
+      }
+    }
+
+    if (searchAllEngines === 'sub') {
+      const title = getText('menuItemTitle_allEngines');
+      const icons =
+        setIcons && getEngineMenuIcon('allEngines', {variant: theme});
+
+      if (options.showInContextMenu === 'all') {
+        createMenuItem({
+          id: 'search_allEngines_1',
+          title,
+          contexts,
+          documentUrlPatterns,
+          icons
+        });
+
+        if (!env.isSamsung) {
+          // Samsung Internet: separator not visible, creates gap that responds to input.
           createMenuItem({
-            id: 'sep-1',
+            id: 'sep_3',
             contexts,
             type: 'separator',
             documentUrlPatterns
           });
         }
+      }
 
-        createMenuItem({
-          id: 'search_allEngines',
-          title: getText('menuItemTitle_allEngines'),
-          contexts,
-          documentUrlPatterns,
-          icons: setIcons && getEngineMenuIcons('allEngines')
-        });
+      createMenuItem({
+        id: 'search_allEngines_2',
+        title,
+        contexts: ['link'],
+        targetUrlPatterns,
+        icons
+      });
 
+      if (!env.isSamsung) {
         // Samsung Internet: separator not visible, creates gap that responds to input.
         createMenuItem({
-          id: 'sep-2',
-          contexts,
+          id: 'sep_4',
+          contexts: ['link'],
           type: 'separator',
-          documentUrlPatterns
+          targetUrlPatterns
         });
-      }
-    } else {
-      if (options.openCurrentDocContextMenu) {
-        await createOpenCurrentDocMenuItem(
-          options.showInContextMenu,
-          documentUrlPatterns
-        );
       }
     }
 
     enEngines.forEach(function (engine) {
+      const title = getText(`menuItemTitle_${engine}`);
+      const icons = setIcons && getEngineMenuIcon(engine, {variant: theme});
+
+      if (options.showInContextMenu === 'all') {
+        createMenuItem({
+          id: `search_${engine}_1`,
+          title,
+          contexts,
+          documentUrlPatterns,
+          icons
+        });
+      }
+
       createMenuItem({
-        id: `search_${engine}`,
-        title: getText(`menuItemTitle_${engine}`),
-        contexts,
-        documentUrlPatterns,
-        icons: setIcons && getEngineMenuIcons(engine)
+        id: `search_${engine}_2`,
+        title,
+        contexts: ['link'],
+        targetUrlPatterns,
+        icons
       });
     });
   }
@@ -377,16 +398,14 @@ async function searchDocument(session, doc, firstBatchItem = true) {
   }
 
   let tabActive = firstBatchItem;
-
   let contributePageTabId;
-  if (enableContributions && firstBatchItem) {
-    let {useCount} = await storage.get('useCount');
-    useCount += 1;
-    await storage.set({useCount});
-    if ([10, 30].includes(useCount)) {
-      const tab = await showContributePage('search');
-      contributePageTabId = tab.id;
-      session.sourceTabIndex += 1;
+
+  if (firstBatchItem) {
+    const contribPageTab = await processAppUse();
+
+    if (contribPageTab) {
+      contributePageTabId = contribPageTab.id;
+      session.sourceTabIndex = contribPageTab.index;
       tabActive = false;
     }
   }
@@ -436,7 +455,8 @@ async function searchEngine(session, search, doc, docId, tabActive) {
   const tab = await createTab({
     token,
     index: session.sourceTabIndex,
-    active: tabActive
+    active: tabActive,
+    getTab: true
   });
   const tabId = tab.id;
 
@@ -565,9 +585,7 @@ async function openCurrentDoc({linkUrl} = {}) {
     }
 
     if (validateUrl(docUrl)) {
-      const activeTab = await getActiveTab();
-
-      await createTab({url: docUrl, index: activeTab.index + 1});
+      return showPage({url: docUrl});
     } else {
       await showNotification({messageId: 'error_currentDocUrlNotFound'});
     }
@@ -826,13 +844,22 @@ async function processMessage(request, sender) {
     return;
   }
 
-  if (
-    targetEnv === 'samsung' &&
-    sender.tab &&
-    sender.tab.id !== browser.tabs.TAB_ID_NONE
-  ) {
-    // Samsung Internet 13: runtime.onMessage provides wrong tab index.
-    sender.tab = await browser.tabs.get(sender.tab.id);
+  if (targetEnv === 'samsung') {
+    if (
+      /^internet-extension:\/\/.*\/src\/action\/index.html/.test(
+        sender.tab?.url
+      )
+    ) {
+      // Samsung Internet 18: runtime.onMessage provides sender.tab
+      // when the message is sent from the browser action,
+      // and tab.id refers to a nonexistent tab.
+      sender.tab = null;
+    }
+
+    if (sender.tab && sender.tab.id !== browser.tabs.TAB_ID_NONE) {
+      // Samsung Internet 13: runtime.onMessage provides wrong tab index.
+      sender.tab = await browser.tabs.get(sender.tab.id);
+    }
   }
 
   if (request.id === 'actionPopupSubmit') {
@@ -881,26 +908,15 @@ async function processMessage(request, sender) {
     }
   } else if (request.id === 'optionChange') {
     await onOptionChange();
-  } else if (request.id === 'createTab') {
-    await createTab({url: request.url, index: sender.tab.index + 1});
+  } else if (request.id === 'showPage') {
+    await showPage({url: request.url});
   }
 }
 
 function onMessage(request, sender, sendResponse) {
   const response = processMessage(request, sender);
 
-  if (targetEnv === 'safari') {
-    response.then(function (result) {
-      // Safari 15: undefined response will cause sendMessage to never resolve.
-      if (result === undefined) {
-        result = null;
-      }
-      sendResponse(result);
-    });
-    return true;
-  } else {
-    return response;
-  }
+  return processMessageResponse(response, sendResponse);
 }
 
 async function onOptionChange() {

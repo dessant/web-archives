@@ -1,34 +1,42 @@
-const path = require('path');
-const {lstatSync, readdirSync} = require('fs');
+const path = require('node:path');
+const {lstatSync, readdirSync} = require('node:fs');
 
 const webpack = require('webpack');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const {VueLoaderPlugin} = require('vue-loader');
+const {VuetifyPlugin} = require('webpack-plugin-vuetify');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const storageRevisions = require('./src/storage/config.json').revisions;
 
-const targetEnv = process.env.TARGET_ENV || 'firefox';
+const targetEnv = process.env.TARGET_ENV || 'chrome';
 const isProduction = process.env.NODE_ENV === 'production';
 const enableContributions =
   (process.env.ENABLE_CONTRIBUTIONS || 'true') === 'true';
+
+const provideExtApi = !['firefox', 'safari'].includes(targetEnv);
+
+const provideModules = {Buffer: ['buffer', 'Buffer']};
+if (provideExtApi) {
+  provideModules.browser = 'webextension-polyfill';
+}
 
 const plugins = [
   new webpack.DefinePlugin({
     'process.env': {
       TARGET_ENV: JSON.stringify(targetEnv),
-      STORAGE_REVISION_LOCAL: JSON.stringify(
-        storageRevisions.local[storageRevisions.local.length - 1]
-      ),
+      STORAGE_REVISION_LOCAL: JSON.stringify(storageRevisions.local.at(-1)),
       ENABLE_CONTRIBUTIONS: JSON.stringify(enableContributions.toString())
-    }
+    },
+    __VUE_OPTIONS_API__: true,
+    __VUE_PROD_DEVTOOLS__: false
   }),
-  new webpack.ProvidePlugin({
-    Buffer: ['buffer', 'Buffer']
-  }),
+  new webpack.ProvidePlugin(provideModules),
   new VueLoaderPlugin(),
+  new VuetifyPlugin(),
   new MiniCssExtractPlugin({
-    filename: '[name]/style.css'
+    filename: '[name]/style.css',
+    ignoreOrder: true
   }),
   isProduction ? new LodashModuleReplacementPlugin({shorthands: true}) : null
 ].filter(Boolean);
@@ -37,6 +45,7 @@ const enginesRootDir = path.join(__dirname, 'src/engines');
 const engines = readdirSync(enginesRootDir)
   .filter(file => lstatSync(path.join(enginesRootDir, file)).isFile())
   .map(file => file.split('.')[0]);
+
 const entries = Object.fromEntries(
   engines.map(engine => [engine, `./src/engines/${engine}.js`])
 );
@@ -88,7 +97,10 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        use: 'babel-loader'
+        use: 'babel-loader',
+        resolve: {
+          fullySpecified: false
+        }
       },
       {
         test: /\.vue$/,
@@ -96,7 +108,8 @@ module.exports = {
           {
             loader: 'vue-loader',
             options: {
-              transformAssetUrls: {img: ''}
+              transformAssetUrls: {img: ''},
+              compilerOptions: {whitespace: 'preserve'}
             }
           }
         ]

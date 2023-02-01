@@ -10,7 +10,12 @@ const optionKeys = [
   'searchModeContextMenu',
   'showEngineIcons',
   'openCurrentDocAction',
-  'openCurrentDocContextMenu'
+  'openCurrentDocContextMenu',
+  'appTheme',
+  'showContribPage',
+  'pinActionToolbarOpenCurrentDoc',
+  'pinActionToolbarOptions',
+  'pinActionToolbarContribute'
 ];
 
 const engines = {
@@ -74,12 +79,48 @@ const engines = {
   }
 };
 
+const engineIconAlias = {
+  googleText: 'google',
+  archiveOrgAll: 'archiveOrg',
+  archiveIsAll: 'archiveIs'
+};
+
+const engineIconVariants = {
+  archiveOrg: ['dark'],
+  archiveIs: ['dark'],
+  yahoo: ['dark']
+};
+
+const rasterEngineIcons = ['gigablast'];
+
+// prettier-ignore
 const errorCodes = [
-  400, 403, 404, 408, 410, 429, 451, 500, 502, 503, 504,
+  400,
+  403,
+  404,
+  408,
+  410,
+  429,
+  451,
+  500,
+  502,
+  503,
+  504,
   // Nonstandard
-  444, 450, 509, 530, 598,
+  444,
+  450,
+  509,
+  530,
+  598,
   // Cloudflare
-  520, 521, 522, 523, 524, 525, 526, 527
+  520,
+  521,
+  522,
+  523,
+  524,
+  525,
+  526,
+  527
 ];
 
 const pageArchiveHosts = {
@@ -129,21 +170,24 @@ const linkArchiveUrlRx = {
 };
 
 const chromeDesktopUA =
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36';
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36';
 
 const chromeMobileUA =
-  'Mozilla/5.0 (Linux; Android 11; Pixel 4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Mobile Safari/537.36';
+  'Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Mobile Safari/537.36';
 
-const projectUrl = 'https://github.com/dessant/web-archives';
+const supportUrl = 'https://github.com/dessant/web-archives/issues';
 
 export {
   optionKeys,
   engines,
+  rasterEngineIcons,
+  engineIconAlias,
+  engineIconVariants,
   errorCodes,
   pageArchiveHosts,
   linkArchiveHosts,
   linkArchiveUrlRx,
   chromeDesktopUA,
   chromeMobileUA,
-  projectUrl
+  supportUrl
 };

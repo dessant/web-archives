@@ -1,5 +1,3 @@
-import browser from 'webextension-polyfill';
-
 function showEngineError({message, errorId, engine}) {
   if (!message) {
     message = browser.i18n.getMessage(

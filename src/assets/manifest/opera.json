@@ -7,7 +7,7 @@
   "homepage_url": "https://github.com/dessant/web-archives",
   "default_locale": "en",
 
-  "minimum_opera_version": "69.0",
+  "minimum_opera_version": "78.0",
 
   "permissions": [
     "alarms",

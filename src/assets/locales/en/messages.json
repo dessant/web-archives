@@ -446,9 +446,39 @@
     "description": "Title of the option."
   },
 
+  "optionTitle_appTheme": {
+    "message": "Theme",
+    "description": "Title of the option."
+  },
+
+  "optionValue_appTheme_auto": {
+    "message": "System default",
+    "description": "Value of the option."
+  },
+
+  "optionValue_appTheme_light": {
+    "message": "Light",
+    "description": "Value of the option."
+  },
+
+  "optionValue_appTheme_dark": {
+    "message": "Dark",
+    "description": "Value of the option."
+  },
+
+  "optionTitle_showContribPage": {
+    "message": "Show contribution page",
+    "description": "Title of the option."
+  },
+
   "inputPlaceholder_docUrl": {
     "message": "Page URL",
     "description": "Placeholder of the input."
+  },
+
+  "buttonLabel_contribute": {
+    "message": "Contribute",
+    "description": "Label of the button."
   },
 
   "pageTitle": {
@@ -476,14 +506,59 @@
     "description": "Title of the page."
   },
 
+  "actionMenu_openCurrentDoc": {
+    "message": "Open current page",
+    "description": "Title of the menu item."
+  },
+
   "actionMenu_options": {
     "message": "Options",
     "description": "Title of the menu item."
   },
 
-  "actionMenu_website": {
-    "message": "Website",
+  "actionMenu_contribute": {
+    "message": "Contribute",
     "description": "Title of the menu item."
+  },
+
+  "actionMenu_support": {
+    "message": "Support",
+    "description": "Title of the menu item."
+  },
+
+  "buttonTooltip_searchMode": {
+    "message": "Search mode",
+    "description": "Tooltip of the button."
+  },
+
+  "buttonTooltip_openCurrentDoc": {
+    "message": "Open current page",
+    "description": "Tooltip of the button."
+  },
+
+  "buttonTooltip_contribute": {
+    "message": "Contribute",
+    "description": "Tooltip of the button."
+  },
+
+  "buttonTooltip_options": {
+    "message": "Options",
+    "description": "Tooltip of the button."
+  },
+
+  "buttonTooltip_menu": {
+    "message": "Menu",
+    "description": "Tooltip of the button."
+  },
+
+  "buttonTooltip_pin": {
+    "message": "Pin",
+    "description": "Tooltip of the button."
+  },
+
+  "buttonTooltip_unpin": {
+    "message": "Unpin",
+    "description": "Tooltip of the button."
   },
 
   "error_invalidPageUrl": {

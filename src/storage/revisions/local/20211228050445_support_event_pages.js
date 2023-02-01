@@ -1,20 +1,16 @@
-import browser from 'webextension-polyfill';
-
 const message = 'Support event pages';
 
 const revision = '20211228050445_support_event_pages';
-const downRevision = 'yjRtkzy';
-
-const storage = browser.storage.local;
 
 async function upgrade() {
   const changes = {};
 
-  const {engines, disabledEngines, searchCount} = await storage.get([
-    'engines',
-    'disabledEngines',
-    'searchCount'
-  ]);
+  const {engines, disabledEngines, searchCount} =
+    await browser.storage.local.get([
+      'engines',
+      'disabledEngines',
+      'searchCount'
+    ]);
   const removeEngines = ['sogou', 'naver', 'exalead', 'webcite'];
 
   changes.engines = engines.filter(function (item) {
@@ -37,10 +33,10 @@ async function upgrade() {
 
   changes.useCount = searchCount;
 
-  await storage.remove(['searchCount', 'openNewTab']);
+  await browser.storage.local.remove(['searchCount', 'openNewTab']);
 
   changes.storageVersion = revision;
-  return storage.set(changes);
+  return browser.storage.local.set(changes);
 }
 
 export {message, revision, upgrade};

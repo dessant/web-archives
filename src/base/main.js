@@ -1,5 +1,3 @@
-import browser from 'webextension-polyfill';
-
 import storage from 'storage/storage';
 
 function main() {

@@ -1,16 +1,11 @@
-import browser from 'webextension-polyfill';
-
 const message = 'Add archiveOrgAll and archiveIsAll';
 
 const revision = 'yjRtkzy';
-const downRevision = 'rJXbW1ZHmM';
-
-const storage = browser.storage.local;
 
 async function upgrade() {
   const changes = {};
 
-  const {engines, disabledEngines} = await storage.get([
+  const {engines, disabledEngines} = await browser.storage.local.get([
     'engines',
     'disabledEngines'
   ]);
@@ -24,7 +19,7 @@ async function upgrade() {
   ]);
 
   changes.storageVersion = revision;
-  return storage.set(changes);
+  return browser.storage.local.set(changes);
 }
 
 export {message, revision, upgrade};
