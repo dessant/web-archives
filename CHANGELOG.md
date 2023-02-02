@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0](https://github.com/dessant/web-archives/compare/v3.1.0...v4.0.0) (2023-02-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* browser versions older than Chrome 92, Edge 92,
+and Opera 78 are no longer supported
+
+### Features
+
+* migrate to Vuetify ([096567a](https://github.com/dessant/web-archives/commit/096567a973e74df9ef84268cde8afc47ede82dd2))
+
+
+### Bug Fixes
+
+* remove deprecated search engines ([21d853f](https://github.com/dessant/web-archives/commit/21d853f6de38029b1c5dfe6644f7a96b79722761)), closes [#63](https://github.com/dessant/web-archives/issues/63)
+* update dependencies ([ba987bc](https://github.com/dessant/web-archives/commit/ba987bc2c7c3808dd9aceea34d019102aca237d9))
+* update Yandex ([88734f6](https://github.com/dessant/web-archives/commit/88734f654116fcd144c82a652059d2ca0fb1c9b2))
+
 ## [3.1.0](https://github.com/dessant/web-archives/compare/v3.0.2...v3.1.0) (2022-01-15)
 
 
