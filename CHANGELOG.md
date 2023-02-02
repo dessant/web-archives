@@ -12,6 +12,7 @@ and Opera 78 are no longer supported
 
 ### Features
 
+* Dark theme is now supported
 * migrate to Vuetify ([096567a](https://github.com/dessant/web-archives/commit/096567a973e74df9ef84268cde8afc47ede82dd2))
 
 
