@@ -682,7 +682,7 @@ async function setContextMenu() {
   await browser.contextMenus.removeAll();
 
   const {showInContextMenu} = await storage.get('showInContextMenu');
-  if (showInContextMenu) {
+  if (showInContextMenu !== 'false') {
     if (['chrome', 'edge', 'opera'].includes(targetEnv)) {
       // notify all background script instances
       await storage.set({setContextMenuEvent: Date.now()});
