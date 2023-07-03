@@ -1,3 +1,5 @@
+import {waitForDocumentLoad} from 'utils/common';
+
 function showEngineError({message, errorId, engine}) {
   if (!message) {
     message = browser.i18n.getMessage(
@@ -33,6 +35,8 @@ async function initSearch(searchFn, engine, taskId) {
   } else {
     return;
   }
+
+  await waitForDocumentLoad();
 
   self.task = await browser.runtime.sendMessage({
     id: 'storageRequest',

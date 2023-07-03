@@ -1,6 +1,6 @@
 import {v4 as uuidv4} from 'uuid';
 
-import {findNode} from 'utils/common';
+import {findNode, makeDocumentVisible} from 'utils/common';
 import {initSearch, sendReceipt} from 'utils/engines';
 import {targetEnv} from 'utils/config';
 
@@ -13,7 +13,7 @@ async function search({session, search, doc, storageIds}) {
     input.value = doc.docUrl;
     input.dispatchEvent(new InputEvent('input', {bubbles: true}));
 
-    (await findNode('.search2__button button')).click();
+    (await findNode('button.search3__button')).click();
 
     return;
   }
@@ -76,7 +76,7 @@ async function search({session, search, doc, storageIds}) {
 
   if (results) {
     const nodes = document.querySelectorAll(
-      '#search-result .serp-item button.Organic-Extralinks'
+      '#search-result .serp-item button.OrganicExtralinks'
     );
 
     await sendReceipt(storageIds);
@@ -90,7 +90,7 @@ async function search({session, search, doc, storageIds}) {
 
         window.setTimeout(function () {
           const link = document.querySelector(
-            '.extralinks-popup a.Extralinks-Item_copy'
+            '#ExtralinksPopup a.ExtralinksPopup-Item_copy'
           );
           link.setAttribute('target', '_top');
           link.click();
@@ -105,6 +105,7 @@ async function search({session, search, doc, storageIds}) {
 }
 
 function init() {
+  makeDocumentVisible();
   if (!window.location.pathname.startsWith('/showcaptcha')) {
     initSearch(search, engine, taskId);
   }
