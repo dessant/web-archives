@@ -10,7 +10,8 @@
       "20220102051642_add_search_engines",
       "20220114113759_add_opencurrentdoc",
       "20221220055629_add_theme_support",
-      "20230201232239_remove_search_engines"
+      "20230201232239_remove_search_engines",
+      "20230703074609_remove_gigablast"
     ],
     "sync": []
   }

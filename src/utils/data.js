@@ -49,10 +49,6 @@ const engines = {
   memento: {
     target: 'http://timetravel.mementoweb.org/memento/{date}/{url}'
   },
-  gigablast: {
-    target: 'https://www.gigablast.com/search?q=url:{url}',
-    isExec: true
-  },
   megalodon: {
     target: 'https://megalodon.jp/?url={url}',
     isExec: true
@@ -75,7 +71,7 @@ const engineIconVariants = {
   yahoo: ['dark']
 };
 
-const rasterEngineIcons = ['gigablast'];
+const rasterEngineIcons = [];
 
 // prettier-ignore
 const errorCodes = [
@@ -122,8 +118,6 @@ const pageArchiveHosts = {
   google: ['webcache.googleusercontent.com'],
   bing: ['cc.bingj.com'],
   yandex: ['yandexwebcache.net']
-  // gigablast: ['www.gigablast.com'],
-  // megalodon: ['megalodon.jp']
 };
 
 const linkArchiveHosts = {

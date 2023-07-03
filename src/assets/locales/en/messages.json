@@ -54,11 +54,6 @@
     "description": "Name of the search engine."
   },
 
-  "engineName_gigablast": {
-    "message": "Gigablast",
-    "description": "Name of the search engine."
-  },
-
   "engineName_megalodon": {
     "message": "Megalodon",
     "description": "Name of the search engine."
@@ -132,11 +127,6 @@
 
   "menuItemTitle_archiveIsAll": {
     "message": "Archive.is (all)",
-    "description": "Title of the menu item."
-  },
-
-  "menuItemTitle_gigablast": {
-    "message": "Gigablast",
     "description": "Title of the menu item."
   },
 
@@ -228,11 +218,6 @@
 
   "optionTitle_archiveIsAll": {
     "message": "Archive.is (all)",
-    "description": "Title of the option."
-  },
-
-  "optionTitle_gigablast": {
-    "message": "Gigablast Cache",
     "description": "Title of the option."
   },
 
