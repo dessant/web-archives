@@ -27,30 +27,32 @@
         </vn-select>
       </div>
 
-      <div class="header-content">
-        <vn-icon-button
-          v-if="enableContributions && pinActionToolbarContribute"
-          class="contribute-button"
-          src="/src/assets/icons/misc/favorite-filled.svg"
-          :title="getText('buttonTooltip_contribute')"
-          @click="showContribute"
-        ></vn-icon-button>
+      <div class="header-content header-buttons">
+        <div class="header-content header-pinned-buttons">
+          <vn-icon-button
+            v-if="enableContributions && pinActionToolbarContribute"
+            class="contribute-button"
+            src="/src/assets/icons/misc/favorite-filled.svg"
+            :title="getText('buttonTooltip_contribute')"
+            @click="showContribute"
+          ></vn-icon-button>
 
-        <vn-icon-button
-          v-if="enableOpenCurrentDoc && pinActionToolbarOpenCurrentDoc"
-          class="current-doc-button"
-          src="/src/assets/icons/misc/open-in-new.svg"
-          :title="getText('buttonTooltip_openCurrentDoc')"
-          @click="showCurrentDoc"
-        ></vn-icon-button>
+          <vn-icon-button
+            v-if="enableOpenCurrentDoc && pinActionToolbarOpenCurrentDoc"
+            class="current-doc-button"
+            src="/src/assets/icons/misc/open-in-new.svg"
+            :title="getText('buttonTooltip_openCurrentDoc')"
+            @click="showCurrentDoc"
+          ></vn-icon-button>
 
-        <vn-icon-button
-          v-if="pinActionToolbarOptions"
-          class="options-button"
-          src="/src/assets/icons/misc/settings.svg"
-          :title="getText('buttonTooltip_options')"
-          @click="showOptions"
-        ></vn-icon-button>
+          <vn-icon-button
+            v-if="pinActionToolbarOptions"
+            class="options-button"
+            src="/src/assets/icons/misc/settings.svg"
+            :title="getText('buttonTooltip_options')"
+            @click="showOptions"
+          ></vn-icon-button>
+        </div>
 
         <vn-menu-icon-button
           id="menu-button"
@@ -620,7 +622,6 @@ body,
 }
 
 body {
-  margin: 0;
   min-width: 354px;
   overflow: hidden;
 }
@@ -629,7 +630,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  column-gap: 24px;
+  column-gap: 8px;
   white-space: nowrap;
   padding-left: 4px;
   padding-right: 4px;
@@ -643,14 +644,12 @@ body {
   height: 24px;
 }
 
-.options-button,
-.current-doc-button,
-.contribute-button {
-  margin-left: 8px;
-}
+.header-buttons {
+  column-gap: 4px;
 
-.menu-button {
-  margin-left: 4px;
+  & .header-pinned-buttons {
+    column-gap: 8px;
+  }
 }
 
 .contribute-button {
@@ -711,6 +710,7 @@ body {
 }
 
 .url-settings {
+  height: 52px;
   padding-left: 16px;
   padding-right: 16px;
 }
@@ -743,5 +743,11 @@ body {
 
 html.firefox.android {
   height: 100%;
+}
+
+html.samsung {
+  & .v-application__wrap {
+    height: initial;
+  }
 }
 </style>

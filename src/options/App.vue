@@ -1,5 +1,5 @@
 <template>
-  <vn-app id="app" v-if="dataLoaded" :class="appClasses">
+  <vn-app v-if="dataLoaded" :class="appClasses">
     <div class="section-engines">
       <div class="section-title" v-once>
         {{ getText('optionSectionTitle_engines') }}
@@ -373,21 +373,19 @@ export default {
 @media (min-width: 1024px) {
   .v-application__wrap {
     grid-template-columns: 464px 464px;
-    grid-template-rows: min-content min-content 1fr;
+    grid-template-rows: min-content 1fr;
     grid-template-areas:
       'engines toolbar'
-      'engines misc'
-      'engines placeholder';
+      'engines misc';
   }
 
   .feature-context-menu {
     & .v-application__wrap {
-      grid-template-rows: min-content min-content min-content 1fr;
+      grid-template-rows: min-content min-content 1fr;
       grid-template-areas:
         'engines context-menu'
         'engines toolbar'
-        'engines misc'
-        'engines placeholder';
+        'engines misc';
     }
   }
 
@@ -405,11 +403,6 @@ export default {
 
   .section-misc {
     grid-area: misc;
-  }
-
-  .section-placeholder {
-    grid-area: placeholder;
-    display: initial;
   }
 }
 </style>

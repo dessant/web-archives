@@ -1,5 +1,5 @@
 <template>
-  <vn-app id="app">
+  <vn-app>
     <vn-contribute
       :extName="extName"
       :extSlug="extSlug"
