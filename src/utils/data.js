@@ -9,7 +9,6 @@ const optionKeys = [
   'searchModeAction',
   'searchModeContextMenu',
   'showEngineIcons',
-  'openCurrentDocAction',
   'openCurrentDocContextMenu',
   'appTheme',
   'showContribPage',

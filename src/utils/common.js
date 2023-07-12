@@ -394,6 +394,12 @@ function makeDocumentVisible() {
   script.remove();
 }
 
+function isValidTab(tab) {
+  if (tab && tab.id !== browser.tabs.TAB_ID_NONE) {
+    return true;
+  }
+}
+
 export {
   onComplete,
   getText,
@@ -411,5 +417,6 @@ export {
   getPlatform,
   sleep,
   waitForDocumentLoad,
-  makeDocumentVisible
+  makeDocumentVisible,
+  isValidTab
 };

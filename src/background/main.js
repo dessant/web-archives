@@ -14,7 +14,8 @@ import {
   isAndroid,
   isMobile,
   getActiveTab,
-  getPlatform
+  getPlatform,
+  isValidTab
 } from 'utils/common';
 import {
   getEnabledEngines,
@@ -591,7 +592,7 @@ async function openCurrentDoc({linkUrl} = {}) {
 }
 
 async function onContextMenuItemClick(info, tab) {
-  if (targetEnv === 'samsung' && tab.id !== browser.tabs.TAB_ID_NONE) {
+  if (targetEnv === 'samsung' && isValidTab(tab)) {
     // Samsung Internet 13: contextMenus.onClicked provides wrong tab index.
     tab = await browser.tabs.get(tab.id);
   }
@@ -624,7 +625,7 @@ async function onActionClick(session, docUrl) {
 }
 
 async function onActionButtonClick(tab) {
-  if (targetEnv === 'samsung' && tab.id !== browser.tabs.TAB_ID_NONE) {
+  if (targetEnv === 'samsung' && isValidTab(tab)) {
     // Samsung Internet 13: browserAction.onClicked provides wrong tab index.
     tab = await browser.tabs.get(tab.id);
   }
@@ -846,7 +847,7 @@ async function processMessage(request, sender) {
       sender.tab = null;
     }
 
-    if (sender.tab && sender.tab.id !== browser.tabs.TAB_ID_NONE) {
+    if (isValidTab(sender.tab)) {
       // Samsung Internet 13: runtime.onMessage provides wrong tab index.
       sender.tab = await browser.tabs.get(sender.tab.id);
     }

@@ -78,8 +78,18 @@
             v-for="(item, index) of listItems.actionMenu"
             :key="item.value"
           >
+            <vn-divider
+              v-if="
+                item.value === 'divider' &&
+                (item.isVisible || this[item.isVisibleStateProp])
+              "
+            ></vn-divider>
+
             <vn-list-item
-              v-if="item.isVisible || this[item.isVisibleStateProp]"
+              v-if="
+                item.value !== 'divider' &&
+                (item.isVisible || this[item.isVisibleStateProp])
+              "
               :title="item.title"
               @click="onActionMenuSelect(item.value)"
             >
@@ -103,10 +113,6 @@
                 ></vn-icon-button>
               </template>
             </vn-list-item>
-
-            <vn-divider
-              v-if="!index && this[item.isVisibleStateProp]"
-            ></vn-divider>
           </template>
         </vn-list>
       </vn-menu>
@@ -203,7 +209,7 @@ import {
   handleBrowserActionEscapeKey,
   getAppTheme
 } from 'utils/app';
-import {getText, getActiveTab} from 'utils/common';
+import {getText, getActiveTab, isValidTab} from 'utils/common';
 import {enableContributions} from 'utils/config';
 import {optionKeys, pageArchiveHosts} from 'utils/data';
 
@@ -237,6 +243,10 @@ export default {
                 icon: 'open-in-new-light',
                 isVisibleStateProp: 'enableOpenCurrentDoc',
                 isPinnedStateProp: 'pinActionToolbarOpenCurrentDoc'
+              },
+              {
+                value: 'divider',
+                isVisibleStateProp: 'enableOpenCurrentDoc'
               },
               {
                 value: 'options',
@@ -278,6 +288,7 @@ export default {
 
       theme: '',
 
+      maxPinnedToolbarButtons: 3,
       pinActionToolbarOpenCurrentDoc: false,
       pinActionToolbarOptions: false,
       pinActionToolbarContribute: false,
@@ -380,7 +391,7 @@ export default {
 
     updatePinnedButtonState: function (item, state) {
       if (state) {
-        this.setupPinnedButtons({maxPins: 2});
+        this.setupPinnedButtons({maxPins: this.maxPinnedToolbarButtons - 1});
       }
 
       this[item.isPinnedStateProp] = state;
@@ -393,8 +404,7 @@ export default {
       // Samsung Internet 18: tabs.getCurrent returns a tab
       // instead of undefined, and tab.id refers to a nonexistent tab.
       if (
-        currentTab &&
-        currentTab.id !== browser.tabs.TAB_ID_NONE &&
+        isValidTab(currentTab) &&
         !this.$env.isSafari &&
         !this.$env.isSamsung
       ) {
@@ -557,15 +567,13 @@ export default {
 
       const activeTab = await getActiveTab();
       if (activeTab) {
-        this.enableOpenCurrentDoc =
-          options.openCurrentDocAction &&
-          isMatchingUrlHost(
-            activeTab.url,
-            Object.values(pageArchiveHosts).flat()
-          );
+        this.enableOpenCurrentDoc = isMatchingUrlHost(
+          activeTab.url,
+          Object.values(pageArchiveHosts).flat()
+        );
       }
 
-      this.setupPinnedButtons({maxPins: 3});
+      this.setupPinnedButtons({maxPins: this.maxPinnedToolbarButtons});
 
       this.theme = await getAppTheme(options.appTheme);
       document.addEventListener('themeChange', ev => {

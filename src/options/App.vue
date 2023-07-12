@@ -94,12 +94,6 @@
             v-model="options.showPageAction"
           ></vn-switch>
         </div>
-        <div class="option">
-          <vn-switch
-            :label="getText('optionTitle_openCurrentDocAction')"
-            v-model="options.openCurrentDocAction"
-          ></vn-switch>
-        </div>
       </div>
     </div>
 
@@ -228,7 +222,6 @@ export default {
         tabInBackgound: false,
         searchModeAction: '',
         showEngineIcons: false,
-        openCurrentDocAction: false,
         openCurrentDocContextMenu: false,
         appTheme: '',
         showContribPage: false

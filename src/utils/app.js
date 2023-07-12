@@ -8,7 +8,8 @@ import {
   getPlatform,
   getDayPrecisionEpoch,
   isAndroid,
-  getDarkColorSchemeQuery
+  getDarkColorSchemeQuery,
+  isValidTab
 } from 'utils/common';
 import {targetEnv, enableContributions} from 'utils/config';
 import {
@@ -161,10 +162,7 @@ function normalizeUrl(url) {
 }
 
 async function getOpenerTabId(openerTab) {
-  if (
-    openerTab.id !== browser.tabs.TAB_ID_NONE &&
-    !(await getPlatform()).isMobile
-  ) {
+  if (isValidTab(openerTab) && !(await getPlatform()).isMobile) {
     return openerTab.id;
   }
 

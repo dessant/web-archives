@@ -351,11 +351,6 @@
     "description": "Title of the option."
   },
 
-  "optionTitle_openCurrentDocAction": {
-    "message": "Open current page",
-    "description": "Title of the option."
-  },
-
   "optionSectionTitle_misc": {
     "message": "Miscellaneous",
     "description": "Title of the miscellaneous options section."
