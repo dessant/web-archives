@@ -64,6 +64,11 @@
     "description": "Name of the search engine."
   },
 
+  "engineName_permacc": {
+    "message": "Perma.cc",
+    "description": "Name of the search engine."
+  },
+
   "engineName_allEngines": {
     "message": "All search engines",
     "description": "Name of the search engine."
@@ -137,6 +142,11 @@
 
   "menuItemTitle_yahoo": {
     "message": "Yahoo",
+    "description": "Title of the menu item."
+  },
+
+  "menuItemTitle_permacc": {
+    "message": "Perma.cc",
     "description": "Title of the menu item."
   },
 
@@ -228,6 +238,11 @@
 
   "optionTitle_yahoo": {
     "message": "Yahoo Cache",
+    "description": "Title of the option."
+  },
+
+  "optionTitle_permacc": {
+    "message": "Perma.cc",
     "description": "Title of the option."
   },
 
@@ -482,7 +497,7 @@
   },
 
   "error_invalidPageUrl": {
-    "message": "The page URL is not valid. It must point to a HTTP(S) or FTP page.",
+    "message": "The page URL is not valid.",
     "description": "Error message."
   },
 
@@ -497,6 +512,11 @@
   },
 
   "error_sessionExpired": {
+    "message": "The session has expired.",
+    "description": "Error message."
+  },
+
+  "error_sessionExpiredEngine": {
     "message": "The session has expired. Try searching again for the page on $ENGINE$.",
     "description": "Error message.",
     "placeholders": {
@@ -516,6 +536,11 @@
         "example": "Google"
       }
     }
+  },
+
+  "error_noResults": {
+    "message": "No results found.",
+    "description": "Error message."
   },
 
   "error_scriptsNotAllowed": {
@@ -539,7 +564,7 @@
   },
 
   "error_currentDocUrlNotFound": {
-    "message": "No current page URL found.",
+    "message": "Current page URL not found.",
     "description": "Error message."
   }
 }

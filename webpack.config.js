@@ -60,6 +60,7 @@ module.exports = {
     background: './src/background/main.js',
     options: './src/options/main.js',
     action: './src/action/main.js',
+    search: './src/search/main.js',
     base: './src/base/main.js',
     tools: './src/tools/main.js',
     tab: './src/tab/main.js',
@@ -81,7 +82,9 @@ module.exports = {
         commonsUi: {
           name: 'commons-ui',
           chunks: chunk => {
-            return ['options', 'action', 'contribute'].includes(chunk.name);
+            return ['options', 'action', 'search', 'contribute'].includes(
+              chunk.name
+            );
           },
           minChunks: 2
         },

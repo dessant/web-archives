@@ -12,7 +12,8 @@
       "20221220055629_add_theme_support",
       "20230201232239_remove_search_engines",
       "20230703074609_remove_gigablast",
-      "20230704125533_remove_opencurrentdocaction"
+      "20230704125533_remove_opencurrentdocaction",
+      "20230713165504_add_perma.cc"
     ],
     "sync": []
   }

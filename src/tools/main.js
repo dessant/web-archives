@@ -47,6 +47,8 @@ function main() {
           )?.href;
         } else if (engine === 'yandex') {
           docUrl = document.querySelector('#yandex-cache-hdr > span > a')?.href;
+        } else if (engine === 'permacc') {
+          docUrl = document.querySelector('._livepage a')?.href;
         }
 
         break;

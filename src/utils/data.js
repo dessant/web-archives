@@ -17,6 +17,8 @@ const optionKeys = [
   'pinActionToolbarContribute'
 ];
 
+const searchUrl = browser.runtime.getURL('/src/search/index.html') + '?id={id}';
+
 const engines = {
   archiveOrg: {
     target: 'https://web.archive.org/web/{url}'
@@ -55,6 +57,10 @@ const engines = {
   yahoo: {
     target: 'https://search.yahoo.com/search?p=url:{url}',
     isExec: true
+  },
+  permacc: {
+    target: searchUrl,
+    isTaskId: true
   }
 };
 
@@ -116,7 +122,8 @@ const pageArchiveHosts = {
   ],
   google: ['webcache.googleusercontent.com'],
   bing: ['cc.bingj.com'],
-  yandex: ['yandexwebcache.net']
+  yandex: ['yandexwebcache.net'],
+  permacc: ['perma.cc', 'rejouer.perma.cc']
 };
 
 const linkArchiveHosts = {
@@ -131,7 +138,8 @@ const linkArchiveHosts = {
     'archive.md',
     'archiveiya74codqgiixo33q62qlrqtkgmcitqx5u2oeqnmn5bpcbiyd.onion'
   ],
-  google: ['webcache.googleusercontent.com']
+  google: ['webcache.googleusercontent.com'],
+  permacc: ['rejouer.perma.cc']
 };
 
 const linkArchiveUrlRx = {
@@ -139,7 +147,8 @@ const linkArchiveUrlRx = {
   archiveIs:
     /^https?:\/\/(?:archive\.(?:is|today|ph|vn|fo|li|md)|archiveiya74codqgiixo33q62qlrqtkgmcitqx5u2oeqnmn5bpcbiyd.onion)\/o\/.*?\/(.*)/i,
   google:
-    /^https?:\/\/webcache\.googleusercontent\.com\/search.*[?&]q=cache:.*$/i
+    /^https?:\/\/webcache\.googleusercontent\.com\/search.*[?&]q=cache:.*$/i,
+  permacc: /^https:\/\/rejouer\.perma\.cc\/(?:.*)\/mp_\/(.*)/i
 };
 
 const chromeDesktopUA =

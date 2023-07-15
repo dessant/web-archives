@@ -64,7 +64,7 @@ async function initSearch(searchFn, engine, taskId) {
       } else {
         await sendReceipt(storageIds);
 
-        showEngineError({errorId: 'error_sessionExpired', engine});
+        showEngineError({errorId: 'error_sessionExpiredEngine', engine});
       }
     } catch (err) {
       await sendReceipt(storageIds);
@@ -75,8 +75,34 @@ async function initSearch(searchFn, engine, taskId) {
       throw err;
     }
   } else {
-    showEngineError({errorId: 'error_sessionExpired', engine});
+    showEngineError({errorId: 'error_sessionExpiredEngine', engine});
   }
 }
 
-export {showEngineError, sendReceipt, initSearch};
+async function searchPermacc({session, search, doc} = {}) {
+  const rsp = await fetch(
+    `https://api.perma.cc/v1/public/archives/?format=json&limit=1&url=${encodeURIComponent(
+      doc.docUrl
+    )}`,
+    {
+      referrer: '',
+      mode: 'cors',
+      method: 'GET'
+    }
+  );
+
+  if (rsp.status !== 200) {
+    throw new Error(`API response: ${rsp.status}, ${await rsp.text()}`);
+  }
+
+  const response = await rsp.json();
+
+  const result = response.objects[0];
+  if (result) {
+    const tabUrl = `https://perma.cc/${result.guid}`;
+
+    return tabUrl;
+  }
+}
+
+export {showEngineError, sendReceipt, initSearch, searchPermacc};
