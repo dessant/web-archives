@@ -107,23 +107,17 @@ async function createMenu() {
   const options = await storage.get(optionKeys);
   const theme = await getAppTheme(options.appTheme);
 
-  const contexts = [
-    'audio',
-    'editable',
-    'frame',
-    'image',
-    'selection',
-    'video'
-  ];
-  if (env.isFirefox) {
-    contexts.push('password');
-  }
-  if (!env.isAndroid) {
-    contexts.push('page');
-  }
+  const contexts = ['link'];
+  if (options.showInContextMenu === 'all') {
+    contexts.push('audio', 'editable', 'frame', 'image', 'selection', 'video');
 
-  const documentUrlPatterns = ['http://*/*', 'https://*/*'];
-  const targetUrlPatterns = ['http://*/*', 'https://*/*'];
+    if (env.isFirefox) {
+      contexts.push('password');
+    }
+    if (!env.isAndroid) {
+      contexts.push('page');
+    }
+  }
 
   const setIcons = env.isFirefox && options.showEngineIcons;
   const searchAllEngines =
@@ -133,155 +127,76 @@ async function createMenu() {
 
   if (enEngines.length === 1) {
     const engine = enEngines[0];
-    const title = getText(
-      'mainMenuItemTitle_engine',
-      getText(`menuItemTitle_${engine}`)
-    );
-
-    if (options.showInContextMenu === 'all') {
-      createMenuItem({
-        id: `search_${engine}_1`,
-        title,
-        contexts,
-        documentUrlPatterns
-      });
-    }
 
     createMenuItem({
-      id: `search_${engine}_2`,
-      title,
-      contexts: ['link'],
-      targetUrlPatterns
+      id: `search_${enEngines[0]}_1`,
+      title: getText(
+        'mainMenuItemTitle_engine',
+        getText(`menuItemTitle_${engine}`)
+      ),
+      contexts
     });
   } else if (enEngines.length > 1 && searchAllEngines === 'main') {
-    const title = getText('mainMenuItemTitle_allEngines');
-
-    if (options.showInContextMenu === 'all') {
-      createMenuItem({
-        id: 'search_allEngines_1',
-        title,
-        contexts,
-        documentUrlPatterns
-      });
-    }
-
     createMenuItem({
-      id: 'search_allEngines_2',
-      title,
-      contexts: ['link'],
-      targetUrlPatterns
+      id: 'search_allEngines_1',
+      title: getText('mainMenuItemTitle_allEngines'),
+      contexts
     });
   } else if (enEngines.length > 1) {
     if (options.openCurrentDocContextMenu) {
-      if (options.showInContextMenu === 'all') {
-        const currentDocDocumentUrlPatterns = Object.values(pageArchiveHosts)
-          .map(hosts => hosts.map(host => `*://${host}/*`))
-          .flat();
-
-        createMenuItem({
-          id: 'openCurrentDoc_1',
-          title: getText('menuItemTitle_openCurrentDoc'),
-          contexts,
-          documentUrlPatterns: currentDocDocumentUrlPatterns
-        });
-
-        if (!env.isSamsung) {
-          // Samsung Internet: separator not visible, creates gap that responds to input.
-          createMenuItem({
-            id: 'sep_1',
-            contexts,
-            type: 'separator',
-            documentUrlPatterns: currentDocDocumentUrlPatterns
-          });
-        }
-      }
-
+      const currentDocDocumentUrlPatterns = Object.values(pageArchiveHosts)
+        .map(hosts => hosts.map(host => `*://${host}/*`))
+        .flat();
       const currentDocTargetUrlPatterns = Object.values(linkArchiveHosts)
         .map(hosts => hosts.map(host => `*://${host}/*`))
         .flat();
 
       createMenuItem({
-        id: 'openCurrentDoc_2',
+        id: 'openCurrentDoc_1',
         title: getText('menuItemTitle_openCurrentDoc'),
-        contexts: ['link'],
+        contexts,
+        documentUrlPatterns: currentDocDocumentUrlPatterns,
         targetUrlPatterns: currentDocTargetUrlPatterns
       });
 
       if (!env.isSamsung) {
         // Samsung Internet: separator not visible, creates gap that responds to input.
         createMenuItem({
-          id: 'sep_2',
-          contexts: ['link'],
+          id: 'sep_1',
+          contexts,
           type: 'separator',
+          documentUrlPatterns: currentDocDocumentUrlPatterns,
           targetUrlPatterns: currentDocTargetUrlPatterns
         });
       }
     }
 
     if (searchAllEngines === 'sub') {
-      const title = getText('menuItemTitle_allEngines');
-      const icons =
-        setIcons && getEngineMenuIcon('allEngines', {variant: theme});
-
-      if (options.showInContextMenu === 'all') {
-        createMenuItem({
-          id: 'search_allEngines_1',
-          title,
-          contexts,
-          documentUrlPatterns,
-          icons
-        });
-
-        if (!env.isSamsung) {
-          // Samsung Internet: separator not visible, creates gap that responds to input.
-          createMenuItem({
-            id: 'sep_3',
-            contexts,
-            type: 'separator',
-            documentUrlPatterns
-          });
-        }
-      }
-
       createMenuItem({
-        id: 'search_allEngines_2',
-        title,
-        contexts: ['link'],
-        targetUrlPatterns,
-        icons
+        id: 'search_allEngines_1',
+        title: getText('menuItemTitle_allEngines'),
+        contexts,
+
+        icons: setIcons && getEngineMenuIcon('allEngines', {variant: theme})
       });
 
       if (!env.isSamsung) {
         // Samsung Internet: separator not visible, creates gap that responds to input.
         createMenuItem({
-          id: 'sep_4',
-          contexts: ['link'],
-          type: 'separator',
-          targetUrlPatterns
+          id: 'sep_2',
+          contexts,
+          type: 'separator'
         });
       }
     }
 
     enEngines.forEach(function (engine) {
-      const title = getText(`menuItemTitle_${engine}`);
-      const icons = setIcons && getEngineMenuIcon(engine, {variant: theme});
-
-      if (options.showInContextMenu === 'all') {
-        createMenuItem({
-          id: `search_${engine}_1`,
-          title,
-          contexts,
-          documentUrlPatterns,
-          icons
-        });
-      }
-
       createMenuItem({
-        id: `search_${engine}_2`,
-        title,
-        contexts: ['link'],
-        targetUrlPatterns,
-        icons
+        id: `search_${engine}_1`,
+        title: getText(`menuItemTitle_${engine}`),
+        contexts,
+
+        icons: setIcons && getEngineMenuIcon(engine, {variant: theme})
       });
     });
   }
