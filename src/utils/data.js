@@ -61,6 +61,10 @@ const engines = {
   permacc: {
     target: searchUrl,
     isTaskId: true
+  },
+  ghostarchive: {
+    target: 'https://ghostarchive.org/search?term={url}',
+    isExec: true
   }
 };
 
@@ -76,7 +80,7 @@ const engineIconVariants = {
   yahoo: ['dark']
 };
 
-const rasterEngineIcons = [];
+const rasterEngineIcons = ['ghostarchive'];
 
 // prettier-ignore
 const errorCodes = [
@@ -123,7 +127,8 @@ const pageArchiveHosts = {
   google: ['webcache.googleusercontent.com'],
   bing: ['cc.bingj.com'],
   yandex: ['yandexwebcache.net'],
-  permacc: ['perma.cc', 'rejouer.perma.cc']
+  permacc: ['perma.cc', 'rejouer.perma.cc'],
+  ghostarchive: ['ghostarchive.org']
 };
 
 const linkArchiveHosts = {
@@ -139,7 +144,8 @@ const linkArchiveHosts = {
     'archiveiya74codqgiixo33q62qlrqtkgmcitqx5u2oeqnmn5bpcbiyd.onion'
   ],
   google: ['webcache.googleusercontent.com'],
-  permacc: ['rejouer.perma.cc']
+  permacc: ['rejouer.perma.cc'],
+  ghostarchive: ['ghostarchive.org']
 };
 
 const linkArchiveUrlRx = {
@@ -148,7 +154,8 @@ const linkArchiveUrlRx = {
     /^https?:\/\/(?:archive\.(?:is|today|ph|vn|fo|li|md)|archiveiya74codqgiixo33q62qlrqtkgmcitqx5u2oeqnmn5bpcbiyd.onion)\/o\/.*?\/(.*)/i,
   google:
     /^https?:\/\/webcache\.googleusercontent\.com\/search.*[?&]q=cache:.*$/i,
-  permacc: /^https:\/\/rejouer\.perma\.cc\/(?:.*)\/mp_\/(.*)/i
+  permacc: /^https:\/\/rejouer\.perma\.cc\/(?:.*)\/mp_\/(.*)/i,
+  ghostarchive: /^https:\/\/ghostarchive\.org\/(?:.*)\/mp_\/(.*)/i
 };
 
 const chromeDesktopUA =
