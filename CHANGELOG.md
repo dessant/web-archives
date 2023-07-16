@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.1.0](https://github.com/dessant/web-archives/compare/v4.0.0...v4.1.0) (2023-07-16)
+
+
+### Features
+
+* search on Ghostarchive ([22c674a](https://github.com/dessant/web-archives/commit/22c674a94d2f05c16b82a85b2a68e6c6672df6d7)), closes [#41](https://github.com/dessant/web-archives/issues/41)
+* search on Perma.cc ([09b5e43](https://github.com/dessant/web-archives/commit/09b5e43900890ce6227d82ca18ee03ed7ce48493)), closes [#8](https://github.com/dessant/web-archives/issues/8)
+
+
+### Bug Fixes
+
+* apply context menu visibility option ([6956486](https://github.com/dessant/web-archives/commit/69564862380fd0aedc7132b86d5b5855c626d8b0))
+* prevent duplicate context menu items ([df7c7ce](https://github.com/dessant/web-archives/commit/df7c7cee1d7ef10eeb859f463827044c564c587f))
+* remove Gigablast ([8f6b228](https://github.com/dessant/web-archives/commit/8f6b22869da1b1246fbac5afdd57829b75958e31))
+* update action toolbar ([f65a652](https://github.com/dessant/web-archives/commit/f65a652a69349fdb7f13aa84acb9bbf05851337e))
+* update dependencies ([de52216](https://github.com/dessant/web-archives/commit/de5221672a02cc410f20d31c9150b4a12968a521))
+* update Yandex search ([ecc38da](https://github.com/dessant/web-archives/commit/ecc38daec05efb6bacfadb46bb0fc11a9fb88132))
+
 ## [4.0.0](https://github.com/dessant/web-archives/compare/v3.1.0...v4.0.0) (2023-02-02)
 
 
