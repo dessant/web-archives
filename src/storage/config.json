@@ -14,7 +14,8 @@
       "20230703074609_remove_gigablast",
       "20230704125533_remove_opencurrentdocaction",
       "20230713165504_add_perma.cc",
-      "20230715152710_add_ghostarchive"
+      "20230715152710_add_ghostarchive",
+      "20230718120215_add_webcite"
     ],
     "sync": []
   }

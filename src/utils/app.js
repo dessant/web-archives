@@ -161,9 +161,13 @@ function normalizeUrl(url) {
   return parsedUrl.toString();
 }
 
-async function getOpenerTabId(openerTab) {
-  if (isValidTab(openerTab) && !(await getPlatform()).isMobile) {
-    return openerTab.id;
+async function getOpenerTabId({tab, tabId = null} = {}) {
+  if (!tab && tabId !== null) {
+    tab = await browser.tabs.get(tabId).catch(err => null);
+  }
+
+  if ((await isValidTab({tab})) && !(await getPlatform()).isMobile) {
+    return tab.id;
   }
 
   return null;
@@ -182,7 +186,7 @@ async function showPage({
   const props = {url, index: activeTab.index + 1, active: true, getTab};
 
   if (setOpenerTab) {
-    props.openerTabId = await getOpenerTabId(activeTab);
+    props.openerTabId = await getOpenerTabId({tab: activeTab});
   }
 
   return createTab(props);

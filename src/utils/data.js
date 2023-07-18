@@ -65,6 +65,9 @@ const engines = {
   ghostarchive: {
     target: 'https://ghostarchive.org/search?term={url}',
     isExec: true
+  },
+  webcite: {
+    target: 'https://webcitation.org/query?url={url}&date={date}'
   }
 };
 
@@ -77,7 +80,8 @@ const engineIconAlias = {
 const engineIconVariants = {
   archiveOrg: ['dark'],
   archiveIs: ['dark'],
-  yahoo: ['dark']
+  yahoo: ['dark'],
+  webcite: ['dark']
 };
 
 const rasterEngineIcons = ['ghostarchive'];
@@ -128,7 +132,8 @@ const pageArchiveHosts = {
   bing: ['cc.bingj.com'],
   yandex: ['yandexwebcache.net'],
   permacc: ['perma.cc', 'rejouer.perma.cc'],
-  ghostarchive: ['ghostarchive.org']
+  ghostarchive: ['ghostarchive.org'],
+  webcite: ['webcitation.org']
 };
 
 const linkArchiveHosts = {

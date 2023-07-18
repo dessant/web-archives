@@ -74,6 +74,11 @@
     "description": "Name of the search engine."
   },
 
+  "engineName_webcite": {
+    "message": "WebCite",
+    "description": "Name of the search engine."
+  },
+
   "engineName_allEngines": {
     "message": "All search engines",
     "description": "Name of the search engine."
@@ -157,6 +162,11 @@
 
   "menuItemTitle_ghostarchive": {
     "message": "Ghostarchive",
+    "description": "Title of the menu item."
+  },
+
+  "menuItemTitle_webcite": {
+    "message": "WebCite",
     "description": "Title of the menu item."
   },
 
@@ -258,6 +268,11 @@
 
   "optionTitle_ghostarchive": {
     "message": "Ghostarchive",
+    "description": "Title of the option."
+  },
+
+  "optionTitle_WebCite": {
+    "message": "WebCite",
     "description": "Title of the option."
   },
 

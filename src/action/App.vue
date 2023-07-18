@@ -404,7 +404,7 @@ export default {
       // Samsung Internet 18: tabs.getCurrent returns a tab
       // instead of undefined, and tab.id refers to a nonexistent tab.
       if (
-        isValidTab(currentTab) &&
+        (await isValidTab({tab: currentTab})) &&
         !this.$env.isSafari &&
         !this.$env.isSamsung
       ) {

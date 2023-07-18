@@ -281,6 +281,8 @@ async function getTabUrl(session, search, doc, taskId) {
       '{date}',
       date.toISOString().split('.')[0].replace(/[-T:]/g, '')
     );
+  } else if (engine === 'webcite') {
+    tabUrl = tabUrl.replace('{date}', new Date().toISOString().split('T')[0]);
   }
 
   tabUrl = tabUrl.replace(/{url}/g, url);
@@ -507,7 +509,7 @@ async function openCurrentDoc({linkUrl} = {}) {
 }
 
 async function onContextMenuItemClick(info, tab) {
-  if (targetEnv === 'samsung' && isValidTab(tab)) {
+  if (targetEnv === 'samsung' && (await isValidTab({tab}))) {
     // Samsung Internet 13: contextMenus.onClicked provides wrong tab index.
     tab = await browser.tabs.get(tab.id);
   }
@@ -540,7 +542,7 @@ async function onActionClick(session, docUrl) {
 }
 
 async function onActionButtonClick(tab) {
-  if (targetEnv === 'samsung' && isValidTab(tab)) {
+  if (targetEnv === 'samsung' && (await isValidTab({tab}))) {
     // Samsung Internet 13: browserAction.onClicked provides wrong tab index.
     tab = await browser.tabs.get(tab.id);
   }
@@ -762,7 +764,7 @@ async function processMessage(request, sender) {
       sender.tab = null;
     }
 
-    if (isValidTab(sender.tab)) {
+    if (await isValidTab({tab: sender.tab})) {
       // Samsung Internet 13: runtime.onMessage provides wrong tab index.
       sender.tab = await browser.tabs.get(sender.tab.id);
     }

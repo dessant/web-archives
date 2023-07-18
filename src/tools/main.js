@@ -51,6 +51,12 @@ function main() {
           docUrl = document.querySelector('._livepage a')?.href;
         } else if (engine === 'ghostarchive') {
           docUrl = document.querySelector('#searchInput')?.value;
+        } else if (engine === 'webcite') {
+          docUrl = document
+            .querySelector('frame[name="nav"]')
+            ?.contentDocument.querySelector(
+              'tr:first-child td:nth-child(2) a'
+            )?.href;
         }
 
         break;

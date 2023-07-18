@@ -394,7 +394,11 @@ function makeDocumentVisible() {
   script.remove();
 }
 
-function isValidTab(tab) {
+async function isValidTab({tab, tabId = null} = {}) {
+  if (!tab && tabId !== null) {
+    tab = await browser.tabs.get(tabId).catch(err => null);
+  }
+
   if (tab && tab.id !== browser.tabs.TAB_ID_NONE) {
     return true;
   }
