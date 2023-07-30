@@ -4,18 +4,28 @@
 <p align="center">
   </br></br>
   <a href="https://chrome.google.com/webstore/detail/web-archives/hkligngkgcpcolhcnkgccglchdafcnao">
-    <img height="58" src="https://i.imgur.com/K9Yh8G9.png" alt="Chrome Web Store"></a>
-  <a href="https://addons.mozilla.org/en-US/firefox/addon/view-page-archive/">
-    <img height="58" src="https://i.imgur.com/2jJOtTI.png" alt="Firefox add-ons"></a>
+    <picture>
+      <source srcset="https://i.imgur.com/XBIE9pk.png" media="(prefers-color-scheme: dark)">
+      <img height="58" src="https://i.imgur.com/oGxig2F.png" alt="Chrome Web Store"></picture></a>
+  <a href="https://addons.mozilla.org/firefox/addon/view-page-archive/">
+    <picture>
+      <source srcset="https://i.imgur.com/ZluoP7T.png" media="(prefers-color-scheme: dark)">
+      <img height="58" src="https://i.imgur.com/4PobQqE.png" alt="Firefox add-ons"></picture></a>
   <a href="https://microsoftedge.microsoft.com/addons/detail/web-archives/apcfghlggldjdjepjnahfdjgdcdekhda">
-    <img height="58" src="https://i.imgur.com/es2YFRA.png" alt="Microsoft Store"></a>
-  <a href="https://addons.opera.com/en/extensions/details/view-page-archive-cache/">
-    <img height="58" src="https://i.imgur.com/IYYsrwg.png" alt="Opera add-ons"></a>
+    <picture>
+      <source srcset="https://i.imgur.com/Jog9cQP.png" media="(prefers-color-scheme: dark)">
+      <img height="58" src="https://i.imgur.com/aiprUt8.png" alt="Microsoft Store"></picture></a>
+  <a href="https://addons.opera.com/extensions/details/view-page-archive-cache/">
+    <picture>
+      <source srcset="https://i.imgur.com/ziehy0f.png" media="(prefers-color-scheme: dark)">
+      <img height="58" src="https://i.imgur.com/ytVATu0.png" alt="Opera add-ons"></picture></a>
   </br></br>
 </p>
 <p align="center">
-  <a href="https://apps.apple.com/us/app/web-archives-for-safari/id1603181853">
-    <img height="58" src="https://i.imgur.com/JGvQ2Zc.png" alt="Mac App Store"></a>
+  <a href="https://apps.apple.com/us/app/web-archives-for-safari/id1603181853?platform=mac">
+    <picture>
+      <source srcset="https://i.imgur.com/A8NELAl.png" media="(prefers-color-scheme: dark)">
+      <img height="58" src="https://i.imgur.com/LC92P1Y.png" alt="Mac App Store"></picture></a>
   </br></br>
 </p>
 
