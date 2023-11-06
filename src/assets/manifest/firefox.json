@@ -10,7 +10,10 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "{d07ccf11-c0cd-4938-a265-2a4d6ad01189}",
-      "strict_min_version": "91.0"
+      "strict_min_version": "115.0"
+    },
+    "gecko_android": {
+      "strict_min_version": "115.0"
     }
   },
 
@@ -78,7 +81,8 @@
   },
 
   "background": {
-    "page": "src/background/index.html"
+    "page": "src/background/index.html",
+    "persistent": false
   },
 
   "content_scripts": [
