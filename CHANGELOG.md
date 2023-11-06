@@ -1,6 +1,26 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
+
+## [5.0.0](https://github.com/dessant/web-archives/compare/v4.1.0...v5.0.0) (2023-11-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* browser versions older than Firefox 115
+are no longer supported
+
+### Features
+
+* search on WebCite ([d4e653d](https://github.com/dessant/web-archives/commit/d4e653d60ca134db1c98fc833e41fd9dc7700712))
+* use non-persistent background page in Firefox ([b629343](https://github.com/dessant/web-archives/commit/b6293436ee811a710c792490a7f30505f629bc05))
+
+
+### Bug Fixes
+
+* improve new tab setup ([76f60b6](https://github.com/dessant/web-archives/commit/76f60b66a1a593aa7badc94607ab6b8df7c91488))
+* improve platform detection ([d65ec42](https://github.com/dessant/web-archives/commit/d65ec42675ac32f6861eace691aa3156d4fc19a1))
+* set initial browser action popup height in Safari ([f738727](https://github.com/dessant/web-archives/commit/f73872759da7b4484fab95aa333c868c49633fe5))
 
 ## [4.1.0](https://github.com/dessant/web-archives/compare/v4.0.0...v4.1.0) (2023-07-16)
 
