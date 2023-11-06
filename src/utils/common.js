@@ -1,5 +1,7 @@
 import {v4 as uuidv4} from 'uuid';
 
+import {isStorageArea} from 'storage/storage';
+import storage from 'storage/storage';
 import {targetEnv} from 'utils/config';
 
 function getText(messageName, substitutions) {
@@ -224,24 +226,61 @@ async function getActiveTab() {
   return tab;
 }
 
-async function getPlatform({fallback = true} = {}) {
-  let os, arch;
+let platformInfo;
+async function getPlatformInfo() {
+  if (platformInfo) {
+    return platformInfo;
+  }
 
-  if (targetEnv === 'samsung') {
-    // Samsung Internet 13: runtime.getPlatformInfo fails.
-    os = 'android';
-    arch = '';
+  const isSessionStorage = await isStorageArea({area: 'session'});
+
+  if (isSessionStorage) {
+    ({platformInfo} = await storage.get('platformInfo', {area: 'session'}));
   } else {
     try {
+      platformInfo = JSON.parse(window.sessionStorage.getItem('platformInfo'));
+    } catch (err) {}
+  }
+
+  if (!platformInfo) {
+    let os, arch;
+
+    if (targetEnv === 'samsung') {
+      // Samsung Internet 13: runtime.getPlatformInfo fails.
+      os = 'android';
+      arch = '';
+    } else if (targetEnv === 'safari') {
+      // Safari: runtime.getPlatformInfo returns 'ios' on iPadOS.
+      ({os, arch} = await browser.runtime.sendNativeMessage('application.id', {
+        id: 'getPlatformInfo'
+      }));
+    } else {
       ({os, arch} = await browser.runtime.getPlatformInfo());
-    } catch (err) {
-      if (fallback) {
-        ({os, arch} = await browser.runtime.sendMessage({id: 'getPlatform'}));
-      } else {
-        throw err;
-      }
+    }
+
+    platformInfo = {os, arch};
+
+    if (isSessionStorage) {
+      await storage.set({platformInfo}, {area: 'session'});
+    } else {
+      try {
+        window.sessionStorage.setItem(
+          'platformInfo',
+          JSON.stringify(platformInfo)
+        );
+      } catch (err) {}
     }
   }
+
+  return platformInfo;
+}
+
+async function getPlatform() {
+  if (!isBackgroundPageContext()) {
+    return browser.runtime.sendMessage({id: 'getPlatform'});
+  }
+
+  let {os, arch} = await getPlatformInfo();
 
   if (os === 'win') {
     os = 'windows';
@@ -249,16 +288,9 @@ async function getPlatform({fallback = true} = {}) {
     os = 'macos';
   }
 
-  if (
-    navigator.platform === 'MacIntel' &&
-    (os === 'ios' || typeof navigator.standalone !== 'undefined')
-  ) {
-    os = 'ipados';
-  }
-
-  if (arch === 'x86-32') {
+  if (['x86-32', 'i386'].includes(arch)) {
     arch = '386';
-  } else if (arch === 'x86-64') {
+  } else if (['x86-64', 'x86_64'].includes(arch)) {
     arch = 'amd64';
   } else if (arch.startsWith('arm')) {
     arch = 'arm';
@@ -274,11 +306,13 @@ async function getPlatform({fallback = true} = {}) {
   const isMobile = ['android', 'ios', 'ipados'].includes(os);
 
   const isChrome = targetEnv === 'chrome';
-  const isEdge = targetEnv === 'edge';
+  const isEdge =
+    ['chrome', 'edge'].includes(targetEnv) &&
+    /\sedg(?:e|a|ios)?\//i.test(navigator.userAgent);
   const isFirefox = targetEnv === 'firefox';
   const isOpera =
     ['chrome', 'opera'].includes(targetEnv) &&
-    / opr\//i.test(navigator.userAgent);
+    /\sopr\//i.test(navigator.userAgent);
   const isSafari = targetEnv === 'safari';
   const isSamsung = targetEnv === 'samsung';
 
@@ -303,13 +337,11 @@ async function getPlatform({fallback = true} = {}) {
 }
 
 async function isAndroid() {
-  const {os} = await getPlatform();
-  return os === 'android';
+  return (await getPlatform()).isAndroid;
 }
 
 async function isMobile() {
-  const {os} = await getPlatform();
-  return ['android', 'ios', 'ipados'].includes(os);
+  return (await getPlatform()).isMobile;
 }
 
 function getDarkColorSchemeQuery() {
@@ -441,6 +473,13 @@ async function isValidTab({tab, tabId = null} = {}) {
   }
 }
 
+function isBackgroundPageContext() {
+  return (
+    window.location.href ===
+    browser.runtime.getURL('/src/background/index.html')
+  );
+}
+
 export {
   onComplete,
   getText,
@@ -461,5 +500,6 @@ export {
   sleep,
   waitForDocumentLoad,
   makeDocumentVisible,
-  isValidTab
+  isValidTab,
+  isBackgroundPageContext
 };

@@ -797,7 +797,7 @@ async function processMessage(request, sender) {
       type: request.type
     });
   } else if (request.id === 'getPlatform') {
-    return getPlatform({fallback: false});
+    return getPlatform();
   } else if (request.id === 'storageRequest') {
     const data = await registry.getStorageItem({
       storageId: request.storageId,
