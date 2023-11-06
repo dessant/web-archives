@@ -705,8 +705,11 @@ body {
   max-height: 100px;
   padding-top: 8px;
   padding-bottom: 24px;
-  transition: max-height 0.3s ease, padding-top 0.3s ease,
-    padding-bottom 0.3s ease, opacity 0.2s ease;
+  transition:
+    max-height 0.3s ease,
+    padding-top 0.3s ease,
+    padding-bottom 0.3s ease,
+    opacity 0.2s ease;
 }
 
 .settings-enter-from,
@@ -756,6 +759,14 @@ html.firefox.android {
 html.samsung {
   & .v-application__wrap {
     height: initial;
+  }
+}
+
+// Safari 17: the popover opens after a delay the first time the action
+// button is clicked on macOS 14, unless the height is declared.
+@if $target-env == 'safari' {
+  html {
+    min-height: 56px;
   }
 }
 </style>
