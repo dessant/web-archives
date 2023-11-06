@@ -369,56 +369,35 @@ async function searchEngine(session, search, doc, docId, tabActive) {
   }
 
   const token = uuidv4();
-
-  const tab = await createTab({
-    token,
-    index: session.sourceTabIndex,
-    active: tabActive,
-    getTab: true
-  });
-  const tabId = tab.id;
-
-  if (search.sendsReceipt) {
-    await registry.addTaskRegistryItem({taskId, tabId});
-  }
+  const beaconToken = targetEnv === 'samsung' ? uuidv4() : '';
 
   const tabUrl = await getTabUrl(session, search, doc, taskId);
 
-  await setupNewEngineTab(tabId, tabUrl, token, search.engine);
-}
+  const setupSteps = [];
 
-async function setupNewEngineTab(tabId, tabUrl, token, engine) {
-  let beaconToken;
-  const userAgent = await getRequiredUserAgent(engine);
+  const userAgent = await getRequiredUserAgent(search.engine);
   if (userAgent) {
-    if (targetEnv === 'samsung') {
-      // Samsung Internet 13: webRequest listener filtering by tab ID
-      // provided by tabs.createTab returns requests from different tab.
-      beaconToken = uuidv4();
-
-      function requestCallback(details) {
-        removeCallback();
-        setUserAgentHeader(details.tabId, userAgent);
-      }
-
-      const removeCallback = function () {
-        window.clearTimeout(timeoutId);
-        browser.webRequest.onBeforeRequest.removeListener(requestCallback);
-      };
-      const timeoutId = window.setTimeout(removeCallback, 10000); // 10 seconds
-
-      browser.webRequest.onBeforeRequest.addListener(
-        requestCallback,
-        {
-          urls: [getNewTabUrl(beaconToken)],
-          types: ['main_frame']
-        },
-        ['blocking']
-      );
-    } else {
-      setUserAgentHeader(tabId, userAgent);
-    }
+    setupSteps.push({id: 'setUserAgent', tabUrl, userAgent, beaconToken});
   }
+
+  if (search.sendsReceipt) {
+    setupSteps.push({id: 'addTask', taskId});
+  }
+
+  const storageItem = {
+    tabUrl: beaconToken ? getNewTabUrl(beaconToken) : tabUrl,
+    keepHistory: false
+  };
+
+  if (setupSteps.length) {
+    storageItem.setupSteps = setupSteps;
+  }
+
+  await registry.addStorageItem(storageItem, {
+    receipts: {expected: 1, received: 0},
+    expiryTime: 1.0,
+    token
+  });
 
   if (beaconToken) {
     await registry.addStorageItem(
@@ -431,31 +410,66 @@ async function setupNewEngineTab(tabId, tabUrl, token, engine) {
     );
   }
 
-  await registry.addStorageItem(
-    {
-      tabUrl: beaconToken ? getNewTabUrl(beaconToken) : tabUrl,
-      keepHistory: false
-    },
-    {
-      receipts: {expected: 1, received: 0},
-      expiryTime: 1.0,
-      token
-    }
-  );
+  await createTab({token, index: session.sourceTabIndex, active: tabActive});
+}
 
-  if (targetEnv === 'safari') {
-    browser.runtime
-      .sendMessage({id: 'setTabLocation', token})
-      .catch(err => null);
+async function setupTab(sender, steps) {
+  const results = {};
+
+  for (const step of steps) {
+    if (step.id === 'setUserAgent') {
+      await setTabUserAgent({
+        tabId: sender.tab.id,
+        tabUrl: step.tabUrl,
+        userAgent: step.userAgent,
+        beaconToken: step.beaconToken
+      });
+
+      results[step.id] = '';
+    } else if (step.id === 'addTask') {
+      await registry.addTaskRegistryItem({
+        taskId: step.taskId,
+        tabId: sender.tab.id
+      });
+
+      results[step.id] = '';
+    }
+  }
+
+  return results;
+}
+
+async function setTabUserAgent({tabId, tabUrl, userAgent, beaconToken} = {}) {
+  if (targetEnv === 'samsung') {
+    // Samsung Internet 13: webRequest listener filtering by tab ID
+    // provided by tabs.createTab returns requests from different tab.
+
+    function requestCallback(details) {
+      removeCallback();
+      setUserAgentHeader(details.tabId, userAgent);
+    }
+
+    const removeCallback = function () {
+      window.clearTimeout(timeoutId);
+      browser.webRequest.onBeforeRequest.removeListener(requestCallback);
+    };
+    const timeoutId = window.setTimeout(removeCallback, 10000); // 10 seconds
+
+    browser.webRequest.onBeforeRequest.addListener(
+      requestCallback,
+      {
+        urls: [getNewTabUrl(beaconToken)],
+        types: ['main_frame']
+      },
+      ['blocking']
+    );
   } else {
-    browser.tabs
-      .sendMessage(tabId, {id: 'setTabLocation', token}, {frameId: 0})
-      .catch(err => null);
+    setUserAgentHeader(tabId, userAgent);
   }
 }
 
 async function getRequiredUserAgent(engine) {
-  if (await isAndroid()) {
+  if (await isMobile()) {
     // Google only works with a Chrome user agent on Firefox for Android,
     // while other search engines may need a desktop user agent.
     if (targetEnv === 'firefox' && ['google', 'googleText'].includes(engine)) {
@@ -818,6 +832,8 @@ async function processMessage(request, sender) {
     await onOptionChange();
   } else if (request.id === 'showPage') {
     await showPage({url: request.url});
+  } else if (request.id === 'setupTab') {
+    return setupTab(sender, request.steps);
   }
 }
 
