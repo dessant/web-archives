@@ -80,6 +80,46 @@ function executeFile(file, tabId, frameId = 0, runAt = 'document_start') {
   });
 }
 
+function executeCodeMainContext(
+  string,
+  {nonce = '', onLoadCallback = null} = {}
+) {
+  const script = document.createElement('script');
+  if (nonce) {
+    script.nonce = nonce;
+  }
+
+  script.textContent = string;
+  document.documentElement.appendChild(script);
+
+  script.remove();
+
+  if (onLoadCallback) {
+    onLoadCallback();
+  }
+}
+
+function executeFileMainContext(
+  file,
+  {nonce = '', onLoadCallback = null} = {}
+) {
+  const script = document.createElement('script');
+  if (nonce) {
+    script.nonce = nonce;
+  }
+
+  script.onload = function (ev) {
+    ev.target.remove();
+
+    if (onLoadCallback) {
+      onLoadCallback();
+    }
+  };
+
+  script.src = file;
+  document.documentElement.appendChild(script);
+}
+
 function findNode(
   selector,
   {
@@ -388,10 +428,7 @@ function makeDocumentVisible() {
     capture: true
   });
 
-  const script = document.createElement('script');
-  script.textContent = `(${patchContext.toString()})("${eventName}")`;
-  document.documentElement.appendChild(script);
-  script.remove();
+  executeCodeMainContext(`(${patchContext.toString()})("${eventName}")`);
 }
 
 async function isValidTab({tab, tabId = null} = {}) {
@@ -411,6 +448,8 @@ export {
   getNewTabUrl,
   executeCode,
   executeFile,
+  executeCodeMainContext,
+  executeFileMainContext,
   isAndroid,
   isMobile,
   getDarkColorSchemeQuery,

@@ -1,6 +1,10 @@
 import {v4 as uuidv4} from 'uuid';
 
-import {findNode, makeDocumentVisible} from 'utils/common';
+import {
+  findNode,
+  makeDocumentVisible,
+  executeCodeMainContext
+} from 'utils/common';
 import {initSearch, sendReceipt} from 'utils/engines';
 import {targetEnv} from 'utils/config';
 
@@ -62,16 +66,16 @@ async function search({session, search, doc, storageIds}) {
       checkService();
     }
 
-    const script = document.createElement('script');
+    let nonce = '';
     if (['firefox', 'safari'].includes(targetEnv)) {
       const nonceNode = document.querySelector('script[nonce]');
       if (nonceNode) {
-        script.nonce = nonceNode.nonce;
+        nonce = nonceNode.nonce;
       }
     }
-    script.textContent = `(${serviceObserver.toString()})("${eventName}")`;
-    document.documentElement.appendChild(script);
-    script.remove();
+    executeCodeMainContext(`(${serviceObserver.toString()})("${eventName}")`, {
+      nonce
+    });
   });
 
   if (results) {
