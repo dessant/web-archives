@@ -3,10 +3,10 @@ import {v4 as uuidv4} from 'uuid';
 import {
   findNode,
   makeDocumentVisible,
-  executeCodeMainContext
+  executeScriptMainContext,
+  sleep
 } from 'utils/common';
 import {initSearch, sendReceipt} from 'utils/engines';
-import {targetEnv} from 'utils/config';
 
 const engine = 'yandex';
 
@@ -47,36 +47,12 @@ async function search({session, search, doc, storageIds}) {
       once: true
     });
 
-    function serviceObserver(eventName) {
-      let stop;
-
-      const checkService = function () {
-        if (window.Ya?.reactBus?.e['extralinks-popup:open']?.length >= 2) {
-          window.clearTimeout(timeoutId);
-          document.dispatchEvent(new Event(eventName));
-        } else if (!stop) {
-          window.setTimeout(checkService, 200);
-        }
-      };
-
-      const timeoutId = window.setTimeout(function () {
-        stop = true;
-      }, 60000); // 1 minute
-
-      checkService();
-    }
-
-    let nonce = '';
-    if (['firefox', 'safari'].includes(targetEnv)) {
-      const nonceNode = document.querySelector('script[nonce]');
-      if (nonceNode) {
-        nonce = nonceNode.nonce;
-      }
-    }
-    executeCodeMainContext(`(${serviceObserver.toString()})("${eventName}")`, {
-      nonce
+    executeScriptMainContext({
+      func: 'yandexServiceObserver',
+      args: [eventName]
     });
   });
+  await sleep(1000);
 
   if (results) {
     const nodes = document.querySelectorAll(

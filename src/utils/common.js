@@ -1,21 +1,131 @@
 import {v4 as uuidv4} from 'uuid';
 
-import {isStorageArea} from 'storage/storage';
 import storage from 'storage/storage';
-import {targetEnv} from 'utils/config';
+import {getScriptFunction} from 'utils/scripts';
+import {targetEnv, mv3} from 'utils/config';
 
 function getText(messageName, substitutions) {
   return browser.i18n.getMessage(messageName, substitutions);
 }
 
-function onComplete() {
-  if (browser.runtime.lastError) {
-    console.log(`Error: ${browser.runtime.lastError}`);
+async function executeScript({
+  files = null,
+  func = null,
+  args = null,
+  tabId = null,
+  frameIds = [0],
+  allFrames = false,
+  world = 'ISOLATED',
+  injectImmediately = true,
+  unwrapResults = true,
+
+  code = ''
+}) {
+  if (mv3) {
+    const params = {target: {tabId, allFrames}, world};
+
+    if (!allFrames) {
+      params.target.frameIds = frameIds;
+    }
+
+    if (files) {
+      params.files = files;
+    } else {
+      params.func = func;
+
+      if (args) {
+        params.args = args;
+      }
+    }
+
+    if (targetEnv !== 'safari') {
+      params.injectImmediately = injectImmediately;
+    }
+
+    const results = await browser.scripting.executeScript(params);
+
+    if (unwrapResults) {
+      return results.map(item => item.result);
+    } else {
+      return results;
+    }
+  } else {
+    const params = {frameId: frameIds[0]};
+
+    if (files) {
+      params.file = files[0];
+    } else {
+      params.code = code;
+    }
+
+    if (injectImmediately) {
+      params.runAt = 'document_start';
+    }
+
+    return browser.tabs.executeScript(tabId, params);
   }
 }
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+function executeScriptMainContext({
+  files = null,
+  func = null,
+  args = null,
+  allFrames = false,
+  injectImmediately = true,
+
+  onLoadCallback = null,
+  setNonce = true
+} = {}) {
+  // Must be called from a content script, `args[0]` must be a trusted string in MV2.
+  if (mv3) {
+    return browser.runtime.sendMessage({
+      id: 'executeScript',
+      setSenderTabId: true,
+      setSenderFrameId: true,
+      params: {files, func, args, allFrames, world: 'MAIN', injectImmediately}
+    });
+  } else {
+    if (allFrames) {
+      throw new Error('Executing code in all frames is not supported in MV2.');
+    }
+
+    let nonce;
+    if (setNonce && ['firefox', 'safari'].includes(targetEnv)) {
+      const nonceNode = document.querySelector('script[nonce]');
+      if (nonceNode) {
+        nonce = nonceNode.nonce;
+      }
+    }
+
+    const script = document.createElement('script');
+    if (nonce) {
+      script.nonce = nonce;
+    }
+
+    if (files) {
+      script.onload = function (ev) {
+        ev.target.remove();
+
+        if (onLoadCallback) {
+          onLoadCallback();
+        }
+      };
+
+      script.src = files[0];
+      document.documentElement.appendChild(script);
+    } else {
+      const string = `(${getScriptFunction(func).toString()})${args ? `("${args[0]}")` : '()'}`;
+
+      script.textContent = string;
+      document.documentElement.appendChild(script);
+
+      script.remove();
+
+      if (onLoadCallback) {
+        onLoadCallback();
+      }
+    }
+  }
 }
 
 async function createTab({
@@ -66,158 +176,6 @@ function getNewTabUrl(token) {
   return `${browser.runtime.getURL('/src/tab/index.html')}?id=${token}`;
 }
 
-function executeCode(string, tabId, frameId = 0, runAt = 'document_start') {
-  return browser.tabs.executeScript(tabId, {
-    frameId: frameId,
-    runAt: runAt,
-    code: string
-  });
-}
-
-function executeFile(file, tabId, frameId = 0, runAt = 'document_start') {
-  return browser.tabs.executeScript(tabId, {
-    frameId: frameId,
-    runAt: runAt,
-    file: file
-  });
-}
-
-function executeCodeMainContext(
-  string,
-  {nonce = '', onLoadCallback = null} = {}
-) {
-  const script = document.createElement('script');
-  if (nonce) {
-    script.nonce = nonce;
-  }
-
-  script.textContent = string;
-  document.documentElement.appendChild(script);
-
-  script.remove();
-
-  if (onLoadCallback) {
-    onLoadCallback();
-  }
-}
-
-function executeFileMainContext(
-  file,
-  {nonce = '', onLoadCallback = null} = {}
-) {
-  const script = document.createElement('script');
-  if (nonce) {
-    script.nonce = nonce;
-  }
-
-  script.onload = function (ev) {
-    ev.target.remove();
-
-    if (onLoadCallback) {
-      onLoadCallback();
-    }
-  };
-
-  script.src = file;
-  document.documentElement.appendChild(script);
-}
-
-function findNode(
-  selector,
-  {
-    timeout = 60000,
-    throwError = true,
-    observerOptions = null,
-    rootNode = null
-  } = {}
-) {
-  return new Promise((resolve, reject) => {
-    rootNode = rootNode || document;
-
-    const el = rootNode.querySelector(selector);
-    if (el) {
-      resolve(el);
-      return;
-    }
-
-    const observer = new MutationObserver(function (mutations, obs) {
-      const el = rootNode.querySelector(selector);
-      if (el) {
-        obs.disconnect();
-        window.clearTimeout(timeoutId);
-        resolve(el);
-      }
-    });
-
-    const options = {
-      childList: true,
-      subtree: true
-    };
-    if (observerOptions) {
-      Object.assign(options, observerOptions);
-    }
-
-    observer.observe(rootNode, options);
-
-    const timeoutId = window.setTimeout(function () {
-      observer.disconnect();
-
-      if (throwError) {
-        reject(new Error(`DOM node not found: ${selector}`));
-      } else {
-        resolve();
-      }
-    }, timeout);
-  });
-}
-
-async function processNode(
-  selector,
-  actionFn,
-  {
-    timeout = 60000,
-    throwError = true,
-    observerOptions = null,
-    rootNode = null,
-    reprocess = false
-  } = {}
-) {
-  rootNode = rootNode || document;
-
-  let node = await findNode(selector, {
-    timeout,
-    throwError,
-    observerOptions,
-    rootNode
-  });
-
-  if (reprocess) {
-    const observer = new MutationObserver(function (mutations, obs) {
-      const el = rootNode.querySelector(selector);
-      if (el && !el.isSameNode(node)) {
-        node = el;
-        actionFn(node);
-      }
-    });
-
-    const options = {
-      childList: true,
-      subtree: true
-    };
-    if (observerOptions) {
-      Object.assign(options, observerOptions);
-    }
-
-    observer.observe(rootNode, options);
-
-    window.setTimeout(function () {
-      observer.disconnect();
-    }, timeout);
-  }
-
-  return actionFn(node);
-}
-
 async function getActiveTab() {
   const [tab] = await browser.tabs.query({
     lastFocusedWindow: true,
@@ -226,15 +184,23 @@ async function getActiveTab() {
   return tab;
 }
 
+async function isValidTab({tab, tabId = null} = {}) {
+  if (!tab && tabId !== null) {
+    tab = await browser.tabs.get(tabId).catch(err => null);
+  }
+
+  if (tab && tab.id !== browser.tabs.TAB_ID_NONE) {
+    return true;
+  }
+}
+
 let platformInfo;
 async function getPlatformInfo() {
   if (platformInfo) {
     return platformInfo;
   }
 
-  const isSessionStorage = await isStorageArea({area: 'session'});
-
-  if (isSessionStorage) {
+  if (mv3) {
     ({platformInfo} = await storage.get('platformInfo', {area: 'session'}));
   } else {
     try {
@@ -260,7 +226,7 @@ async function getPlatformInfo() {
 
     platformInfo = {os, arch};
 
-    if (isSessionStorage) {
+    if (mv3) {
       await storage.set({platformInfo}, {area: 'session'});
     } else {
       try {
@@ -356,6 +322,136 @@ function getDayPrecisionEpoch(epoch) {
   return epoch - (epoch % 86400000);
 }
 
+function isBackgroundPageContext() {
+  const backgroundUrl = mv3
+    ? browser.runtime.getURL('/src/background/script.js')
+    : browser.runtime.getURL('/src/background/index.html');
+
+  return self.location.href === backgroundUrl;
+}
+
+function querySelectorXpath(selector, {rootNode = null} = {}) {
+  rootNode = rootNode || document;
+
+  return document.evaluate(
+    selector,
+    rootNode,
+    null,
+    XPathResult.FIRST_ORDERED_NODE_TYPE,
+    null
+  ).singleNodeValue;
+}
+
+function nodeQuerySelector(
+  selector,
+  {rootNode = null, selectorType = 'css'} = {}
+) {
+  rootNode = rootNode || document;
+
+  return selectorType === 'css'
+    ? rootNode.querySelector(selector)
+    : querySelectorXpath(selector, {rootNode});
+}
+
+function findNode(
+  selector,
+  {
+    timeout = 60000,
+    throwError = true,
+    observerOptions = null,
+    rootNode = null,
+    selectorType = 'css'
+  } = {}
+) {
+  return new Promise((resolve, reject) => {
+    rootNode = rootNode || document;
+
+    const el = nodeQuerySelector(selector, {rootNode, selectorType});
+    if (el) {
+      resolve(el);
+      return;
+    }
+
+    const observer = new MutationObserver(function (mutations, obs) {
+      const el = nodeQuerySelector(selector, {rootNode, selectorType});
+      if (el) {
+        obs.disconnect();
+        window.clearTimeout(timeoutId);
+        resolve(el);
+      }
+    });
+
+    const options = {
+      childList: true,
+      subtree: true
+    };
+    if (observerOptions) {
+      Object.assign(options, observerOptions);
+    }
+
+    observer.observe(rootNode, options);
+
+    const timeoutId = window.setTimeout(function () {
+      observer.disconnect();
+
+      if (throwError) {
+        reject(new Error(`DOM node not found: ${selector}`));
+      } else {
+        resolve();
+      }
+    }, timeout);
+  });
+}
+
+async function processNode(
+  selector,
+  actionFn,
+  {
+    timeout = 60000,
+    throwError = true,
+    observerOptions = null,
+    rootNode = null,
+    selectorType = 'css',
+    reprocess = false
+  } = {}
+) {
+  rootNode = rootNode || document;
+
+  let node = await findNode(selector, {
+    timeout,
+    throwError,
+    observerOptions,
+    rootNode,
+    selectorType
+  });
+
+  if (reprocess) {
+    const observer = new MutationObserver(function (mutations, obs) {
+      const el = nodeQuerySelector(selector, {rootNode, selectorType});
+      if (el && !el.isSameNode(node)) {
+        node = el;
+        actionFn(node);
+      }
+    });
+
+    const options = {
+      childList: true,
+      subtree: true
+    };
+    if (observerOptions) {
+      Object.assign(options, observerOptions);
+    }
+
+    observer.observe(rootNode, options);
+
+    window.setTimeout(function () {
+      observer.disconnect();
+    }, timeout);
+  }
+
+  return actionFn(node);
+}
+
 function waitForDocumentLoad() {
   return new Promise(resolve => {
     function checkState() {
@@ -378,76 +474,6 @@ function makeDocumentVisible() {
     self.documentVisibleModule = true;
   }
 
-  function patchContext(eventName) {
-    let visibilityState = document.visibilityState;
-
-    function updateVisibilityState(ev) {
-      visibilityState = ev.detail;
-    }
-
-    document.addEventListener(eventName, updateVisibilityState, {
-      capture: true
-    });
-
-    let lastCallTime = 0;
-    window.requestAnimationFrame = new Proxy(window.requestAnimationFrame, {
-      apply(target, thisArg, argumentsList) {
-        if (visibilityState === 'visible') {
-          return Reflect.apply(target, thisArg, argumentsList);
-        } else {
-          const currentTime = Date.now();
-          const callDelay = Math.max(0, 16 - (currentTime - lastCallTime));
-
-          lastCallTime = currentTime + callDelay;
-
-          const timeoutId = window.setTimeout(function () {
-            argumentsList[0](performance.now());
-          }, callDelay);
-
-          return timeoutId;
-        }
-      }
-    });
-
-    window.cancelAnimationFrame = new Proxy(window.cancelAnimationFrame, {
-      apply(target, thisArg, argumentsList) {
-        if (visibilityState === 'visible') {
-          return Reflect.apply(target, thisArg, argumentsList);
-        } else {
-          window.clearTimeout(argumentsList[0]);
-        }
-      }
-    });
-
-    Object.defineProperty(document, 'visibilityState', {
-      get() {
-        return 'visible';
-      }
-    });
-
-    Object.defineProperty(document, 'hidden', {
-      get() {
-        return false;
-      }
-    });
-
-    Document.prototype.hasFocus = function () {
-      return true;
-    };
-
-    function stopEvent(ev) {
-      ev.preventDefault();
-      ev.stopImmediatePropagation();
-    }
-
-    window.addEventListener('pagehide', stopEvent, {capture: true});
-    window.addEventListener('blur', stopEvent, {capture: true});
-
-    document.dispatchEvent(new Event('visibilitychange'));
-    window.dispatchEvent(new PageTransitionEvent('pageshow'));
-    window.dispatchEvent(new FocusEvent('focus'));
-  }
-
   const eventName = uuidv4();
 
   function dispatchVisibilityState() {
@@ -460,46 +486,48 @@ function makeDocumentVisible() {
     capture: true
   });
 
-  executeCodeMainContext(`(${patchContext.toString()})("${eventName}")`);
+  executeScriptMainContext({func: 'makeDocumentVisible', args: [eventName]});
 }
 
-async function isValidTab({tab, tabId = null} = {}) {
-  if (!tab && tabId !== null) {
-    tab = await browser.tabs.get(tabId).catch(err => null);
-  }
+function runOnce(name, func) {
+  name = `${name}Run`;
 
-  if (tab && tab.id !== browser.tabs.TAB_ID_NONE) {
-    return true;
+  if (!self[name]) {
+    self[name] = true;
+
+    if (!func) {
+      return true;
+    }
+
+    return func();
   }
 }
 
-function isBackgroundPageContext() {
-  return (
-    window.location.href ===
-    browser.runtime.getURL('/src/background/index.html')
-  );
+function sleep(ms) {
+  return new Promise(resolve => self.setTimeout(resolve, ms));
 }
 
 export {
-  onComplete,
   getText,
+  executeScript,
+  executeScriptMainContext,
   createTab,
   getNewTabUrl,
-  executeCode,
-  executeFile,
-  executeCodeMainContext,
-  executeFileMainContext,
+  getActiveTab,
+  isValidTab,
+  getPlatformInfo,
+  getPlatform,
   isAndroid,
   isMobile,
   getDarkColorSchemeQuery,
   getDayPrecisionEpoch,
+  isBackgroundPageContext,
+  querySelectorXpath,
+  nodeQuerySelector,
   findNode,
   processNode,
-  getActiveTab,
-  getPlatform,
-  sleep,
   waitForDocumentLoad,
   makeDocumentVisible,
-  isValidTab,
-  isBackgroundPageContext
+  runOnce,
+  sleep
 };

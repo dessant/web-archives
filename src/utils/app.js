@@ -3,15 +3,22 @@ import {difference} from 'lodash-es';
 import storage from 'storage/storage';
 import {
   getText,
+  executeScript,
   createTab,
   getActiveTab,
+  isValidTab,
   getPlatform,
-  getDayPrecisionEpoch,
   isAndroid,
-  getDarkColorSchemeQuery,
-  isValidTab
+  getDayPrecisionEpoch,
+  getDarkColorSchemeQuery
 } from 'utils/common';
-import {targetEnv, enableContributions} from 'utils/config';
+import {
+  targetEnv,
+  enableContributions,
+  storageRevisions,
+  appVersion,
+  mv3
+} from 'utils/config';
 import {
   engines,
   rasterEngineIcons,
@@ -74,7 +81,7 @@ async function showNotification({
     );
 
     if (timeout) {
-      window.setTimeout(() => {
+      self.setTimeout(() => {
         browser.notifications.clear(notification);
       }, timeout);
     }
@@ -107,19 +114,59 @@ function getListItems(data, {scope = '', shortScope = ''} = {}) {
   return results;
 }
 
-async function loadFonts(fonts) {
-  await Promise.allSettled(fonts.map(font => document.fonts.load(font)));
+async function hasModule({tabId, frameId = 0, module, insert = false} = {}) {
+  try {
+    const [isModule] = await executeScript({
+      func: name => typeof self[`${name}Module`] !== 'undefined',
+      args: [module],
+      code: `typeof ${module}Module !== 'undefined'`,
+      tabId,
+      frameIds: [frameId]
+    });
+
+    if (!isModule && insert) {
+      await executeScript({
+        files: [`/src/${module}/script.js`],
+        tabId,
+        frameIds: [frameId]
+      });
+    }
+
+    if (isModule || insert) {
+      return true;
+    }
+  } catch (err) {}
+
+  return false;
 }
 
-async function configApp(app) {
-  const platform = await getPlatform();
-
-  const classes = [platform.targetEnv, platform.os];
-  document.documentElement.classList.add(...classes);
-
-  if (app) {
-    app.config.globalProperties.$env = platform;
+async function insertBaseModule({activeTab = false} = {}) {
+  const tabs = [];
+  if (activeTab) {
+    const tab = await getActiveTab();
+    if (tab) {
+      tabs.push(tab);
+    }
+  } else {
+    tabs.push(
+      ...(await browser.tabs.query({
+        url: ['http://*/*', 'https://*/*'],
+        windowType: 'normal'
+      }))
+    );
   }
+
+  for (const tab of tabs) {
+    executeScript({
+      files: ['/src/base/script.js'],
+      tabId: tab.id,
+      allFrames: false
+    });
+  }
+}
+
+async function loadFonts(fonts) {
+  await Promise.allSettled(fonts.map(font => document.fonts.load(font)));
 }
 
 function processMessageResponse(response, sendResponse) {
@@ -138,27 +185,46 @@ function processMessageResponse(response, sendResponse) {
   }
 }
 
-function validateUrl(url) {
-  try {
-    if (url.length > 2048) {
-      return;
-    }
+async function configApp(app) {
+  const platform = await getPlatform();
 
-    const parsedUrl = new URL(url);
+  const classes = [platform.targetEnv, platform.os];
+  document.documentElement.classList.add(...classes);
 
-    if (/^(?:https?|ftp):$/i.test(parsedUrl.protocol)) {
-      return true;
-    }
-  } catch (err) {}
+  if (app) {
+    app.config.globalProperties.$env = platform;
+  }
 }
 
-function normalizeUrl(url) {
-  const parsedUrl = new URL(url);
-  if (parsedUrl.hash) {
-    parsedUrl.hash = '';
+async function getAppTheme(theme) {
+  if (!theme) {
+    ({appTheme: theme} = await storage.get('appTheme'));
   }
 
-  return parsedUrl.toString();
+  if (theme === 'auto') {
+    theme = getDarkColorSchemeQuery().matches ? 'dark' : 'light';
+  }
+
+  return theme;
+}
+
+function addSystemThemeListener(callback) {
+  getDarkColorSchemeQuery().addEventListener('change', function () {
+    callback();
+  });
+}
+
+function addAppThemeListener(callback) {
+  browser.storage.onChanged.addListener(function (changes, area) {
+    if (area === 'local' && changes.appTheme) {
+      callback();
+    }
+  });
+}
+
+function addThemeListener(callback) {
+  addSystemThemeListener(callback);
+  addAppThemeListener(callback);
 }
 
 async function getOpenerTabId({tab, tabId = null} = {}) {
@@ -252,20 +318,26 @@ async function updateUseCount({
   }
 }
 
-async function processAppUse({action = 'auto', activeTab = null} = {}) {
+async function processAppUse({
+  action = 'auto',
+  activeTab = null,
+  showContribPage = true
+} = {}) {
   await updateUseCount({
     valueChange: 1,
     maxUseCount: 1000
   });
 
-  return autoShowContributePage({
-    minUseCount: 10,
-    minInstallDays: 14,
-    minLastOpenDays: 14,
-    minLastAutoOpenDays: 365,
-    activeTab,
-    action
-  });
+  if (showContribPage) {
+    return autoShowContributePage({
+      minUseCount: 10,
+      minInstallDays: 14,
+      minLastOpenDays: 14,
+      minLastAutoOpenDays: 365,
+      activeTab,
+      action
+    });
+  }
 }
 
 async function showContributePage({
@@ -300,53 +372,144 @@ async function showSupportPage({getTab = false, activeTab = null} = {}) {
   return showPage({url: supportUrl, getTab, activeTab});
 }
 
-async function hasModule({tabId, frameId = 0, module, insert = false} = {}) {
-  try {
-    const [isModule] = await browser.tabs.executeScript(tabId, {
-      frameId,
-      runAt: 'document_start',
-      code: `typeof ${module}Module !== 'undefined'`
-    });
+function getEngineIcon(engine, {variant = ''} = {}) {
+  engine = engineIconAlias[engine] || engine;
 
-    if (!isModule && insert) {
-      await browser.tabs.executeScript(tabId, {
-        frameId,
-        runAt: 'document_start',
-        file: `/src/${module}/script.js`
-      });
-    }
+  let name = engine;
+  if (variant && engineIconVariants[engine]?.includes(variant)) {
+    name += `-${variant}`;
+  }
 
-    if (isModule || insert) {
-      return true;
-    }
-  } catch (err) {}
+  const ext = rasterEngineIcons.includes(engine) ? 'png' : 'svg';
 
-  return false;
+  return `/src/assets/icons/engines/${name}.${ext}`;
 }
 
-async function insertBaseModule({activeTab = false} = {}) {
-  const tabs = [];
-  if (activeTab) {
-    const tab = await getActiveTab();
-    if (tab) {
-      tabs.push(tab);
-    }
-  } else {
-    tabs.push(
-      ...(await browser.tabs.query({
-        url: ['http://*/*', 'https://*/*'],
-        windowType: 'normal'
-      }))
-    );
+async function setAppVersion() {
+  await storage.set({appVersion});
+}
+
+async function isSessionStartup() {
+  const privateContext = browser.extension.inIncognitoContext;
+
+  const sessionKey = privateContext ? 'privateSession' : 'session';
+  const session = (await browser.storage.session.get(sessionKey))[sessionKey];
+
+  if (!session) {
+    await browser.storage.session.set({[sessionKey]: true});
   }
 
-  for (const tab of tabs) {
-    browser.tabs.executeScript(tab.id, {
-      allFrames: true,
-      runAt: 'document_start',
-      file: '/src/base/script.js'
-    });
+  if (privateContext) {
+    try {
+      if (!(await self.caches.has(sessionKey))) {
+        await self.caches.open(sessionKey);
+
+        return true;
+      }
+    } catch (err) {
+      return true;
+    }
   }
+
+  if (!session) {
+    return true;
+  }
+}
+
+async function isStartup() {
+  const startup = {
+    install: false,
+    update: false,
+    session: false,
+    setupInstance: false,
+    setupSession: false
+  };
+
+  const {storageVersion, appVersion: savedAppVersion} =
+    await browser.storage.local.get(['storageVersion', 'appVersion']);
+
+  if (!storageVersion) {
+    startup.install = true;
+  }
+
+  if (
+    storageVersion !== storageRevisions.local ||
+    savedAppVersion !== appVersion
+  ) {
+    startup.update = true;
+  }
+
+  if (mv3 && (await isSessionStartup())) {
+    startup.session = true;
+  }
+
+  if (startup.install || startup.update) {
+    startup.setupInstance = true;
+  }
+
+  if (startup.session || !mv3) {
+    startup.setupSession = true;
+  }
+
+  return startup;
+}
+
+let startupState;
+async function getStartupState({event = ''} = {}) {
+  if (!startupState) {
+    startupState = isStartup();
+    startupState.events = [];
+  }
+
+  if (event) {
+    startupState.events.push(event);
+  }
+
+  const startup = await startupState;
+
+  if (startupState.events.includes('install')) {
+    startup.setupInstance = true;
+  }
+  if (startupState.events.includes('startup')) {
+    startup.setupSession = true;
+  }
+
+  return startup;
+}
+
+function getEngineMenuIcon(engine, {variant = ''} = {}) {
+  engine = engineIconAlias[engine] || engine;
+
+  let name = engine;
+  if (variant && engineIconVariants[engine]?.includes(variant)) {
+    name += `-${variant}`;
+  }
+
+  if (rasterEngineIcons.includes(engine)) {
+    return {
+      16: `src/assets/icons/engines/${name}-16.png`,
+      32: `src/assets/icons/engines/${name}-32.png`
+    };
+  } else {
+    return {
+      16: `src/assets/icons/engines/${name}.svg`
+    };
+  }
+}
+
+function handleActionEscapeKey() {
+  // Keep the browser action open when a menu or popup is active
+
+  // Firefox: extensions cannot handle the Escape key event
+  window.addEventListener(
+    'keydown',
+    ev => {
+      if (ev.key === 'Escape' && document.querySelector('.v-overlay--active')) {
+        ev.preventDefault();
+      }
+    },
+    {capture: true, passive: false}
+  );
 }
 
 async function isContextMenuSupported() {
@@ -363,7 +526,7 @@ async function isContextMenuSupported() {
 
 async function checkSearchEngineAccess() {
   // Check if search engine access is enabled in Opera
-  if (/ opr\//i.test(navigator.userAgent)) {
+  if (!mv3 && / opr\//i.test(navigator.userAgent)) {
     const {lastEngineAccessCheck} = await storage.get('lastEngineAccessCheck');
     // run at most once a week
     if (Date.now() - lastEngineAccessCheck > 604800000) {
@@ -404,39 +567,6 @@ async function checkSearchEngineAccess() {
   }
 }
 
-function getEngineIcon(engine, {variant = ''} = {}) {
-  engine = engineIconAlias[engine] || engine;
-
-  let name = engine;
-  if (variant && engineIconVariants[engine]?.includes(variant)) {
-    name += `-${variant}`;
-  }
-
-  const ext = rasterEngineIcons.includes(engine) ? 'png' : 'svg';
-
-  return `/src/assets/icons/engines/${name}.${ext}`;
-}
-
-function getEngineMenuIcon(engine, {variant = ''} = {}) {
-  engine = engineIconAlias[engine] || engine;
-
-  let name = engine;
-  if (variant && engineIconVariants[engine]?.includes(variant)) {
-    name += `-${variant}`;
-  }
-
-  if (rasterEngineIcons.includes(engine)) {
-    return {
-      16: `src/assets/icons/engines/${name}-16.png`,
-      32: `src/assets/icons/engines/${name}-32.png`
-    };
-  } else {
-    return {
-      16: `src/assets/icons/engines/${name}.svg`
-    };
-  }
-}
-
 function isMatchingUrlHost(url, hostnames) {
   try {
     const {hostname} = new URL(url);
@@ -448,50 +578,27 @@ function isMatchingUrlHost(url, hostnames) {
   return false;
 }
 
-function handleBrowserActionEscapeKey() {
-  // Keep the browser action open when a menu or popup is active
-
-  // Firefox: extensions cannot handle the Escape key event
-  window.addEventListener(
-    'keydown',
-    ev => {
-      if (ev.key === 'Escape' && document.querySelector('.v-overlay--active')) {
-        ev.preventDefault();
-      }
-    },
-    {capture: true, passive: false}
-  );
-}
-
-async function getAppTheme(theme) {
-  if (!theme) {
-    ({appTheme: theme} = await storage.get('appTheme'));
-  }
-
-  if (theme === 'auto') {
-    theme = getDarkColorSchemeQuery().matches ? 'dark' : 'light';
-  }
-
-  return theme;
-}
-
-function addSystemThemeListener(callback) {
-  getDarkColorSchemeQuery().addEventListener('change', function () {
-    callback();
-  });
-}
-
-function addAppThemeListener(callback) {
-  browser.storage.onChanged.addListener(function (changes, area) {
-    if (area === 'local' && changes.appTheme) {
-      callback();
+function validateUrl(url) {
+  try {
+    if (url.length > 2048) {
+      return;
     }
-  });
+
+    const parsedUrl = new URL(url);
+
+    if (/^(?:https?|ftp):$/i.test(parsedUrl.protocol)) {
+      return true;
+    }
+  } catch (err) {}
 }
 
-function addThemeListener(callback) {
-  addSystemThemeListener(callback);
-  addAppThemeListener(callback);
+function normalizeUrl(url) {
+  const parsedUrl = new URL(url);
+  if (parsedUrl.hash) {
+    parsedUrl.hash = '';
+  }
+
+  return parsedUrl.toString();
 }
 
 export {
@@ -499,29 +606,33 @@ export {
   getSearches,
   showNotification,
   getListItems,
-  configApp,
-  loadFonts,
-  processMessageResponse,
-  showContributePage,
-  autoShowContributePage,
-  updateUseCount,
-  processAppUse,
-  showOptionsPage,
-  showSupportPage,
-  getEngineIcon,
-  getEngineMenuIcon,
-  validateUrl,
-  normalizeUrl,
-  getOpenerTabId,
-  showPage,
   hasModule,
   insertBaseModule,
-  isContextMenuSupported,
-  checkSearchEngineAccess,
-  isMatchingUrlHost,
-  handleBrowserActionEscapeKey,
+  loadFonts,
+  processMessageResponse,
+  configApp,
   getAppTheme,
   addSystemThemeListener,
   addAppThemeListener,
-  addThemeListener
+  addThemeListener,
+  getOpenerTabId,
+  showPage,
+  autoShowContributePage,
+  updateUseCount,
+  processAppUse,
+  showContributePage,
+  showOptionsPage,
+  showSupportPage,
+  setAppVersion,
+  isSessionStartup,
+  isStartup,
+  getStartupState,
+  getEngineIcon,
+  getEngineMenuIcon,
+  handleActionEscapeKey,
+  isContextMenuSupported,
+  checkSearchEngineAccess,
+  isMatchingUrlHost,
+  validateUrl,
+  normalizeUrl
 };

@@ -7,7 +7,7 @@
   "homepage_url": "https://github.com/dessant/web-archives",
   "default_locale": "en",
 
-  "minimum_chrome_version": "92.0",
+  "minimum_chrome_version": "123.0",
 
   "permissions": [
     "alarms",
@@ -22,7 +22,7 @@
     "<all_urls>"
   ],
 
-  "content_security_policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; connect-src *; object-src 'none'; child-src 'none'; form-action 'none';",
+  "content_security_policy": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src * data:; connect-src *; object-src 'none'; media-src 'none'; child-src 'none'; form-action 'none';",
 
   "icons": {
     "16": "src/assets/icons/app/icon-16.png",

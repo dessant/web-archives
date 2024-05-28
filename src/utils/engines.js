@@ -87,7 +87,8 @@ async function searchPermacc({session, search, doc} = {}) {
     {
       referrer: '',
       mode: 'cors',
-      method: 'GET'
+      method: 'GET',
+      credentials: 'omit'
     }
   );
 

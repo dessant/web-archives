@@ -1,22 +1,9 @@
 import {v4 as uuidv4} from 'uuid';
 import Queue from 'p-queue';
 
-import {initStorage, migrateLegacyStorage} from 'storage/init';
+import {initStorage} from 'storage/init';
 import {isStorageReady} from 'storage/storage';
 import storage from 'storage/storage';
-import {
-  getText,
-  createTab,
-  getNewTabUrl,
-  executeCode,
-  executeFile,
-  onComplete,
-  isAndroid,
-  isMobile,
-  getActiveTab,
-  getPlatform,
-  isValidTab
-} from 'utils/common';
 import {
   getEnabledEngines,
   getSearches,
@@ -26,13 +13,28 @@ import {
   showPage,
   hasModule,
   insertBaseModule,
+  processMessageResponse,
+  processAppUse,
+  setAppVersion,
+  getStartupState,
   isContextMenuSupported,
   checkSearchEngineAccess,
-  processAppUse,
-  processMessageResponse,
   getEngineMenuIcon,
   getAppTheme
 } from 'utils/app';
+import {
+  getText,
+  executeScript,
+  createTab,
+  getNewTabUrl,
+  isAndroid,
+  isMobile,
+  getActiveTab,
+  getPlatform,
+  isValidTab,
+  runOnce
+} from 'utils/common';
+import {getScriptFunction} from 'utils/scripts';
 import registry from 'utils/registry';
 import {
   optionKeys,
@@ -44,32 +46,121 @@ import {
   chromeMobileUA,
   chromeDesktopUA
 } from 'utils/data';
-import {targetEnv} from 'utils/config';
+import {targetEnv, mv3} from 'utils/config';
 
 const queue = new Queue({concurrency: 1});
 
-function setUserAgentHeader(tabId, userAgent) {
-  const engineRequestCallback = function (details) {
-    for (const header of details.requestHeaders) {
-      if (header.name.toLowerCase() === 'user-agent') {
-        header.value = userAgent;
-        break;
+async function setUserAgentHeader(tabId, userAgent) {
+  if (mv3) {
+    await browser.declarativeNetRequest.updateSessionRules({
+      addRules: [
+        {
+          id: tabId,
+          action: {
+            type: 'modifyHeaders',
+            requestHeaders: [
+              {header: 'User-Agent', operation: 'set', value: userAgent}
+            ]
+          },
+          condition: {
+            tabIds: [tabId],
+            resourceTypes: [
+              'font',
+              'image',
+              'main_frame',
+              'media',
+              'ping',
+              'script',
+              'stylesheet',
+              'sub_frame',
+              'websocket',
+              'xmlhttprequest',
+              'other'
+            ]
+          }
+        }
+      ]
+    });
+  } else {
+    const engineRequestCallback = function (details) {
+      for (const header of details.requestHeaders) {
+        if (header.name.toLowerCase() === 'user-agent') {
+          header.value = userAgent;
+          break;
+        }
       }
-    }
-    return {requestHeaders: details.requestHeaders};
-  };
+      return {requestHeaders: details.requestHeaders};
+    };
 
-  browser.webRequest.onBeforeSendHeaders.addListener(
-    engineRequestCallback,
-    {
-      urls: ['http://*/*', 'https://*/*'],
-      tabId
-    },
-    ['blocking', 'requestHeaders']
-  );
+    browser.webRequest.onBeforeSendHeaders.addListener(
+      engineRequestCallback,
+      {
+        urls: ['http://*/*', 'https://*/*'],
+        tabId
+      },
+      ['blocking', 'requestHeaders']
+    );
+  }
 }
 
-function createMenuItem({
+async function createMenuItem(item) {
+  return new Promise((resolve, reject) => {
+    let menuItemId;
+
+    function callback() {
+      if (browser.runtime.lastError) {
+        reject(browser.runtime.lastError);
+      }
+
+      resolve(menuItemId);
+    }
+
+    // creates context menu item for current instance
+    menuItemId = browser.contextMenus.create(item, callback);
+  });
+}
+
+async function removeMenuItem(menuItemId, {throwError = false} = {}) {
+  try {
+    // removes context menu item from current instance
+    await browser.contextMenus.remove(menuItemId);
+  } catch (err) {
+    if (throwError) {
+      throw err;
+    }
+  }
+}
+
+async function createMenu() {
+  const menuKey = browser.extension.inIncognitoContext
+    ? 'privateMenuItems'
+    : 'menuItems';
+
+  const {showInContextMenu, [menuKey]: currentItems} = await storage.get([
+    'showInContextMenu',
+    menuKey
+  ]);
+
+  for (const itemId of currentItems) {
+    await removeMenuItem(itemId);
+  }
+
+  const newItems = showInContextMenu ? await getMenuItems() : [];
+  await storage.set({[menuKey]: newItems.map(item => item.id)});
+
+  try {
+    for (const item of newItems) {
+      await createMenuItem(item);
+    }
+  } catch (err) {
+    // removes context menu items from all instances
+    await browser.contextMenus.removeAll();
+
+    throw err;
+  }
+}
+
+async function getMenuItem({
   id,
   title = '',
   contexts,
@@ -97,15 +188,13 @@ function createMenuItem({
     params.icons = icons;
   }
 
-  // creates context menu item for current instance
-  browser.contextMenus.create(params, onComplete);
+  return params;
 }
 
-async function createMenu() {
-  const env = await getPlatform({fallback: false});
+async function getMenuItems() {
+  const env = await getPlatform();
 
   const options = await storage.get(optionKeys);
-  const theme = await getAppTheme(options.appTheme);
 
   const contexts = ['link'];
   if (options.showInContextMenu === 'all') {
@@ -120,28 +209,40 @@ async function createMenu() {
   }
 
   const setIcons = env.isFirefox && options.showEngineIcons;
+
+  let theme;
+  if (setIcons) {
+    theme = await getAppTheme(options.appTheme);
+  }
+
   const searchAllEngines =
     !env.isSamsung && options.searchAllEnginesContextMenu;
 
   const enEngines = await getEnabledEngines(options);
 
+  const items = [];
+
   if (enEngines.length === 1) {
     const engine = enEngines[0];
 
-    createMenuItem({
-      id: `search_${enEngines[0]}_1`,
-      title: getText(
-        'mainMenuItemTitle_engine',
-        getText(`menuItemTitle_${engine}`)
-      ),
-      contexts
-    });
+    items.push(
+      await getMenuItem({
+        id: `search_${enEngines[0]}_1`,
+        title: getText(
+          'mainMenuItemTitle_engine',
+          getText(`menuItemTitle_${engine}`)
+        ),
+        contexts
+      })
+    );
   } else if (enEngines.length > 1 && searchAllEngines === 'main') {
-    createMenuItem({
-      id: 'search_allEngines_1',
-      title: getText('mainMenuItemTitle_allEngines'),
-      contexts
-    });
+    items.push(
+      await getMenuItem({
+        id: 'search_allEngines_1',
+        title: getText('mainMenuItemTitle_allEngines'),
+        contexts
+      })
+    );
   } else if (enEngines.length > 1) {
     if (options.openCurrentDocContextMenu) {
       const currentDocDocumentUrlPatterns = Object.values(pageArchiveHosts)
@@ -151,55 +252,69 @@ async function createMenu() {
         .map(hosts => hosts.map(host => `*://${host}/*`))
         .flat();
 
-      createMenuItem({
-        id: 'openCurrentDoc_1',
-        title: getText('menuItemTitle_openCurrentDoc'),
-        contexts,
-        documentUrlPatterns: currentDocDocumentUrlPatterns,
-        targetUrlPatterns: currentDocTargetUrlPatterns
-      });
+      items.push(
+        await getMenuItem({
+          id: 'openCurrentDoc_1',
+          title: getText('menuItemTitle_openCurrentDoc'),
+          contexts,
+          documentUrlPatterns: currentDocDocumentUrlPatterns,
+          targetUrlPatterns: currentDocTargetUrlPatterns
+        })
+      );
 
       if (!env.isSamsung) {
         // Samsung Internet: separator not visible, creates gap that responds to input.
-        createMenuItem({
-          id: 'sep_1',
-          contexts,
-          type: 'separator',
-          documentUrlPatterns: currentDocDocumentUrlPatterns,
-          targetUrlPatterns: currentDocTargetUrlPatterns
-        });
+        items.push(
+          await getMenuItem({
+            id: 'sep_1',
+            contexts,
+            type: 'separator',
+            documentUrlPatterns: currentDocDocumentUrlPatterns,
+            targetUrlPatterns: currentDocTargetUrlPatterns
+          })
+        );
       }
     }
 
     if (searchAllEngines === 'sub') {
-      createMenuItem({
-        id: 'search_allEngines_1',
-        title: getText('menuItemTitle_allEngines'),
-        contexts,
+      items.push(
+        await getMenuItem({
+          id: 'search_allEngines_1',
+          title: getText('menuItemTitle_allEngines'),
+          contexts,
 
-        icons: setIcons && getEngineMenuIcon('allEngines', {variant: theme})
-      });
+          icons: setIcons && getEngineMenuIcon('allEngines', {variant: theme})
+        })
+      );
 
       if (!env.isSamsung) {
         // Samsung Internet: separator not visible, creates gap that responds to input.
-        createMenuItem({
-          id: 'sep_2',
-          contexts,
-          type: 'separator'
-        });
+        items.push(
+          await getMenuItem({
+            id: 'sep_2',
+            contexts,
+            type: 'separator'
+          })
+        );
       }
     }
 
-    enEngines.forEach(function (engine) {
-      createMenuItem({
-        id: `search_${engine}_1`,
-        title: getText(`menuItemTitle_${engine}`),
-        contexts,
+    for (const engine of enEngines) {
+      const title = getText(`menuItemTitle_${engine}`);
+      const icons = setIcons && getEngineMenuIcon(engine, {variant: theme});
 
-        icons: setIcons && getEngineMenuIcon(engine, {variant: theme})
-      });
-    });
+      items.push(
+        await getMenuItem({
+          id: `search_${engine}_1`,
+          title,
+          contexts,
+          icons
+        })
+      );
+    }
   }
+
+  return items;
 }
 
 async function createSession(data) {
@@ -464,7 +579,7 @@ async function setTabUserAgent({tabId, tabUrl, userAgent, beaconToken} = {}) {
       ['blocking']
     );
   } else {
-    setUserAgentHeader(tabId, userAgent);
+    await setUserAgentHeader(tabId, userAgent);
   }
 }
 
@@ -481,9 +596,14 @@ async function getRequiredUserAgent(engine) {
 }
 
 async function execEngine(tabId, engine, taskId) {
-  await executeCode(`var taskId = '${taskId}';`, tabId);
-  await executeFile(`/src/commons-engine/script.js`, tabId);
-  await executeFile(`/src/engines/${engine}/script.js`, tabId);
+  await executeScript({
+    func: taskId => (self.taskId = taskId),
+    args: [taskId],
+    code: `var taskId = '${taskId}';`,
+    tabId
+  });
+  await executeScript({files: ['/src/commons-engine/script.js'], tabId});
+  await executeScript({files: [`/src/engines/${engine}/script.js`], tabId});
 }
 
 async function openCurrentDoc({linkUrl} = {}) {
@@ -515,7 +635,11 @@ async function openCurrentDoc({linkUrl} = {}) {
     const activeTab = await getActiveTab();
 
     if (await hasModule({tabId: activeTab.id, module: 'tools', insert: true})) {
-      await executeCode(`openCurrentDoc()`, activeTab.id);
+      await executeScript({
+        func: () => self.openCurrentDoc(),
+        code: `openCurrentDoc()`,
+        tabId: activeTab.id
+      });
     } else {
       await showNotification({messageId: 'error_scriptsNotAllowed'});
     }
@@ -610,17 +734,14 @@ async function onActionPopupClick(engine, docUrl) {
 }
 
 async function setContextMenu() {
-  // removes context menu items from all instances
-  await browser.contextMenus.removeAll();
-
-  const {showInContextMenu} = await storage.get('showInContextMenu');
-  if (showInContextMenu !== 'false') {
-    if (['chrome', 'edge', 'opera'].includes(targetEnv)) {
-      // notify all background script instances
-      await storage.set({setContextMenuEvent: Date.now()});
-    } else {
-      await createMenu();
-    }
+  if (['chrome', 'edge', 'opera'].includes(targetEnv)) {
+    // notify all background script instances
+    await storage.set(
+      {setContextMenuEvent: Date.now()},
+      {area: mv3 ? 'session' : 'local'}
+    );
+  } else {
+    await createMenu();
   }
 }
 
@@ -632,30 +753,32 @@ async function setBrowserAction() {
   ]);
   const enEngines = await getEnabledEngines(options);
 
+  const action = mv3 ? browser.action : browser.browserAction;
+
   if (enEngines.length === 1) {
-    browser.browserAction.setTitle({
+    action.setTitle({
       title: getText(
         'actionTitle_engine',
         getText(`engineName_${enEngines[0]}`)
       )
     });
-    browser.browserAction.setPopup({popup: ''});
+    action.setPopup({popup: ''});
     return;
   }
 
   if (options.searchAllEnginesAction === 'main' && enEngines.length > 1) {
-    browser.browserAction.setTitle({
+    action.setTitle({
       title: getText('actionTitle_allEngines')
     });
-    browser.browserAction.setPopup({popup: ''});
+    action.setPopup({popup: ''});
     return;
   }
 
-  browser.browserAction.setTitle({title: getText('extensionName')});
+  action.setTitle({title: getText('extensionName')});
   if (enEngines.length === 0) {
-    browser.browserAction.setPopup({popup: ''});
+    action.setPopup({popup: ''});
   } else {
-    browser.browserAction.setPopup({popup: '/src/action/index.html'});
+    action.setPopup({popup: '/src/action/index.html'});
   }
 }
 
@@ -762,7 +885,7 @@ async function setPageAction(tabId) {
 async function processMessage(request, sender) {
   // Samsung Internet 13: extension messages are sometimes also dispatched
   // to the sender frame.
-  if (sender.url === document.URL) {
+  if (sender.url === self.location.href) {
     return;
   }
 
@@ -834,6 +957,20 @@ async function processMessage(request, sender) {
     await showPage({url: request.url});
   } else if (request.id === 'setupTab') {
     return setupTab(sender, request.steps);
+  } else if (request.id === 'executeScript') {
+    const params = request.params;
+    if (request.setSenderTabId) {
+      params.tabId = sender.tab.id;
+    }
+    if (request.setSenderFrameId) {
+      params.frameIds = [sender.frameId];
+    }
+
+    if (params.func) {
+      params.func = getScriptFunction(params.func);
+    }
+
+    return executeScript(params);
   }
 }
 
@@ -848,8 +985,8 @@ async function onOptionChange() {
 }
 
 async function onStorageChange(changes, area) {
-  if (area === 'local' && (await isStorageReady())) {
-    if (changes.setContextMenuEvent) {
+  if (changes.setContextMenuEvent?.newValue) {
+    if (await isStorageReady({area: mv3 ? 'session' : 'local'})) {
       await queue.add(createMenu);
     }
   }
@@ -863,20 +1000,13 @@ async function onAlarm({name}) {
 }
 
 async function onInstall(details) {
-  if (
-    ['install', 'update'].includes(details.reason) &&
-    ['chrome', 'edge', 'opera', 'samsung'].includes(targetEnv)
-  ) {
-    await insertBaseModule();
+  if (['install', 'update'].includes(details.reason)) {
+    await setup({event: 'install'});
   }
 }
 
 async function onStartup() {
-  if (['samsung'].includes(targetEnv)) {
-    // Samsung Internet: Content script is not always run in restored
-    // active tab on startup.
-    await insertBaseModule({activeTab: true});
-  }
+  await setup({event: 'startup'});
 }
 
 function addContextMenuListener() {
@@ -885,8 +1015,12 @@ function addContextMenuListener() {
   }
 }
 
-function addBrowserActionListener() {
-  browser.browserAction.onClicked.addListener(onActionButtonClick);
+function addActionListener() {
+  if (mv3) {
+    browser.action.onClicked.addListener(onActionButtonClick);
+  } else {
+    browser.browserAction.onClicked.addListener(onActionButtonClick);
+  }
 }
 
 function addStorageListener() {
@@ -906,7 +1040,6 @@ function addInstallListener() {
 }
 
 function addStartupListener() {
-  // Not fired in private browsing mode.
   browser.runtime.onStartup.addListener(onStartup);
 }
 
@@ -924,19 +1057,46 @@ async function setupUI() {
   await queue.addAll(items);
 }
 
-async function setup() {
-  if (!(await isStorageReady())) {
-    await migrateLegacyStorage();
-    await initStorage();
+async function setup({event = ''} = {}) {
+  const startup = await getStartupState({event});
+
+  if (startup.setupInstance) {
+    await runOnce('setupInstance', async () => {
+      if (!(await isStorageReady())) {
+        await initStorage({data: startup});
+      }
+
+      if (['chrome', 'edge', 'opera', 'samsung'].includes(targetEnv)) {
+        await insertBaseModule();
+      }
+
+      if (startup.update) {
+        await setAppVersion();
+      }
+    });
   }
 
-  await setupUI();
-  await registry.cleanupRegistry();
+  if (startup.setupSession) {
+    await runOnce('setupSession', async () => {
+      if (mv3 && !(await isStorageReady({area: 'session'}))) {
+        await initStorage({area: 'session', silent: true});
+      }
+
+      if (['samsung'].includes(targetEnv) && !startup.setupInstance) {
+        // Samsung Internet: Content script does not always run in restored
+        // active tab on startup.
+        await insertBaseModule({activeTab: true});
+      }
+
+      await setupUI();
+      await registry.cleanupRegistry();
+    });
+  }
 }
 
 function init() {
   addContextMenuListener();
-  addBrowserActionListener();
+  addActionListener();
   addMessageListener();
   addStorageListener();
   addAlarmListener();
