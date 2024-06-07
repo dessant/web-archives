@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
   "version": "0.1.0",
@@ -18,11 +18,15 @@
     "activeTab",
     "notifications",
     "webRequest",
-    "webRequestBlocking",
-    "<all_urls>"
+    "declarativeNetRequest",
+    "scripting"
   ],
 
-  "content_security_policy": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src * data:; connect-src *; object-src 'none'; media-src 'none'; child-src 'none'; form-action 'none';",
+  "host_permissions": ["<all_urls>"],
+
+  "content_security_policy": {
+    "extension_pages": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src * data:; connect-src *; object-src 'none'; media-src 'none'; child-src 'none'; form-action 'none';"
+  },
 
   "icons": {
     "16": "src/assets/icons/app/icon-16.png",
@@ -36,7 +40,7 @@
     "128": "src/assets/icons/app/icon-128.png"
   },
 
-  "browser_action": {
+  "action": {
     "default_icon": {
       "16": "src/assets/icons/app/icon-16.png",
       "19": "src/assets/icons/app/icon-19.png",
@@ -52,12 +56,11 @@
 
   "options_ui": {
     "page": "src/options/index.html",
-    "chrome_style": false,
     "open_in_tab": true
   },
 
   "background": {
-    "page": "src/background/index.html"
+    "service_worker": "src/background/script.js"
   },
 
   "content_scripts": [
