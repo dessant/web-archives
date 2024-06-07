@@ -330,6 +330,22 @@ function isBackgroundPageContext() {
   return self.location.href === backgroundUrl;
 }
 
+function getExtensionDomain() {
+  try {
+    const {hostname} = new URL(
+      browser.runtime.getURL('/src/background/script.js')
+    );
+
+    return hostname;
+  } catch (err) {}
+
+  return null;
+}
+
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 function querySelectorXpath(selector, {rootNode = null} = {}) {
   rootNode = rootNode || document;
 
@@ -522,6 +538,8 @@ export {
   getDarkColorSchemeQuery,
   getDayPrecisionEpoch,
   isBackgroundPageContext,
+  getExtensionDomain,
+  getRandomInt,
   querySelectorXpath,
   nodeQuerySelector,
   findNode,
