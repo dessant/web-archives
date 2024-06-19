@@ -1,14 +1,8 @@
 import {validateUrl} from 'utils/app';
+import {runOnce} from 'utils/common';
 import {pageArchiveHosts, linkArchiveUrlRx} from 'utils/data';
 
 function main() {
-  // Script may be injected multiple times.
-  if (self.toolsModule) {
-    return;
-  } else {
-    self.toolsModule = true;
-  }
-
   self.openCurrentDoc = async function () {
     let docUrl;
     const hostname = window.location.hostname;
@@ -74,4 +68,6 @@ function main() {
   };
 }
 
-main();
+if (runOnce('toolsModule')) {
+  main();
+}

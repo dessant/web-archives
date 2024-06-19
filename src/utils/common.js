@@ -483,13 +483,6 @@ function waitForDocumentLoad() {
 }
 
 function makeDocumentVisible() {
-  // Script may be injected multiple times.
-  if (self.documentVisibleModule) {
-    return;
-  } else {
-    self.documentVisibleModule = true;
-  }
-
   const eventName = uuidv4();
 
   function dispatchVisibilityState() {
@@ -505,11 +498,21 @@ function makeDocumentVisible() {
   executeScriptMainContext({func: 'makeDocumentVisible', args: [eventName]});
 }
 
-function runOnce(name, func) {
-  name = `${name}Run`;
+function getStore(name, {content = null} = {}) {
+  name = `${name}Store`;
 
   if (!self[name]) {
-    self[name] = true;
+    self[name] = content || {};
+  }
+
+  return self[name];
+}
+
+function runOnce(name, func) {
+  const store = getStore('run');
+
+  if (!store[name]) {
+    store[name] = true;
 
     if (!func) {
       return true;
@@ -546,6 +549,7 @@ export {
   processNode,
   waitForDocumentLoad,
   makeDocumentVisible,
+  getStore,
   runOnce,
   sleep
 };

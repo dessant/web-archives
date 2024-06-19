@@ -1,5 +1,5 @@
 import {validateUrl} from 'utils/app';
-import {findNode} from 'utils/common';
+import {findNode, runOnce} from 'utils/common';
 import {initSearch, sendReceipt} from 'utils/engines';
 
 const engine = 'ghostarchive';
@@ -25,4 +25,6 @@ function init() {
   initSearch(search, engine, taskId);
 }
 
-init();
+if (runOnce('search')) {
+  init();
+}

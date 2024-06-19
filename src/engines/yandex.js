@@ -4,6 +4,7 @@ import {
   findNode,
   makeDocumentVisible,
   executeScriptMainContext,
+  runOnce,
   sleep
 } from 'utils/common';
 import {initSearch, sendReceipt} from 'utils/engines';
@@ -91,4 +92,6 @@ function init() {
   }
 }
 
-init();
+if (runOnce('search')) {
+  init();
+}

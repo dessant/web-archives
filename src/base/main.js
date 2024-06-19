@@ -1,13 +1,7 @@
 import storage from 'storage/storage';
+import {runOnce} from 'utils/common';
 
 function main() {
-  // Script may be injected multiple times.
-  if (self.baseModule) {
-    return;
-  } else {
-    self.baseModule = true;
-  }
-
   async function checkTask() {
     const {taskRegistry} = await storage.get('taskRegistry');
     if (Date.now() - taskRegistry.lastTaskStart < 600000) {
@@ -20,4 +14,6 @@ function main() {
   }
 }
 
-main();
+if (runOnce('baseModule')) {
+  main();
+}

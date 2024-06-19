@@ -1,5 +1,5 @@
 import {validateUrl} from 'utils/app';
-import {findNode} from 'utils/common';
+import {findNode, runOnce} from 'utils/common';
 import {initSearch, sendReceipt} from 'utils/engines';
 
 const engine = 'yahoo';
@@ -38,4 +38,6 @@ function init() {
   }
 }
 
-init();
+if (runOnce('search')) {
+  init();
+}
