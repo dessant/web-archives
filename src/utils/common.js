@@ -346,6 +346,10 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function getCharCount(string) {
+  return [...string].length;
+}
+
 function querySelectorXpath(selector, {rootNode = null} = {}) {
   rootNode = rootNode || document;
 
@@ -543,6 +547,7 @@ export {
   isBackgroundPageContext,
   getExtensionDomain,
   getRandomInt,
+  getCharCount,
   querySelectorXpath,
   nodeQuerySelector,
   findNode,

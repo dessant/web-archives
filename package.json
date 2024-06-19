@@ -48,6 +48,7 @@
     "idb-keyval": "^6.2.1",
     "lodash-es": "^4.17.21",
     "p-queue": "^8.0.1",
+    "psl": "^1.9.0",
     "uuid": "^9.0.1",
     "vue": "3.4.23",
     "vue-resize": "^2.0.0-alpha.1",
