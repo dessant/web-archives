@@ -1,3 +1,4 @@
+import {capitalizeFirstLetter, lowercaseFirstLetter} from 'utils/common';
 import {storageRevisions} from 'utils/config';
 
 async function isStorageArea({area = 'local'} = {}) {
@@ -49,19 +50,67 @@ async function ensureStorageReady({area = 'local'} = {}) {
   }
 }
 
-async function get(keys = null, {area = 'local'} = {}) {
-  await ensureStorageReady({area});
-  return browser.storage[area].get(keys);
+function encodeStorageData(data, context) {
+  if (context?.active) {
+    if (typeof data === 'string') {
+      return `${context.name}${capitalizeFirstLetter(data)}`;
+    } else if (Array.isArray(data)) {
+      const items = [];
+
+      for (const item of data) {
+        items.push(`${context.name}${capitalizeFirstLetter(item)}`);
+      }
+
+      return items;
+    } else {
+      const items = {};
+
+      for (const [key, value] of Object.entries(data)) {
+        items[`${context.name}${capitalizeFirstLetter(key)}`] = value;
+      }
+
+      return items;
+    }
+  }
+
+  return data;
 }
 
-async function set(obj, {area = 'local'} = {}) {
-  await ensureStorageReady({area});
-  return browser.storage[area].set(obj);
+function decodeStorageData(data, context) {
+  if (context?.active) {
+    const items = {};
+
+    for (const [key, value] of Object.entries(data)) {
+      items[
+        lowercaseFirstLetter(key.replace(new RegExp(`^${context.name}`), ''))
+      ] = value;
+    }
+
+    return items;
+  }
+
+  return data;
 }
 
-async function remove(keys, {area = 'local'} = {}) {
+async function get(keys = null, {area = 'local', context = null} = {}) {
   await ensureStorageReady({area});
-  return browser.storage[area].remove(keys);
+
+  return decodeStorageData(
+    await browser.storage[area].get(encodeStorageData(keys, context)),
+    context
+  );
+}
+
+async function set(obj, {area = 'local', context = null} = {}) {
+  await ensureStorageReady({area});
+
+  return browser.storage[area].set(encodeStorageData(obj, context));
+}
+
+async function remove(keys, {area = 'local', context = null} = {}) {
+  await ensureStorageReady({area});
+
+  return browser.storage[area].remove(encodeStorageData(keys, context));
 }
 
 async function clear({area = 'local'} = {}) {
@@ -70,4 +119,4 @@ async function clear({area = 'local'} = {}) {
 }
 
 export default {get, set, remove, clear};
-export {isStorageArea, isStorageReady, ensureStorageReady};
+export {isStorageArea, isStorageReady};

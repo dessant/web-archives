@@ -346,6 +346,14 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function capitalizeFirstLetter(string, {locale = 'en-US'} = {}) {
+  return string.replace(/^\p{CWU}/u, char => char.toLocaleUpperCase(locale));
+}
+
+function lowercaseFirstLetter(string, {locale = 'en-US'} = {}) {
+  return string.replace(/^\p{CWL}/u, char => char.toLocaleLowerCase(locale));
+}
+
 function getCharCount(string) {
   return [...string].length;
 }
@@ -547,6 +555,8 @@ export {
   isBackgroundPageContext,
   getExtensionDomain,
   getRandomInt,
+  capitalizeFirstLetter,
+  lowercaseFirstLetter,
   getCharCount,
   querySelectorXpath,
   nodeQuerySelector,

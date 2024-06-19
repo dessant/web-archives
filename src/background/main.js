@@ -132,21 +132,21 @@ async function removeMenuItem(menuItemId, {throwError = false} = {}) {
 }
 
 async function createMenu() {
-  const menuKey = browser.extension.inIncognitoContext
-    ? 'privateMenuItems'
-    : 'menuItems';
+  const context = {
+    name: 'private',
+    active: browser.extension.inIncognitoContext
+  };
 
-  const {showInContextMenu, [menuKey]: currentItems} = await storage.get([
-    'showInContextMenu',
-    menuKey
-  ]);
+  const {menuItems: currentItems} = await storage.get('menuItems', {context});
 
   for (const itemId of currentItems) {
     await removeMenuItem(itemId);
   }
 
+  const {showInContextMenu} = await storage.get('showInContextMenu');
   const newItems = showInContextMenu ? await getMenuItems() : [];
-  await storage.set({[menuKey]: newItems.map(item => item.id)});
+
+  await storage.set({menuItems: newItems.map(item => item.id)}, {context});
 
   try {
     for (const item of newItems) {
@@ -599,7 +599,7 @@ async function execEngine(tabId, engine, taskId) {
   await executeScript({
     func: taskId => (self.taskId = taskId),
     args: [taskId],
-    code: `var taskId = '${taskId}';`,
+    code: `self.taskId = '${taskId}'`,
     tabId
   });
   await executeScript({files: ['/src/commons-engine/script.js'], tabId});
@@ -637,7 +637,7 @@ async function openCurrentDoc({linkUrl} = {}) {
     if (await hasModule({tabId: activeTab.id, module: 'tools', insert: true})) {
       await executeScript({
         func: () => self.openCurrentDoc(),
-        code: `openCurrentDoc()`,
+        code: `self.openCurrentDoc()`,
         tabId: activeTab.id
       });
     } else {
