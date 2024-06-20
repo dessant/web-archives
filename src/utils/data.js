@@ -132,6 +132,7 @@ const pageArchiveHosts = {
   bing: ['cc.bingj.com'],
   yandex: ['yandexwebcache.net'],
   permacc: ['perma.cc', 'rejouer.perma.cc'],
+  megalodon: ['megalodon.jp'],
   ghostarchive: ['ghostarchive.org'],
   webcite: ['webcitation.org']
 };
@@ -150,6 +151,7 @@ const linkArchiveHosts = {
   ],
   google: ['webcache.googleusercontent.com'],
   permacc: ['rejouer.perma.cc'],
+  megalodon: ['megalodon.jp'],
   ghostarchive: ['ghostarchive.org']
 };
 
@@ -160,6 +162,7 @@ const linkArchiveUrlRx = {
   google:
     /^https?:\/\/webcache\.googleusercontent\.com\/search.*[?&]q=cache:.*$/i,
   permacc: /^https:\/\/rejouer\.perma\.cc\/(?:.*)\/mp_\/(.*)/i,
+  megalodon: /https?:\/\/megalodon\.jp\/(?:\d+-)+\d+\/(.*)/i,
   ghostarchive: /^https:\/\/ghostarchive\.org\/(?:.*)\/mp_\/(.*)/i
 };
 

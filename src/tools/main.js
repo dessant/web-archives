@@ -43,6 +43,8 @@ function main() {
           docUrl = document.querySelector('#yandex-cache-hdr > span > a')?.href;
         } else if (engine === 'permacc') {
           docUrl = document.querySelector('._livepage a')?.href;
+        } else if (engine === 'megalodon') {
+          docUrl = window.location.href.match(linkArchiveUrlRx.megalodon)?.[1];
         } else if (engine === 'ghostarchive') {
           docUrl = document.querySelector('#searchInput')?.value;
         } else if (engine === 'webcite') {
