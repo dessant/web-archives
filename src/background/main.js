@@ -17,6 +17,7 @@ import {
   processAppUse,
   setAppVersion,
   getStartupState,
+  getNetRequestRuleIds,
   isContextMenuSupported,
   checkSearchEngineAccess,
   getEngineMenuIcon,
@@ -52,10 +53,13 @@ const queue = new Queue({concurrency: 1});
 
 async function setUserAgentHeader(tabId, userAgent) {
   if (mv3) {
+    const ruleIds = getNetRequestRuleIds();
+
     await browser.declarativeNetRequest.updateSessionRules({
+      removeRuleIds: ruleIds,
       addRules: [
         {
-          id: tabId,
+          id: ruleIds[0],
           action: {
             type: 'modifyHeaders',
             requestHeaders: [
