@@ -149,7 +149,7 @@ async function createMenu() {
   }
 
   const {showInContextMenu} = await storage.get('showInContextMenu');
-  const newItems = showInContextMenu ? await getMenuItems() : [];
+  const newItems = showInContextMenu !== 'false' ? await getMenuItems() : [];
 
   await storage.set({menuItems: newItems.map(item => item.id)}, {context});
 
