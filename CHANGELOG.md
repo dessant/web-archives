@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.1.0](https://github.com/dessant/web-archives/compare/v6.0.0...v6.1.0) (2024-06-20)
+
+
+### Features
+
+* add storage context ([6c662c7](https://github.com/dessant/web-archives/commit/6c662c7494652bb0b0e9fb7aac6c52272d15b94d))
+* find closest match on Yandex ([7496504](https://github.com/dessant/web-archives/commit/74965042b911015fdf54f1fe9f45f356cbe51bda))
+* open current page from Megalodon archive ([a19386f](https://github.com/dessant/web-archives/commit/a19386f299f86745dccdefd12f5f82ec62bd4e63))
+* upgrade to Manifest V3 in Edge and Opera ([292d584](https://github.com/dessant/web-archives/commit/292d584c97aa7f8fd94fb9167d09d1a307dc146d))
+
+
+### Bug Fixes
+
+* apply context menu visibility option ([6732cd2](https://github.com/dessant/web-archives/commit/6732cd2f9fd286a5b46dbce9631ea5c4f3db669f))
+* check search engine access in MV3 ([44c2eee](https://github.com/dessant/web-archives/commit/44c2eeedb7f1adeabb3d28710d5c83b7eb944c11))
+* recover from error during context menu setup ([d4755b7](https://github.com/dessant/web-archives/commit/d4755b7d0cc960503164f281432e63b91823c621))
+* run content scripts only once ([47a3375](https://github.com/dessant/web-archives/commit/47a3375bf4535d4405de9fa90cf8d6b295b9643a))
+* use IndexedDB on all platforms ([9f799ec](https://github.com/dessant/web-archives/commit/9f799ece9eb82bc47b77947030c7928244fb2c68))
+
 ## [6.0.0](https://github.com/dessant/web-archives/compare/v5.0.0...v6.0.0) (2024-05-28)
 
 
