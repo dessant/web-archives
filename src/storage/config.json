@@ -16,8 +16,11 @@
       "20230713165504_add_perma.cc",
       "20230715152710_add_ghostarchive",
       "20230718120215_add_webcite",
-      "20240514170322_add_appversion"
+      "20240514170322_add_appversion",
+      "20240619180111_add_menuchangeevent"
     ],
-    "session": ["20240514122825_initial_version"]
+    "session": [
+      "20240514122825_initial_version"
+    ]
   }
 }

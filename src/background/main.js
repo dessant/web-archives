@@ -2,7 +2,7 @@ import {v4 as uuidv4} from 'uuid';
 import Queue from 'p-queue';
 
 import {initStorage} from 'storage/init';
-import {isStorageReady} from 'storage/storage';
+import {isStorageReady, encodeStorageData} from 'storage/storage';
 import storage from 'storage/storage';
 import {
   getEnabledEngines,
@@ -131,6 +131,11 @@ async function removeMenuItem(menuItemId, {throwError = false} = {}) {
   }
 }
 
+async function removeAllMenuItems() {
+  // removes context menu items from all instances
+  await browser.contextMenus.removeAll();
+}
+
 async function createMenu() {
   const context = {
     name: 'private',
@@ -153,10 +158,36 @@ async function createMenu() {
       await createMenuItem(item);
     }
   } catch (err) {
-    // removes context menu items from all instances
-    await browser.contextMenus.removeAll();
+    // The storage may have been cleared, and the context menu state is
+    // no longer known. All menu items are removed and the menu is recreated.
+
+    await removeAllMenuItems();
+
+    for (const item of newItems) {
+      await createMenuItem(item);
+    }
+
+    if (runOnce('createMenuError')) {
+      await dispatchMenuChangeEvent();
+    }
 
     throw err;
+  }
+}
+
+async function dispatchMenuChangeEvent() {
+  if (['chrome', 'edge', 'opera'].includes(targetEnv)) {
+    // notify the other background script instance
+    await storage.set(
+      {menuChangeEvent: Date.now()},
+      {
+        area: mv3 ? 'session' : 'local',
+        context: {
+          name: 'private',
+          active: !browser.extension.inIncognitoContext
+        }
+      }
+    );
   }
 }
 
@@ -177,6 +208,10 @@ async function getMenuItem({
     parentId: parent,
     type
   };
+
+  if (browser.extension.inIncognitoContext) {
+    params.id += '_private';
+  }
 
   if (documentUrlPatterns) {
     params.documentUrlPatterns = documentUrlPatterns;
@@ -734,15 +769,9 @@ async function onActionPopupClick(engine, docUrl) {
 }
 
 async function setContextMenu() {
-  if (['chrome', 'edge', 'opera'].includes(targetEnv)) {
-    // notify all background script instances
-    await storage.set(
-      {setContextMenuEvent: Date.now()},
-      {area: mv3 ? 'session' : 'local'}
-    );
-  } else {
-    await createMenu();
-  }
+  await createMenu();
+
+  await dispatchMenuChangeEvent();
 }
 
 async function setBrowserAction() {
@@ -985,8 +1014,13 @@ async function onOptionChange() {
 }
 
 async function onStorageChange(changes, area) {
-  if (changes.setContextMenuEvent?.newValue) {
-    if (await isStorageReady({area: mv3 ? 'session' : 'local'})) {
+  if (await isStorageReady({area: mv3 ? 'session' : 'local'})) {
+    const menuChangeEvent = encodeStorageData('menuChangeEvent', {
+      name: 'private',
+      active: browser.extension.inIncognitoContext
+    });
+
+    if (changes[menuChangeEvent]?.newValue) {
       await queue.add(createMenu);
     }
   }

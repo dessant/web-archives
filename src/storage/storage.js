@@ -50,27 +50,39 @@ async function ensureStorageReady({area = 'local'} = {}) {
   }
 }
 
+function processStorageKey(key, contextName, {encode = true} = {}) {
+  if (encode) {
+    return `${contextName}${capitalizeFirstLetter(key)}`;
+  } else {
+    return lowercaseFirstLetter(key.replace(new RegExp(`^${contextName}`), ''));
+  }
+}
+
+function processStorageData(data, contextName, {encode = true} = {}) {
+  if (typeof data === 'string') {
+    return processStorageKey(data, contextName, {encode});
+  } else if (Array.isArray(data)) {
+    const items = [];
+
+    for (const item of data) {
+      items.push(processStorageKey(item, contextName, {encode}));
+    }
+
+    return items;
+  } else {
+    const items = {};
+
+    for (const [key, value] of Object.entries(data)) {
+      items[processStorageKey(key, contextName, {encode})] = value;
+    }
+
+    return items;
+  }
+}
+
 function encodeStorageData(data, context) {
   if (context?.active) {
-    if (typeof data === 'string') {
-      return `${context.name}${capitalizeFirstLetter(data)}`;
-    } else if (Array.isArray(data)) {
-      const items = [];
-
-      for (const item of data) {
-        items.push(`${context.name}${capitalizeFirstLetter(item)}`);
-      }
-
-      return items;
-    } else {
-      const items = {};
-
-      for (const [key, value] of Object.entries(data)) {
-        items[`${context.name}${capitalizeFirstLetter(key)}`] = value;
-      }
-
-      return items;
-    }
+    return processStorageData(data, context.name, {encode: true});
   }
 
   return data;
@@ -78,15 +90,7 @@ function encodeStorageData(data, context) {
 
 function decodeStorageData(data, context) {
   if (context?.active) {
-    const items = {};
-
-    for (const [key, value] of Object.entries(data)) {
-      items[
-        lowercaseFirstLetter(key.replace(new RegExp(`^${context.name}`), ''))
-      ] = value;
-    }
-
-    return items;
+    return processStorageData(data, context.name, {encode: false});
   }
 
   return data;
@@ -119,4 +123,4 @@ async function clear({area = 'local'} = {}) {
 }
 
 export default {get, set, remove, clear};
-export {isStorageArea, isStorageReady};
+export {isStorageArea, isStorageReady, encodeStorageData, decodeStorageData};
