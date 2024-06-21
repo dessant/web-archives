@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.1.1](https://github.com/dessant/web-archives/compare/v6.1.0...v6.1.1) (2024-06-21)
+
+
+### Bug Fixes
+
+* update search engines ([5cf99f0](https://github.com/dessant/web-archives/commit/5cf99f024a74bc86009dc713b162ee393a24feb8))
+
 ## [6.1.0](https://github.com/dessant/web-archives/compare/v6.0.0...v6.1.0) (2024-06-20)
 
 
