@@ -120,6 +120,7 @@ async function search({session, search, doc, storageIds}) {
         throwError: false,
         timeout: 30000
       });
+      await sleep(1000);
 
       await sendReceipt(storageIds);
 

@@ -6,7 +6,7 @@ const engine = 'yahoo';
 
 async function search({session, search, doc, storageIds}) {
   const button = await findNode(
-    '#results li:first-of-type div.options-toggle span.chevron-down',
+    '#results li div.options-toggle span.chevron-down',
     {throwError: false}
   );
 
@@ -14,7 +14,7 @@ async function search({session, search, doc, storageIds}) {
     button.click();
 
     const node = await findNode(
-      '#results li:first-of-type a[href*="cc.bingj.com/cache"], #results li:first-of-type a[href*="cc.bingj.com%2fcache"]',
+      '#results li a[href*="cc.bingj.com/cache"], #results li a[href*="cc.bingj.com%2fcache"]',
       {throwError: false, timeout: 1000}
     );
 

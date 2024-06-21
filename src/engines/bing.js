@@ -5,7 +5,7 @@ const engine = 'bing';
 
 async function search({session, search, doc, storageIds}) {
   const button = await findNode(
-    'ol#b_results li.b_algo:first-of-type div.b_attribution a.trgr_icon',
+    'ol#b_results li.b_algo div.b_attribution a.trgr_icon',
     {throwError: false}
   );
 
@@ -13,7 +13,7 @@ async function search({session, search, doc, storageIds}) {
     button.click();
 
     const node = await findNode(
-      'ol#b_results li.b_algo:first-of-type div.b_attribution a[href*="cc.bingj.com/cache"]',
+      'ol#b_results li.b_algo div.b_attribution a[href*="cc.bingj.com/cache"]',
       {throwError: false, timeout: 1000}
     );
 
