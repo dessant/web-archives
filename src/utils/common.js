@@ -22,9 +22,13 @@ async function executeScript({
   code = ''
 }) {
   if (mv3) {
-    const params = {target: {tabId, allFrames}, world};
+    const params = {target: {tabId}, world};
 
-    if (!allFrames) {
+    // Safari 17: allFrames and frameIds cannot both be specified,
+    // fixed in Safari 18.
+    if (allFrames) {
+      params.target.allFrames = true;
+    } else {
       params.target.frameIds = frameIds;
     }
 
@@ -323,11 +327,9 @@ function getDayPrecisionEpoch(epoch) {
 }
 
 function isBackgroundPageContext() {
-  const backgroundUrl = mv3
-    ? browser.runtime.getURL('/src/background/script.js')
-    : browser.runtime.getURL('/src/background/index.html');
-
-  return self.location.href === backgroundUrl;
+  return self.location.href.startsWith(
+    browser.runtime.getURL('/src/background/')
+  );
 }
 
 function getExtensionDomain() {
