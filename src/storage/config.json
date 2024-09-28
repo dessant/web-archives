@@ -17,10 +17,9 @@
       "20230715152710_add_ghostarchive",
       "20230718120215_add_webcite",
       "20240514170322_add_appversion",
-      "20240619180111_add_menuchangeevent"
+      "20240619180111_add_menuchangeevent",
+      "20240928183956_remove_search_engines"
     ],
-    "session": [
-      "20240514122825_initial_version"
-    ]
+    "session": ["20240514122825_initial_version"]
   }
 }

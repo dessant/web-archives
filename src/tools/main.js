@@ -31,10 +31,6 @@ function main() {
           docUrl = document.querySelector(
             '#HEADER form[action*="/search/"] input[type=text]'
           )?.value;
-        } else if (engine === 'google') {
-          docUrl = document.querySelector(
-            '[id*="google-cache-hdr"] > div > span > a'
-          )?.href;
         } else if (engine === 'bing') {
           docUrl = document.querySelector(
             'div.b_vPanel > div > strong > a[h*="ID=SERP"]'

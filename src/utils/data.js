@@ -26,13 +26,6 @@ const engines = {
   archiveOrgAll: {
     target: 'https://web.archive.org/web/*/{url}'
   },
-  google: {
-    target: 'https://webcache.googleusercontent.com/search?q=cache:{url}'
-  },
-  googleText: {
-    target:
-      'https://webcache.googleusercontent.com/search?strip=1&q=cache:{url}'
-  },
   bing: {
     target: 'https://www.bing.com/search?q=url:{url}&go=Search&qs=bs&form=QBRE',
     isExec: true
@@ -54,10 +47,6 @@ const engines = {
     target: 'https://megalodon.jp/?url={url}',
     isExec: true
   },
-  yahoo: {
-    target: 'https://search.yahoo.com/search?p=url:{url}',
-    isExec: true
-  },
   permacc: {
     target: searchUrl,
     isTaskId: true
@@ -72,7 +61,6 @@ const engines = {
 };
 
 const engineIconAlias = {
-  googleText: 'google',
   archiveOrgAll: 'archiveOrg',
   archiveIsAll: 'archiveIs'
 };
@@ -80,7 +68,6 @@ const engineIconAlias = {
 const engineIconVariants = {
   archiveOrg: ['dark'],
   archiveIs: ['dark'],
-  yahoo: ['dark'],
   webcite: ['dark']
 };
 
@@ -128,7 +115,6 @@ const pageArchiveHosts = {
     'archive.md',
     'archiveiya74codqgiixo33q62qlrqtkgmcitqx5u2oeqnmn5bpcbiyd.onion'
   ],
-  google: ['webcache.googleusercontent.com'],
   bing: ['cc.bingj.com'],
   yandex: ['yandexwebcache.net'],
   permacc: ['perma.cc', 'rejouer.perma.cc'],
@@ -149,7 +135,6 @@ const linkArchiveHosts = {
     'archive.md',
     'archiveiya74codqgiixo33q62qlrqtkgmcitqx5u2oeqnmn5bpcbiyd.onion'
   ],
-  google: ['webcache.googleusercontent.com'],
   permacc: ['rejouer.perma.cc'],
   megalodon: ['megalodon.jp'],
   ghostarchive: ['ghostarchive.org']
@@ -159,8 +144,6 @@ const linkArchiveUrlRx = {
   archiveOrg: /^https?:\/\/web\.archive\.org\/web\/[0-9]+\/(.*)/i,
   archiveIs:
     /^https?:\/\/(?:archive\.(?:is|today|ph|vn|fo|li|md)|archiveiya74codqgiixo33q62qlrqtkgmcitqx5u2oeqnmn5bpcbiyd.onion)\/o\/.*?\/(.*)/i,
-  google:
-    /^https?:\/\/webcache\.googleusercontent\.com\/search.*[?&]q=cache:.*$/i,
   permacc: /^https:\/\/rejouer\.perma\.cc\/(?:.*)\/mp_\/(.*)/i,
   megalodon: /https?:\/\/megalodon\.jp\/(?:\d+-)+\d+\/(.*)/i,
   ghostarchive: /^https:\/\/ghostarchive\.org\/(?:.*)\/mp_\/(.*)/i

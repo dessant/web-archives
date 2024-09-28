@@ -5,18 +5,8 @@
   },
 
   "extensionDescription": {
-    "message": "View archived and cached versions of web pages on 10+ search engines, such as the Wayback Machine, Archive.is and Google.",
+    "message": "View archived and cached versions of web pages on 10+ search engines, such as the Wayback Machine and Archive.is.",
     "description": "Description of the extension."
-  },
-
-  "engineName_google": {
-    "message": "Google",
-    "description": "Name of the search engine."
-  },
-
-  "engineName_googleText": {
-    "message": "Google (text-only)",
-    "description": "Name of the search engine."
   },
 
   "engineName_bing": {
@@ -59,11 +49,6 @@
     "description": "Name of the search engine."
   },
 
-  "engineName_yahoo": {
-    "message": "Yahoo",
-    "description": "Name of the search engine."
-  },
-
   "engineName_permacc": {
     "message": "Perma.cc",
     "description": "Name of the search engine."
@@ -95,19 +80,9 @@
     "placeholders": {
       "engine": {
         "content": "$1",
-        "example": "Google"
+        "example": "Wayback Machine"
       }
     }
-  },
-
-  "menuItemTitle_google": {
-    "message": "Google",
-    "description": "Title of the menu item."
-  },
-
-  "menuItemTitle_googleText": {
-    "message": "Google (text-only)",
-    "description": "Title of the menu item."
   },
 
   "menuItemTitle_bing": {
@@ -150,11 +125,6 @@
     "description": "Title of the menu item."
   },
 
-  "menuItemTitle_yahoo": {
-    "message": "Yahoo",
-    "description": "Title of the menu item."
-  },
-
   "menuItemTitle_permacc": {
     "message": "Perma.cc",
     "description": "Title of the menu item."
@@ -186,7 +156,7 @@
     "placeholders": {
       "engine": {
         "content": "$1",
-        "example": "Google"
+        "example": "Wayback Machine"
       }
     }
   },
@@ -204,16 +174,6 @@
   "optionSectionDescription_engines": {
     "message": "Toggle search engines and customize their order (drag and drop)",
     "description": "Description of the options section."
-  },
-
-  "optionTitle_google": {
-    "message": "Google Cache",
-    "description": "Title of the option."
-  },
-
-  "optionTitle_googleText": {
-    "message": "Google Cache (text-only)",
-    "description": "Title of the option."
   },
 
   "optionTitle_bing": {
@@ -253,11 +213,6 @@
 
   "optionTitle_megalodon": {
     "message": "Megalodon",
-    "description": "Title of the option."
-  },
-
-  "optionTitle_yahoo": {
-    "message": "Yahoo Cache",
     "description": "Title of the option."
   },
 
@@ -552,7 +507,7 @@
     "placeholders": {
       "engine": {
         "content": "$1",
-        "example": "Google"
+        "example": "Wayback Machine"
       }
     }
   },
@@ -563,7 +518,7 @@
     "placeholders": {
       "engine": {
         "content": "$1",
-        "example": "Google"
+        "example": "Wayback Machine"
       }
     }
   },

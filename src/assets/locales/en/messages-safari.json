@@ -4,11 +4,6 @@
     "description": "Description of the extension."
   },
 
-  "engineName_googleText": {
-    "message": "Google (Text-Only)",
-    "description": "Name of the search engine."
-  },
-
   "engineName_archiveIsAll": {
     "message": "Archive.is (All)",
     "description": "Name of the search engine."
@@ -17,11 +12,6 @@
   "engineName_archiveOrgAll": {
     "message": "Wayback Machine (All)",
     "description": "Name of the search engine."
-  },
-
-  "menuItemTitle_googleText": {
-    "message": "Google (Text-Only)",
-    "description": "Title of the menu item."
   },
 
   "menuItemTitle_archiveIsAll": {
@@ -50,7 +40,7 @@
     "placeholders": {
       "engine": {
         "content": "$1",
-        "example": "Google"
+        "example": "Wayback Machine"
       }
     }
   },
@@ -63,11 +53,6 @@
   "optionSectionTitle_engines": {
     "message": "Search Engines",
     "description": "Title of the options section."
-  },
-
-  "optionTitle_googleText": {
-    "message": "Google Cache (Text-Only)",
-    "description": "Title of the option."
   },
 
   "optionTitle_archiveOrgAll": {

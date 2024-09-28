@@ -45,7 +45,6 @@ import {
   pageArchiveHosts,
   linkArchiveHosts,
   linkArchiveUrlRx,
-  chromeMobileUA,
   chromeDesktopUA
 } from 'utils/data';
 import {targetEnv, mv3} from 'utils/config';
@@ -625,11 +624,7 @@ async function setTabUserAgent({tabId, tabUrl, userAgent, beaconToken} = {}) {
 
 async function getRequiredUserAgent(engine) {
   if (await isMobile()) {
-    // Google only works with a Chrome user agent on Firefox for Android,
-    // while other search engines may need a desktop user agent.
-    if (targetEnv === 'firefox' && ['google', 'googleText'].includes(engine)) {
-      return chromeMobileUA;
-    } else if (['yandex', 'bing', 'yahoo'].includes(engine)) {
+    if (['yandex', 'bing'].includes(engine)) {
       return chromeDesktopUA;
     }
   }
@@ -653,14 +648,7 @@ async function openCurrentDoc({linkUrl} = {}) {
     for (const [engine, rx] of Object.entries(linkArchiveUrlRx)) {
       const match = linkUrl.match(rx);
       if (match) {
-        if (engine === 'google') {
-          const data = new URL(linkUrl).searchParams.get('q');
-          if (data) {
-            docUrl = data.replace(/^cache.*?(https?:\/\/.*)$/, '$1').trim();
-          }
-        } else {
-          docUrl = match[1].trim();
-        }
+        docUrl = match[1].trim();
 
         break;
       }
