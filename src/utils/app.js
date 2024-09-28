@@ -12,7 +12,8 @@ import {
   getDayPrecisionEpoch,
   getDarkColorSchemeQuery,
   getExtensionDomain,
-  getRandomInt
+  getRandomInt,
+  requestLock
 } from 'utils/common';
 import {
   targetEnv,
@@ -677,6 +678,43 @@ function normalizeUrl(url) {
   return parsedUrl.toString();
 }
 
+async function addTabRevision({addedTabId, removedTabId} = {}) {
+  return requestLock('tab_revisions', async () => {
+    const {tabRevisions} = await storage.get('tabRevisions', {area: 'session'});
+
+    let entryFound = false;
+
+    for (const tabIds of tabRevisions) {
+      if (tabIds.includes(removedTabId)) {
+        tabIds.push(addedTabId);
+
+        entryFound = true;
+        break;
+      }
+    }
+
+    if (!entryFound) {
+      tabRevisions.push([removedTabId, addedTabId]);
+    }
+
+    await storage.set({tabRevisions}, {area: 'session'});
+  });
+}
+
+async function getTabRevisions(tabId) {
+  return requestLock('tab_revisions', async () => {
+    const {tabRevisions} = await storage.get('tabRevisions', {area: 'session'});
+
+    for (const tabIds of tabRevisions) {
+      if (tabIds.includes(tabId)) {
+        return tabIds;
+      }
+    }
+
+    return null;
+  });
+}
+
 export {
   getEnabledEngines,
   getSearches,
@@ -711,5 +749,7 @@ export {
   checkSearchEngineAccess,
   isMatchingUrlHost,
   validateUrl,
-  normalizeUrl
+  normalizeUrl,
+  addTabRevision,
+  getTabRevisions
 };

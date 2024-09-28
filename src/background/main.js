@@ -21,7 +21,8 @@ import {
   isContextMenuSupported,
   checkSearchEngineAccess,
   getEngineMenuIcon,
-  getAppTheme
+  getAppTheme,
+  addTabRevision
 } from 'utils/app';
 import {
   getText,
@@ -1047,6 +1048,10 @@ async function onStartup() {
   await setup({event: 'startup'});
 }
 
+async function onTabReplaced(addedTabId, removedTabId) {
+  await addTabRevision({addedTabId, removedTabId});
+}
+
 function addContextMenuListener() {
   if (browser.contextMenus) {
     browser.contextMenus.onClicked.addListener(onContextMenuItemClick);
@@ -1079,6 +1084,14 @@ function addInstallListener() {
 
 function addStartupListener() {
   browser.runtime.onStartup.addListener(onStartup);
+}
+
+function addTabReplacedListener() {
+  // Safari 18: tab.id changes when an extension page is redirected
+  // to a website, changes are saved to assign tasks to the correct tab.
+  if (['safari'].includes(targetEnv)) {
+    browser.tabs.onReplaced.addListener(onTabReplaced);
+  }
 }
 
 async function setupUI() {
@@ -1140,6 +1153,7 @@ function init() {
   addAlarmListener();
   addInstallListener();
   addStartupListener();
+  addTabReplacedListener();
 
   setup();
 }
