@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.0.0](https://github.com/dessant/web-archives/compare/v6.1.1...v7.0.0) (2024-09-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* browser versions older than Safari 17
+are no longer supported
+
+### Features
+
+* upgrade to Manifest V3 in Safari ([3fecc20](https://github.com/dessant/web-archives/commit/3fecc201feddf4dd46c9773e2a4fd8002f5e90cf))
+
+
+### Bug Fixes
+
+* remove Google Cache and Yahoo Cache ([b48f6d6](https://github.com/dessant/web-archives/commit/b48f6d62a799648baad89f1a1d0f2027cbf0ad9e)), closes [#90](https://github.com/dessant/web-archives/issues/90)
+* restore compatibility with Safari 18 ([7869d64](https://github.com/dessant/web-archives/commit/7869d64e4b02b6bd6311cff114a30ea9ea52b3d8))
+
 ## [6.1.1](https://github.com/dessant/web-archives/compare/v6.1.0...v6.1.1) (2024-06-21)
 
 
