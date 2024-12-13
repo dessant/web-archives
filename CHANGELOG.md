@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.0.1](https://github.com/dessant/web-archives/compare/v7.0.0...v7.0.1) (2024-12-13)
+
+
+### Bug Fixes
+
+* remove Bing Cache ([1b2050c](https://github.com/dessant/web-archives/commit/1b2050ca5e6fee8bd881b76f37b07042f597bade))
+* update Yandex ([1e5defd](https://github.com/dessant/web-archives/commit/1e5defd7db1716f278f2060e22e623420239b558)), closes [#106](https://github.com/dessant/web-archives/issues/106)
+
 ## [7.0.0](https://github.com/dessant/web-archives/compare/v6.1.1...v7.0.0) (2024-09-29)
 
 
