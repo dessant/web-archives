@@ -26,10 +26,6 @@ const engines = {
   archiveOrgAll: {
     target: 'https://web.archive.org/web/*/{url}'
   },
-  bing: {
-    target: 'https://www.bing.com/search?q=url:{url}&go=Search&qs=bs&form=QBRE',
-    isExec: true
-  },
   yandex: {
     target: 'https://www.yandex.com/',
     isExec: true
@@ -115,7 +111,6 @@ const pageArchiveHosts = {
     'archive.md',
     'archiveiya74codqgiixo33q62qlrqtkgmcitqx5u2oeqnmn5bpcbiyd.onion'
   ],
-  bing: ['cc.bingj.com'],
   yandex: ['yandexwebcache.net'],
   permacc: ['perma.cc', 'rejouer.perma.cc'],
   megalodon: ['megalodon.jp'],

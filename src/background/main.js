@@ -624,7 +624,7 @@ async function setTabUserAgent({tabId, tabUrl, userAgent, beaconToken} = {}) {
 
 async function getRequiredUserAgent(engine) {
   if (await isMobile()) {
-    if (['yandex', 'bing'].includes(engine)) {
+    if (['yandex'].includes(engine)) {
       return chromeDesktopUA;
     }
   }

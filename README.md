@@ -41,8 +41,8 @@ of the extension, please consider contributing with
 ## Description
 
 Web Archives is a browser extension that enables you to find archived
-and cached versions of web pages, and comes with support for more than
-10 search engines. Searches can be initiated from the context menu
+and cached versions of web pages, and comes with support for various
+search engines. Searches can be initiated from the context menu
 and the browser toolbar.
 
 #### Search Engines

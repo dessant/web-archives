@@ -9,11 +9,6 @@
     "description": "Description of the extension."
   },
 
-  "engineName_bing": {
-    "message": "Bing",
-    "description": "Name of the search engine."
-  },
-
   "engineName_yandex": {
     "message": "Yandex",
     "description": "Name of the search engine."
@@ -83,11 +78,6 @@
         "example": "Wayback Machine"
       }
     }
-  },
-
-  "menuItemTitle_bing": {
-    "message": "Bing",
-    "description": "Title of the menu item."
   },
 
   "menuItemTitle_yandex": {
@@ -174,11 +164,6 @@
   "optionSectionDescription_engines": {
     "message": "Toggle search engines and customize their order (drag and drop)",
     "description": "Description of the options section."
-  },
-
-  "optionTitle_bing": {
-    "message": "Bing Cache",
-    "description": "Title of the option."
   },
 
   "optionTitle_yandex": {

@@ -18,8 +18,11 @@
       "20230718120215_add_webcite",
       "20240514170322_add_appversion",
       "20240619180111_add_menuchangeevent",
-      "20240928183956_remove_search_engines"
+      "20240928183956_remove_search_engines",
+      "20241213110403_remove_bing"
     ],
-    "session": ["20240514122825_initial_version"]
+    "session": [
+      "20240514122825_initial_version"
+    ]
   }
 }
