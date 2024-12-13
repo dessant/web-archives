@@ -40,7 +40,7 @@ async function handleResults(sourceUrl, results) {
 
     window.setTimeout(async function () {
       const link = await findNode(
-        '#ExtralinksPopup a.ExtralinksPopup-Item_copy'
+        '.ExtralinksPopup a.ExtralinksPopup-Item_copy'
       );
       link.setAttribute('target', '_top');
       link.click();
@@ -93,7 +93,7 @@ async function search({session, search, doc, storageIds}) {
   await sleep(1000);
 
   let results = document.querySelectorAll(
-    '#search-result button.OrganicExtralinks'
+    '#search-result button.Organic-Extralinks'
   );
 
   if (results.length) {
@@ -116,7 +116,7 @@ async function search({session, search, doc, storageIds}) {
       }, 100);
 
       // the page is not reloaded on desktop
-      await findNode('#search-result button.OrganicExtralinks', {
+      await findNode('#search-result button.Organic-Extralinks', {
         throwError: false,
         timeout: 30000
       });
@@ -125,7 +125,7 @@ async function search({session, search, doc, storageIds}) {
       await sendReceipt(storageIds);
 
       results = document.querySelectorAll(
-        '#search-result button.OrganicExtralinks'
+        '#search-result button.Organic-Extralinks'
       );
 
       if (results.length) {
