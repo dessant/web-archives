@@ -57,7 +57,7 @@ https://github.com/dessant/web-archives/wiki/Search-engines
 
 <p>
   <img width="380" src="https://i.imgur.com/Qamw5Dm.png">
-  <img width="380" src="https://i.imgur.com/jbpH7lp.png">
+  <img width="380" src="https://i.imgur.com/SMJvLw4.png">
   <img width="380" src="https://i.imgur.com/GCRbxh3.png">
   <img width="380" src="https://i.imgur.com/FMvop7l.png">
 </p>
