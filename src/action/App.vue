@@ -607,7 +607,7 @@ export default {
 
 <style lang="scss">
 @use 'vueton/styles' as vueton;
-@import 'vue-resize/dist/vue-resize';
+@use 'vue-resize/dist/vue-resize';
 
 @include vueton.theme-base;
 @include vueton.transitions;
