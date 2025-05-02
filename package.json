@@ -39,7 +39,9 @@
     "inspect": "cross-env NODE_ENV=production gulp inspect",
     "update": "ncu --dep prod,dev,peer --filterVersion '^*' --upgrade",
     "release": "commit-and-tag-version",
-    "push": "git push --follow-tags origin main"
+    "push": "git push --follow-tags origin main",
+    "install": "npm install",
+    "build": "npm run build:chrome"
   },
   "dependencies": {
     "@fontsource/roboto": "^5.1.0",

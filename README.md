@@ -62,6 +62,23 @@ https://github.com/dessant/web-archives/wiki/Search-engines
   <img width="380" src="https://i.imgur.com/FMvop7l.png">
 </p>
 
+## Installation
+
+To install the project, follow these steps:
+
+1. Ensure you have Node.js and npm installed on your machine.
+2. Clone the repository to your local machine.
+3. Navigate to the root directory of the repository.
+4. Run `npm install` to install the necessary dependencies as specified in the `package.json` file.
+
+## Build
+
+To build the project, follow these steps:
+
+1. After the installation is complete, you can build the project using the provided scripts in the `package.json` file.
+2. For example, to build for Chrome, you can run `npm run build:chrome`.
+3. The build output will be saved in the `dist` directory, organized by the target environment.
+
 ## License
 
 Copyright (c) 2017-2024 Armin Sebastian
