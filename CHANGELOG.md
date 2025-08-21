@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.0.3](https://github.com/dessant/web-archives/compare/v7.0.2...v7.0.3) (2025-08-21)
+
+
+### Bug Fixes
+
+* prevent crash in Safari ([5dbda7a](https://github.com/dessant/web-archives/commit/5dbda7aea275bb3b3b8c6c2efe3a099db0dd72f7))
+
 ## [7.0.2](https://github.com/dessant/web-archives/compare/v7.0.1...v7.0.2) (2025-08-21)
 
 
