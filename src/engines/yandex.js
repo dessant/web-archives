@@ -102,7 +102,7 @@ async function search({session, search, doc, storageIds}) {
     await handleResults(doc.docUrl, results);
   } else {
     const input = await findNode(
-      'form[role=search] .HeaderForm-InputWrapper input.HeaderForm-Input'
+      'form[role=search] .HeaderForm-InputWrapper textarea.HeaderForm-Input'
     );
 
     if (input.value.startsWith('url:')) {
