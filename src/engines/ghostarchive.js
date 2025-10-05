@@ -4,7 +4,7 @@ import {initSearch, sendReceipt} from 'utils/engines';
 
 const engine = 'ghostarchive';
 
-async function search({session, search, doc, storageIds}) {
+async function search({session, search, doc, storageIds} = {}) {
   const link = await findNode('#bodyContent table td a', {
     throwError: false,
     timeout: 10000

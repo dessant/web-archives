@@ -1,12 +1,6 @@
 import {v4 as uuidv4} from 'uuid';
 
-import {
-  findNode,
-  makeDocumentVisible,
-  executeScriptMainContext,
-  runOnce,
-  sleep
-} from 'utils/common';
+import {findNode, executeScriptMainContext, runOnce, sleep} from 'utils/common';
 import {initSearch, sendReceipt, getRankedResults} from 'utils/engines';
 
 const engine = 'yandex';
@@ -48,7 +42,7 @@ async function handleResults(sourceUrl, results) {
   }
 }
 
-async function search({session, search, doc, storageIds}) {
+async function search({session, search, doc, storageIds} = {}) {
   if (!window.location.pathname.startsWith('/search')) {
     const input = await findNode('input#text');
 
@@ -135,11 +129,16 @@ async function search({session, search, doc, storageIds}) {
   }
 }
 
-function init() {
-  makeDocumentVisible();
-  if (!window.location.pathname.startsWith('/showcaptcha')) {
-    initSearch(search, engine, taskId);
+async function engineAccess() {
+  if (window.location.pathname.startsWith('/showcaptcha')) {
+    return false;
   }
+
+  return true;
+}
+
+function init() {
+  initSearch(search, engine, taskId, {engineAccess, documentVisible: true});
 }
 
 if (runOnce('search')) {

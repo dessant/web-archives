@@ -1,6 +1,10 @@
 import psl from 'psl';
 
-import {waitForDocumentLoad, getCharCount} from 'utils/common';
+import {
+  waitForDocumentLoad,
+  makeDocumentVisible,
+  getCharCount
+} from 'utils/common';
 
 function showEngineError({message, errorId, engine}) {
   if (!message) {
@@ -30,8 +34,21 @@ async function sendReceipt(storageIds) {
   }
 }
 
-async function initSearch(searchFn, engine, taskId) {
+async function initSearch(
+  searchFn,
+  engine,
+  taskId,
+  {engineAccess = null, documentVisible = false} = {}
+) {
+  if (documentVisible) {
+    makeDocumentVisible();
+  }
+
   await waitForDocumentLoad();
+
+  if (engineAccess && !(await engineAccess())) {
+    return;
+  }
 
   const task = await browser.runtime.sendMessage({
     id: 'storageRequest',

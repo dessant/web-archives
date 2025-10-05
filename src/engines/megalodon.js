@@ -3,7 +3,7 @@ import {initSearch, sendReceipt} from 'utils/engines';
 
 const engine = 'megalodon';
 
-async function search({session, search, doc, storageIds}) {
+async function search({session, search, doc, storageIds} = {}) {
   const node = await findNode('div#bgcontain a[id^="fish"]', {
     throwError: false
   });

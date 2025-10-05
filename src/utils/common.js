@@ -70,7 +70,7 @@ async function executeScript({
   }
 }
 
-function executeScriptMainContext({
+async function executeScriptMainContext({
   files = null,
   func = null,
   args = null,
