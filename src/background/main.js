@@ -34,6 +34,7 @@ import {
   getActiveTab,
   getPlatform,
   isValidTab,
+  isIndexedDbSupported,
   runOnce
 } from 'utils/common';
 import {getScriptFunction} from 'utils/scripts';
@@ -496,12 +497,14 @@ async function searchDocument(session, doc, firstBatchItem = true) {
 
   const receiptSearches = searches.filter(item => item.sendsReceipt);
 
+  const docStorageArea = isIndexedDbSupported() ? 'indexeddb' : 'local';
+
   let docId;
   if (receiptSearches.length) {
     docId = await registry.addStorageItem(doc, {
       receipts: {expected: receiptSearches.length, received: 0},
       expiryTime: 10.0,
-      area: 'indexeddb'
+      area: docStorageArea
     });
   }
 
