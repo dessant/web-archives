@@ -53,6 +53,10 @@ const engines = {
   },
   webcite: {
     target: 'https://webcitation.org/query?url={url}&date={date}'
+  },
+  softwareHeritage: {
+    target:
+      'https://archive.softwareheritage.org/browse/origin/?origin_url={url}'
   }
 };
 

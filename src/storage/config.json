@@ -19,7 +19,8 @@
       "20240514170322_add_appversion",
       "20240619180111_add_menuchangeevent",
       "20240928183956_remove_search_engines",
-      "20241213110403_remove_bing"
+      "20241213110403_remove_bing",
+      "20251011182228_add_software_heritage"
     ],
     "session": [
       "20240514122825_initial_version"
