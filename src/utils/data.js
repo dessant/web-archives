@@ -118,7 +118,7 @@ const pageArchiveHosts = {
   permacc: ['perma.cc', 'rejouer.perma.cc'],
   megalodon: ['megalodon.jp'],
   ghostarchive: ['ghostarchive.org'],
-  webcite: ['webcitation.org']
+  webcite: ['www.webcitation.org']
 };
 
 const linkArchiveHosts = {
