@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.1.0](https://github.com/dessant/web-archives/compare/v7.0.3...v7.1.0) (2025-10-11)
+
+
+### Features
+
+* search on Software Heritage ([004ad13](https://github.com/dessant/web-archives/commit/004ad131e0b6498db4ac141afdf03eed4ea8ecf6)), closes [#91](https://github.com/dessant/web-archives/issues/91)
+
+
+### Bug Fixes
+
+* check search engine access after document load ([7d368ee](https://github.com/dessant/web-archives/commit/7d368eeee105a851d08a0cf1644800238526b314))
+* improve current page detection ([1f60ded](https://github.com/dessant/web-archives/commit/1f60ded8f80b4d716ffdbedc10c855d408ba5055))
+* open current page from WebCite archive ([b545948](https://github.com/dessant/web-archives/commit/b545948813b89f2e86ba4d7af14c4b1520c5be0d))
+* prevent IndexedDB error in Firefox when Private Browsing is enabled ([9057e38](https://github.com/dessant/web-archives/commit/9057e385d82544b37ae5c456c5acb603174a646c))
+
 ## [7.0.3](https://github.com/dessant/web-archives/compare/v7.0.2...v7.0.3) (2025-08-21)
 
 
