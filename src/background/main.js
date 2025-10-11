@@ -661,6 +661,13 @@ async function openCurrentDoc({linkUrl} = {}) {
       if (match) {
         docUrl = match[1].trim();
 
+        if (
+          ['permacc', 'ghostarchive'].includes(engine) &&
+          !/^(?:https?|ftp):\/\//i.test(docUrl)
+        ) {
+          docUrl = `https://${docUrl}`;
+        }
+
         break;
       }
     }

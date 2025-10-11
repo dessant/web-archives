@@ -100,7 +100,10 @@ const errorCodes = [
 ];
 
 const pageArchiveHosts = {
-  archiveOrg: ['web.archive.org'],
+  archiveOrg: [
+    'web.archive.org',
+    'web.archivep75mbjunhxc6x4j5mwjmomyxb573v42baldlqu56ruil2oiad.onion'
+  ],
   archiveIs: [
     'archive.is',
     'archive.today',
@@ -119,7 +122,10 @@ const pageArchiveHosts = {
 };
 
 const linkArchiveHosts = {
-  archiveOrg: ['web.archive.org'],
+  archiveOrg: [
+    'web.archive.org',
+    'web.archivep75mbjunhxc6x4j5mwjmomyxb573v42baldlqu56ruil2oiad.onion'
+  ],
   archiveIs: [
     'archive.is',
     'archive.today',
@@ -136,12 +142,13 @@ const linkArchiveHosts = {
 };
 
 const linkArchiveUrlRx = {
-  archiveOrg: /^https?:\/\/web\.archive\.org\/web\/[0-9]+\/(.*)/i,
+  archiveOrg:
+    /^https?:\/\/web\.(?:archive\.org|archivep75mbjunhxc6x4j5mwjmomyxb573v42baldlqu56ruil2oiad\.onion)\/web\/[0-9]+\/(.*)/i,
   archiveIs:
-    /^https?:\/\/(?:archive\.(?:is|today|ph|vn|fo|li|md)|archiveiya74codqgiixo33q62qlrqtkgmcitqx5u2oeqnmn5bpcbiyd.onion)\/o\/.*?\/(.*)/i,
-  permacc: /^https:\/\/rejouer\.perma\.cc\/(?:.*)\/mp_\/(.*)/i,
+    /^https?:\/\/(?:archive\.(?:is|today|ph|vn|fo|li|md)|archiveiya74codqgiixo33q62qlrqtkgmcitqx5u2oeqnmn5bpcbiyd\.onion)\/o\/.*?\/(.*)/i,
+  permacc: /^https?:\/\/rejouer\.perma\.cc\/.*(?:\/|[0-9]+)mp_\/\/?\/?(.*)/i,
   megalodon: /https?:\/\/megalodon\.jp\/(?:\d+-)+\d+\/(.*)/i,
-  ghostarchive: /^https:\/\/ghostarchive\.org\/(?:.*)\/mp_\/(.*)/i
+  ghostarchive: /^https?:\/\/ghostarchive\.org\/.*(?:\/|[0-9]+)mp_\/\/?\/?(.*)/i
 };
 
 const chromeDesktopUA =
