@@ -684,6 +684,17 @@ function normalizeUrl(url) {
   return parsedUrl.toString();
 }
 
+function removeUrlParams(url) {
+  try {
+    const parsedUrl = new URL(url);
+    parsedUrl.search = '';
+    return parsedUrl.toString();
+  } catch (err) {
+    // If URL parsing fails, return original URL
+    return url;
+  }
+}
+
 async function addTabRevision({addedTabId, removedTabId} = {}) {
   return requestLock('tab_revisions', async () => {
     const {tabRevisions} = await storage.get('tabRevisions', {area: 'session'});
@@ -756,6 +767,7 @@ export {
   isMatchingUrlHost,
   validateUrl,
   normalizeUrl,
+  removeUrlParams,
   addTabRevision,
   getTabRevisions
 };

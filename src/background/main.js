@@ -10,6 +10,7 @@ import {
   showNotification,
   validateUrl,
   normalizeUrl,
+  removeUrlParams,
   showPage,
   hasModule,
   insertBaseModule,
@@ -420,6 +421,11 @@ async function getTabUrl(session, search, doc, taskId) {
 
   let url = doc.docUrl;
 
+  // Remove URL parameters if option is enabled
+  if (session.options.removeUrlParams) {
+    url = removeUrlParams(url);
+  }
+
   if (['archiveOrg', 'archiveOrgAll'].includes(search.engine)) {
     url = normalizeUrl(url);
   }
@@ -766,14 +772,15 @@ async function onActionButtonClick(tab) {
   onActionClick(session, tab.url);
 }
 
-async function onActionPopupClick(engine, docUrl) {
+async function onActionPopupClick(engine, docUrl, removeUrlParams) {
   const tab = await getActiveTab();
 
   const session = await createSession({
     sessionOrigin: 'action',
     sourceTabId: tab.id,
     sourceTabIndex: tab.index,
-    engine
+    engine,
+    options: removeUrlParams !== undefined ? {removeUrlParams} : {}
   });
 
   onActionClick(session, docUrl || tab.url);
@@ -789,13 +796,17 @@ async function setBrowserAction() {
   const options = await storage.get([
     'engines',
     'disabledEngines',
-    'searchAllEnginesAction'
+    'searchAllEnginesAction',
+    'removeUrlParams'
   ]);
   const enEngines = await getEnabledEngines(options);
 
   const action = mv3 ? browser.action : browser.browserAction;
 
-  if (enEngines.length === 1) {
+  // Always show popup if removeUrlParams is disabled globally, so users can use per-search option
+  const shouldShowPopup = !options.removeUrlParams;
+
+  if (enEngines.length === 1 && !shouldShowPopup) {
     action.setTitle({
       title: getText(
         'actionTitle_engine',
@@ -806,7 +817,7 @@ async function setBrowserAction() {
     return;
   }
 
-  if (options.searchAllEnginesAction === 'main' && enEngines.length > 1) {
+  if (options.searchAllEnginesAction === 'main' && enEngines.length > 1 && !shouldShowPopup) {
     action.setTitle({
       title: getText('actionTitle_allEngines')
     });
@@ -872,13 +883,17 @@ async function setPageAction(tabId) {
   const options = await storage.get([
     'engines',
     'disabledEngines',
-    'searchAllEnginesAction'
+    'searchAllEnginesAction',
+    'removeUrlParams'
   ]);
   const enEngines = await getEnabledEngines(options);
   const hasListener =
     browser.pageAction.onClicked.hasListener(onActionButtonClick);
 
-  if (enEngines.length === 1) {
+  // Always show popup if removeUrlParams is disabled globally, so users can use per-search option
+  const shouldShowPopup = !options.removeUrlParams;
+
+  if (enEngines.length === 1 && !shouldShowPopup) {
     if (!hasListener) {
       browser.pageAction.onClicked.addListener(onActionButtonClick);
     }
@@ -893,7 +908,7 @@ async function setPageAction(tabId) {
     return;
   }
 
-  if (options.searchAllEnginesAction === 'main' && enEngines.length > 1) {
+  if (options.searchAllEnginesAction === 'main' && enEngines.length > 1 && !shouldShowPopup) {
     if (!hasListener) {
       browser.pageAction.onClicked.addListener(onActionButtonClick);
     }
@@ -948,7 +963,7 @@ async function processMessage(request, sender) {
   }
 
   if (request.id === 'actionPopupSubmit') {
-    onActionPopupClick(request.engine, request.docUrl);
+    onActionPopupClick(request.engine, request.docUrl, request.removeUrlParams);
   }
   if (request.id === 'openCurrentDoc') {
     openCurrentDoc();

@@ -140,6 +140,14 @@
       </div>
     </transition>
 
+    <div class="remove-params-option" v-if="showRemoveParamsOption">
+      <vn-switch
+        :label="getText('actionLabel_removeUrlParams')"
+        v-model="removeUrlParams"
+        density="compact"
+      ></vn-switch>
+    </div>
+
     <vn-divider class="header-separator" :class="separatorClasses"></vn-divider>
 
     <div class="list-items-wrap" ref="items" @scroll="onListScroll">
@@ -192,6 +200,7 @@ import {
   Menu,
   MenuIconButton,
   Select,
+  Switch,
   TextField
 } from 'vueton';
 
@@ -224,6 +233,7 @@ export default {
     [Menu.name]: Menu,
     [MenuIconButton.name]: MenuIconButton,
     [Select.name]: Select,
+    [Switch.name]: Switch,
     [TextField.name]: TextField,
     [ResizeObserver.name]: ResizeObserver
   },
@@ -234,6 +244,7 @@ export default {
 
       searchModeAction: '',
       docUrl: '',
+      removeUrlParams: false,
       listItems: {
         ...getListItems(
           {
@@ -296,7 +307,8 @@ export default {
       openActionMenu: false,
 
       enableOpenCurrentDoc: false,
-      enableContributions
+      enableContributions,
+      globalRemoveUrlParams: false
     };
   },
 
@@ -309,6 +321,10 @@ export default {
 
     showSettings: function () {
       return this.searchModeAction === 'url';
+    },
+
+    showRemoveParamsOption: function () {
+      return !this.globalRemoveUrlParams;
     }
   },
 
@@ -329,7 +345,8 @@ export default {
       await browser.runtime.sendMessage({
         id: 'actionPopupSubmit',
         docUrl: this.docUrl,
-        engine
+        engine,
+        removeUrlParams: this.showRemoveParamsOption ? this.removeUrlParams : undefined
       });
 
       this.closeAction();
@@ -416,6 +433,7 @@ export default {
 
     removeDocUrl: function () {
       this.docUrl = '';
+      this.removeUrlParams = false;
     },
 
     focusDocUrlInput: function () {
@@ -573,6 +591,8 @@ export default {
         );
       }
 
+      this.globalRemoveUrlParams = options.removeUrlParams;
+
       this.setupPinnedButtons({maxPins: this.maxPinnedToolbarButtons});
 
       this.theme = await getAppTheme(options.appTheme);
@@ -698,6 +718,13 @@ body {
 .settings {
   padding-top: 8px;
   padding-bottom: 24px;
+}
+
+.remove-params-option {
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 
 .settings-enter-active,

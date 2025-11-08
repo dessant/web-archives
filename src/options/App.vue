@@ -124,6 +124,12 @@
             v-model="options.showEngineIcons"
           ></vn-switch>
         </div>
+        <div class="option">
+          <vn-switch
+            :label="getText('optionTitle_removeUrlParams')"
+            v-model="options.removeUrlParams"
+          ></vn-switch>
+        </div>
         <div class="option" v-if="enableContributions">
           <vn-switch
             :label="getText('optionTitle_showContribPage')"
@@ -224,7 +230,8 @@ export default {
         showEngineIcons: false,
         openCurrentDocContextMenu: false,
         appTheme: '',
-        showContribPage: false
+        showContribPage: false,
+        removeUrlParams: false
       }
     };
   },

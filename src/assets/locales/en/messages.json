@@ -366,6 +366,11 @@
     "description": "Title of the option."
   },
 
+  "optionTitle_removeUrlParams": {
+    "message": "Remove URL parameters before searching",
+    "description": "Title of the option."
+  },
+
   "optionTitle_appTheme": {
     "message": "Theme",
     "description": "Title of the option."
@@ -394,6 +399,11 @@
   "inputPlaceholder_docUrl": {
     "message": "Page URL",
     "description": "Placeholder of the input."
+  },
+
+  "actionLabel_removeUrlParams": {
+    "message": "Remove URL parameters",
+    "description": "Label for the remove URL parameters option in action popup."
   },
 
   "buttonLabel_contribute": {

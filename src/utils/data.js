@@ -14,7 +14,8 @@ const optionKeys = [
   'showContribPage',
   'pinActionToolbarOpenCurrentDoc',
   'pinActionToolbarOptions',
-  'pinActionToolbarContribute'
+  'pinActionToolbarContribute',
+  'removeUrlParams'
 ];
 
 const searchUrl = browser.runtime.getURL('/src/search/index.html') + '?id={id}';
