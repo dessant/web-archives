@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.2.0](https://github.com/dessant/web-archives/compare/v7.1.0...v7.2.0) (2025-12-05)
+
+
+### Features
+
+* add options for changing Wayback Machine and Archive.is hosts ([bc995df](https://github.com/dessant/web-archives/commit/bc995df46e523064905bacb2b0a3c81b6fc9434a))
+
 ## [7.1.0](https://github.com/dessant/web-archives/compare/v7.0.3...v7.1.0) (2025-10-11)
 
 
