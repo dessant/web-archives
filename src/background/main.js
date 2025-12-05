@@ -43,6 +43,8 @@ import {
   optionKeys,
   engines,
   errorCodes,
+  archiveOrgHosts,
+  archiveIsHosts,
   pageArchiveHosts,
   linkArchiveHosts,
   linkArchiveUrlRx,
@@ -446,7 +448,19 @@ async function getTabUrl(session, search, doc, taskId) {
     );
   } else if (engine === 'webcite') {
     tabUrl = tabUrl.replace('{date}', new Date().toISOString().split('T')[0]);
+  } else if (['archiveOrg', 'archiveOrgAll'].includes(engine)) {
+    const host = archiveOrgHosts[session.options.archiveOrgHost];
+    tabUrl = tabUrl.replace('{host}', host);
+  } else if (['archiveIs', 'archiveIsAll'].includes(engine)) {
+    const host = archiveIsHosts[session.options.archiveIsHost];
+    tabUrl = tabUrl.replace('{host}', host);
+
+    if (session.options.archiveIsHost.startsWith('onion_')) {
+      tabUrl = tabUrl.replace(/^https/i, 'http');
+    }
   }
+
+  archiveOrgHosts, archiveIsHosts;
 
   tabUrl = tabUrl.replace(/{url}/g, url);
 

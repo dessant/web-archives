@@ -130,6 +130,24 @@
             v-model="options.showContribPage"
           ></vn-switch>
         </div>
+        <div class="option select">
+          <vn-select
+            :label="getText('optionTitle_archiveOrgHost')"
+            :items="listItems.archiveOrgHost"
+            v-model="options.archiveOrgHost"
+            transition="scale-transition"
+          >
+          </vn-select>
+        </div>
+        <div class="option select">
+          <vn-select
+            :label="getText('optionTitle_archiveIsHost')"
+            :items="listItems.archiveIsHost"
+            v-model="options.archiveIsHost"
+            transition="scale-transition"
+          >
+          </vn-select>
+        </div>
         <div class="option button" v-if="enableContributions">
           <vn-button
             class="contribute-button vn-icon--start"
@@ -155,7 +173,7 @@ import storage from 'storage/storage';
 import {getListItems, showContributePage} from 'utils/app';
 import {getText} from 'utils/common';
 import {enableContributions} from 'utils/config';
-import {optionKeys} from 'utils/data';
+import {optionKeys, archiveOrgHosts, archiveIsHosts} from 'utils/data';
 
 export default {
   components: {
@@ -203,6 +221,14 @@ export default {
         ...getListItems(
           {appTheme: ['auto', 'light', 'dark']},
           {scope: 'optionValue_appTheme'}
+        ),
+        ...getListItems(
+          {archiveOrgHost: Object.keys(archiveOrgHosts)},
+          {scope: 'optionValue_archiveOrgHost'}
+        ),
+        ...getListItems(
+          {archiveIsHost: Object.keys(archiveIsHosts)},
+          {scope: 'optionValue_archiveIsHost'}
         )
       },
 
@@ -224,7 +250,9 @@ export default {
         showEngineIcons: false,
         openCurrentDocContextMenu: false,
         appTheme: '',
-        showContribPage: false
+        showContribPage: false,
+        archiveOrgHost: '',
+        archiveIsHost: ''
       }
     };
   },

@@ -391,6 +391,66 @@
     "description": "Title of the option."
   },
 
+  "optionTitle_archiveOrgHost": {
+    "message": "Wayback Machine host",
+    "description": "Title of the option."
+  },
+
+  "optionValue_archiveOrgHost_web_archive_org": {
+    "message": "web.archive.org",
+    "description": "Value of the option."
+  },
+
+  "optionValue_archiveOrgHost_onion_1": {
+    "message": "Onion service",
+    "description": "Value of the option."
+  },
+
+  "optionTitle_archiveIsHost": {
+    "message": "Archive.is host",
+    "description": "Title of the option."
+  },
+
+  "optionValue_archiveIsHost_archive_is": {
+    "message": "archive.is",
+    "description": "Value of the option."
+  },
+
+  "optionValue_archiveIsHost_archive_today": {
+    "message": "archive.today",
+    "description": "Value of the option."
+  },
+
+  "optionValue_archiveIsHost_archive_ph": {
+    "message": "archive.ph",
+    "description": "Value of the option."
+  },
+
+  "optionValue_archiveIsHost_archive_vn": {
+    "message": "archive.vn",
+    "description": "Value of the option."
+  },
+
+  "optionValue_archiveIsHost_archive_fo": {
+    "message": "archive.fo",
+    "description": "Value of the option."
+  },
+
+  "optionValue_archiveIsHost_archive_li": {
+    "message": "archive.li",
+    "description": "Value of the option."
+  },
+
+  "optionValue_archiveIsHost_archive_md": {
+    "message": "archive.md",
+    "description": "Value of the option."
+  },
+
+  "optionValue_archiveIsHost_onion_1": {
+    "message": "Onion service",
+    "description": "Value of the option."
+  },
+
   "inputPlaceholder_docUrl": {
     "message": "Page URL",
     "description": "Placeholder of the input."

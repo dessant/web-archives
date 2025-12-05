@@ -20,10 +20,9 @@
       "20240619180111_add_menuchangeevent",
       "20240928183956_remove_search_engines",
       "20241213110403_remove_bing",
-      "20251011182228_add_software_heritage"
+      "20251011182228_add_software_heritage",
+      "20251205101919_add_archive_host_options"
     ],
-    "session": [
-      "20240514122825_initial_version"
-    ]
+    "session": ["20240514122825_initial_version"]
   }
 }

@@ -14,27 +14,29 @@ const optionKeys = [
   'showContribPage',
   'pinActionToolbarOpenCurrentDoc',
   'pinActionToolbarOptions',
-  'pinActionToolbarContribute'
+  'pinActionToolbarContribute',
+  'archiveOrgHost',
+  'archiveIsHost'
 ];
 
 const searchUrl = browser.runtime.getURL('/src/search/index.html') + '?id={id}';
 
 const engines = {
   archiveOrg: {
-    target: 'https://web.archive.org/web/{url}'
+    target: 'https://{host}/web/{url}'
   },
   archiveOrgAll: {
-    target: 'https://web.archive.org/web/*/{url}'
+    target: 'https://{host}/web/*/{url}'
   },
   yandex: {
     target: 'https://www.yandex.com/',
     isExec: true
   },
   archiveIs: {
-    target: 'https://archive.is/newest/{url}'
+    target: 'https://{host}/newest/{url}'
   },
   archiveIsAll: {
-    target: 'https://archive.is/{url}'
+    target: 'https://{host}/{url}'
   },
   memento: {
     target: 'http://timetravel.mementoweb.org/memento/{date}/{url}'
@@ -103,21 +105,25 @@ const errorCodes = [
   527
 ];
 
+const archiveOrgHosts = {
+  web_archive_org: 'web.archive.org',
+  onion_1: 'web.archivep75mbjunhxc6x4j5mwjmomyxb573v42baldlqu56ruil2oiad.onion'
+};
+
+const archiveIsHosts = {
+  archive_is: 'archive.is',
+  archive_today: 'archive.today',
+  archive_ph: 'archive.ph',
+  archive_vn: 'archive.vn',
+  archive_fo: 'archive.fo',
+  archive_li: 'archive.li',
+  archive_md: 'archive.md',
+  onion_1: 'archiveiya74codqgiixo33q62qlrqtkgmcitqx5u2oeqnmn5bpcbiyd.onion'
+};
+
 const pageArchiveHosts = {
-  archiveOrg: [
-    'web.archive.org',
-    'web.archivep75mbjunhxc6x4j5mwjmomyxb573v42baldlqu56ruil2oiad.onion'
-  ],
-  archiveIs: [
-    'archive.is',
-    'archive.today',
-    'archive.ph',
-    'archive.vn',
-    'archive.fo',
-    'archive.li',
-    'archive.md',
-    'archiveiya74codqgiixo33q62qlrqtkgmcitqx5u2oeqnmn5bpcbiyd.onion'
-  ],
+  archiveOrg: Object.values(archiveOrgHosts),
+  archiveIs: Object.values(archiveIsHosts),
   yandex: ['yandexwebcache.net'],
   permacc: ['perma.cc', 'rejouer.perma.cc'],
   megalodon: ['megalodon.jp'],
@@ -126,20 +132,8 @@ const pageArchiveHosts = {
 };
 
 const linkArchiveHosts = {
-  archiveOrg: [
-    'web.archive.org',
-    'web.archivep75mbjunhxc6x4j5mwjmomyxb573v42baldlqu56ruil2oiad.onion'
-  ],
-  archiveIs: [
-    'archive.is',
-    'archive.today',
-    'archive.ph',
-    'archive.vn',
-    'archive.fo',
-    'archive.li',
-    'archive.md',
-    'archiveiya74codqgiixo33q62qlrqtkgmcitqx5u2oeqnmn5bpcbiyd.onion'
-  ],
+  archiveOrg: Object.values(archiveOrgHosts),
+  archiveIs: Object.values(archiveIsHosts),
   permacc: ['rejouer.perma.cc'],
   megalodon: ['megalodon.jp'],
   ghostarchive: ['ghostarchive.org']
@@ -170,6 +164,8 @@ export {
   engineIconAlias,
   engineIconVariants,
   errorCodes,
+  archiveOrgHosts,
+  archiveIsHosts,
   pageArchiveHosts,
   linkArchiveHosts,
   linkArchiveUrlRx,
