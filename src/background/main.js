@@ -246,9 +246,9 @@ async function getMenuItems() {
 
   const options = await storage.get(optionKeys);
 
-  const contexts = ['link'];
+  const contexts = ['link', 'selection'];
   if (options.showInContextMenu === 'all') {
-    contexts.push('audio', 'editable', 'frame', 'image', 'selection', 'video');
+    contexts.push('audio', 'editable', 'frame', 'image', 'video');
 
     if (env.isFirefox) {
       contexts.push('password');
@@ -732,7 +732,12 @@ async function onContextMenuItemClick(info, tab) {
 
   const session = await createSession(sessionData);
 
-  initSearch(session, {docUrl: info.linkUrl || info.pageUrl});
+  initSearch(session, {
+    docUrl:
+      (validateUrl(info.selectionText) && info.selectionText) ||
+      info.linkUrl ||
+      info.pageUrl
+  });
 }
 
 async function onActionClick(session, docUrl) {
