@@ -38,9 +38,6 @@ const engines = {
   archiveIsAll: {
     target: 'https://{host}/{url}'
   },
-  memento: {
-    target: 'http://timetravel.mementoweb.org/memento/{date}/{url}'
-  },
   megalodon: {
     target: 'https://megalodon.jp/?url={url}',
     isExec: true

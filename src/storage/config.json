@@ -21,8 +21,11 @@
       "20240928183956_remove_search_engines",
       "20241213110403_remove_bing",
       "20251011182228_add_software_heritage",
-      "20251205101919_add_archive_host_options"
+      "20251205101919_add_archive_host_options",
+      "20260215113435_remove_memento_time_travel"
     ],
-    "session": ["20240514122825_initial_version"]
+    "session": [
+      "20240514122825_initial_version"
+    ]
   }
 }
