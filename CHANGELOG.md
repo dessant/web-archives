@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.3.0](https://github.com/dessant/web-archives/compare/v7.2.0...v7.3.0) (2026-02-15)
+
+
+### Features
+
+* search with selected text URL ([976e785](https://github.com/dessant/web-archives/commit/976e7854d0599d1ae596d1437e6a1be98b051444)), closes [#97](https://github.com/dessant/web-archives/issues/97)
+
+
+### Bug Fixes
+
+* improve platform detection ([e8502f8](https://github.com/dessant/web-archives/commit/e8502f8c9e7bbfefe7fdc4637f99766796aee93b))
+* remove Memento Time Travel ([54c84a9](https://github.com/dessant/web-archives/commit/54c84a9a113c6473b498112a0d9e9d9289f5cc74)), closes [#126](https://github.com/dessant/web-archives/issues/126)
+* show dropdown menus in extension modal on iPadOS ([23a2e75](https://github.com/dessant/web-archives/commit/23a2e75c13ceca7acade443de269303c1d5dd5b3))
+
 ## [7.2.0](https://github.com/dessant/web-archives/compare/v7.1.0...v7.2.0) (2025-12-05)
 
 
