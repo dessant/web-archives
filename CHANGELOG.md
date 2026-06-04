@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.3.1](https://github.com/dessant/web-archives/compare/v7.3.0...v7.3.1) (2026-06-04)
+
+
+### Bug Fixes
+
+* update dependencies ([766437f](https://github.com/dessant/web-archives/commit/766437f212413e82e3603799b63defca554edba9))
+
 ## [7.3.0](https://github.com/dessant/web-archives/compare/v7.2.0...v7.3.0) (2026-02-15)
 
 
