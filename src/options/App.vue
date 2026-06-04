@@ -228,9 +228,6 @@ export default {
     return {
       dataLoaded: false,
 
-      getSponsorUrl,
-      getSponsorLogo,
-
       listItems: {
         ...getListItems(
           {showInContextMenu},
@@ -308,6 +305,9 @@ export default {
 
   methods: {
     getText,
+
+    getSponsorUrl,
+    getSponsorLogo,
 
     setup: async function () {
       const options = await storage.get(optionKeys);
@@ -459,7 +459,7 @@ export default {
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 736px) {
   .v-application__wrap {
     grid-template-columns: minmax(280px, max-content) max-content;
     grid-template-rows: min-content 1fr;
