@@ -70,7 +70,9 @@ const engineIconVariants = {
   webcite: ['dark']
 };
 
-const sponsorLogoVariants = {};
+const sponsorLogoVariants = {
+  lenso: ['dark']
+};
 
 const rasterEngineIcons = ['ghostarchive'];
 
@@ -156,9 +158,11 @@ const chromeMobileUA =
 
 const supportUrl = 'https://github.com/dessant/web-archives/issues';
 
-const sponsors = [];
+const sponsors = ['lenso'];
 
-const sponsorSites = {};
+const sponsorSites = {
+  lenso: 'https://go.vapps.dev/n2/sponsor/lenso'
+};
 
 export {
   optionKeys,
