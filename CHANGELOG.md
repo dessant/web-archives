@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.3.3](https://github.com/dessant/web-archives/compare/v7.3.2...v7.3.3) (2026-06-27)
+
+
+### Bug Fixes
+
+* account for undefined InjectionResult ([78bf2da](https://github.com/dessant/web-archives/commit/78bf2dadb216182a48c89d6bdf3a728041bf5b8d))
+
 ## [7.3.2](https://github.com/dessant/web-archives/compare/v7.3.1...v7.3.2) (2026-06-15)
 
 
