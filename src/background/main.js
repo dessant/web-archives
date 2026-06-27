@@ -33,6 +33,7 @@ import {
   isMobile,
   getActiveTab,
   getPlatform,
+  getBrowser,
   isValidTab,
   isIndexedDbSupported,
   runOnce
@@ -447,8 +448,6 @@ async function getTabUrl(session, search, doc, taskId) {
       tabUrl = tabUrl.replace(/^https/i, 'http');
     }
   }
-
-  archiveOrgHosts, archiveIsHosts;
 
   tabUrl = tabUrl.replace(/{url}/g, url);
 
@@ -968,6 +967,8 @@ async function processMessage(request, sender) {
     });
   } else if (request.id === 'getPlatform') {
     return getPlatform();
+  } else if (request.id === 'getBrowser') {
+    return getBrowser();
   } else if (request.id === 'storageRequest') {
     const data = await registry.getStorageItem({
       storageId: request.storageId,

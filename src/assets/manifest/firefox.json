@@ -27,7 +27,8 @@
     "notifications",
     "webRequest",
     "webRequestBlocking",
-    "<all_urls>"
+    "<all_urls>",
+    "scripting"
   ],
 
   "content_security_policy": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src * data:; connect-src *; object-src 'none'; media-src 'none'; child-src 'none'; form-action 'none';",
