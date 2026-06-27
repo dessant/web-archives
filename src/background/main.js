@@ -1150,7 +1150,7 @@ async function setup({event = ''} = {}) {
       if (['samsung'].includes(targetEnv) && !startup.setupInstance) {
         // Samsung Internet: Content script does not always run in restored
         // active tab on startup.
-        await insertBaseModule({activeTab: true});
+        await insertBaseModule({activeTab: true, allFrames: false});
       }
 
       await setupUI();
